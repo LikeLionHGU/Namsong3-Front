@@ -1,0 +1,64 @@
+{
+  "goals": [
+    {
+      "title": "중앙해커톤 우승",
+      "startDate": "2024.07.16",
+      "dueDate": "2024.08.07",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "스마트 앱 개발 공모전 최우수상",
+      "startDate": "2024.07.20",
+      "dueDate": "2024.08.15",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "글로벌 스타트업 피칭 대회 우승",
+      "startDate": "2024.08.01",
+      "dueDate": "2024.08.30",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "코드 마라톤 2024 우승",
+      "startDate": "2024.07.25",
+      "dueDate": "2024.09.05",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "AI 해커톤 챌린지 우승",
+      "startDate": "2024.07.30",
+      "dueDate": "2024.08.20",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "데이터 사이언스 경진대회 금상",
+      "startDate": "2024.08.10",
+      "dueDate": "2024.09.01",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "모바일 앱 혁신상",
+      "startDate": "2024.08.15",
+      "dueDate": "2024.09.10",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "국제 IT 솔루션 페어 우수상",
+      "startDate": "2024.08.05",
+      "dueDate": "2024.08.25",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "오픈 소스 소프트웨어 챌린지 1위",
+      "startDate": "2024.08.18",
+      "dueDate": "2024.09.08",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    },
+    {
+      "title": "블록체인 해커톤 우승",
+      "startDate": "2024.09.01",
+      "dueDate": "2024.09.21",
+      "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg"
+    }
+  ]
+}
