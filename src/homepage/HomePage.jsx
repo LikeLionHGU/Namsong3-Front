@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../common/Header";
 import styled from "styled-components";
-import Goals from "./Goals";
+import Goals from "./component/Goals";
 
 function Hompage() {
   return (
