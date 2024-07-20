@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import LoginPage from "./loginPage/LoginPage";
 import Hompage from "./homepage/HomePage";
+import DiaryListPage from "./diaryListPage/DiaryListPage";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/HomePage" element={<Hompage />} />
+          <Route path="/diarylist" element={<DiaryListPage />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
