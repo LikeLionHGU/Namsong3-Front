@@ -1,21 +1,30 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import dummy from "../../db/data.json";
-import CreateGoalModal from "./CreateGoalModal";
+import CreateGoalModal from "./CreateGoalModal/CreateGoalModal";
+import GoalEditDropdown from "./goalEditDropdown/GoalEditDropdown";
+import { useNavigate } from "react-router-dom";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const openCreateGoalModal = () => {
+  const openCreateGoalsModal = () => {
     setIsModalOpen(true);
   };
 
+  const handleClickGoal = () => {
+    navigate("/diarylist");
+  };
   return (
     <Container>
-      <CreateGoalModalBtn onClick={openCreateGoalModal}>목표생성</CreateGoalModalBtn>
+      <CreateGoalModalBtn onClick={openCreateGoalsModal}>목표생성</CreateGoalModalBtn>
       {dummy.goals.map((goal, index) => (
-        <Wrapper key={index}>
-          <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
+        <Wrapper key={index} onClick={handleClickGoal}>
+          <ImageContainer>
+            <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
+            <GoalEditDropdown />
+          </ImageContainer>
           <Info>
             <Title>{goal.title}</Title>
             <Period>
@@ -57,8 +66,13 @@ const Wrapper = styled.div`
   margin-left: 24px;
 `;
 
-const Image = styled.div`
+const ImageContainer = styled.div`
+  position: relative;
   height: 168px;
+`;
+
+const Image = styled.div`
+  height: 100%;
   background-size: cover;
   background-position: center;
 `;
