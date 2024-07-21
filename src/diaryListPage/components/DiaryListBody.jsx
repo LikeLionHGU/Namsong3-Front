@@ -73,7 +73,7 @@ const GoalCardBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: start; // 이거 지우면 목표 카드가 위아래 중앙으로 오게됨
-  height: 320px;
+  /* height: 320px; */
   /* border: 2px solid gold; */
 `;
 const CalendarCard = styled.div`
