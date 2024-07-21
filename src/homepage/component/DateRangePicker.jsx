@@ -3,8 +3,16 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const CustomInput = forwardRef(({ value, onClick, placeholder }, ref) => (
-  <StyledInput onClick={onClick} ref={ref} value={value} placeholder={placeholder} readOnly />
+const CustomInputStart = forwardRef(({ value, onClick }, ref) => (
+  <StyledButtonStart onClick={onClick} ref={ref}>
+    {value || "시작일자"}
+  </StyledButtonStart>
+));
+
+const CustomInputEnd = forwardRef(({ value, onClick }, ref) => (
+  <StyledButtonEnd onClick={onClick} ref={ref}>
+    {value || "종료일자"}
+  </StyledButtonEnd>
 ));
 
 function DateRangePicker() {
@@ -15,36 +23,19 @@ function DateRangePicker() {
     <PeriodContainer>
       <ExplainText>목표 진행기간 설정</ExplainText>
       <DateInputs>
-        <DatePicker
+        <StyledDatePicker
+          dateFormat="yyyy.MM.dd"
+          shouldCloseOnSelect
           selected={startDate}
           onChange={(date) => setStartDate(date)}
-          customInput={
-            <CustomInput
-              placeholder="시작일자"
-              value={
-                startDate
-                  ? startDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
-                  : ""
-              }
-            />
-          }
-          dateFormat="yyyy/MM/dd"
+          customInput={<CustomInputStart />}
         />
-
-        <DatePicker
+        <StyledDatePicker
+          dateFormat="yyyy.MM.dd"
+          shouldCloseOnSelect
           selected={endDate}
           onChange={(date) => setEndDate(date)}
-          customInput={
-            <CustomInput
-              placeholder="종료일자"
-              value={
-                endDate
-                  ? endDate.toLocaleDateString("ko-KR", { year: "numeric", month: "2-digit", day: "2-digit" })
-                  : ""
-              }
-            />
-          }
-          dateFormat="yyyy/MM/dd"
+          customInput={<CustomInputEnd />}
         />
       </DateInputs>
     </PeriodContainer>
@@ -70,17 +61,51 @@ const DateInputs = styled.div`
   align-items: center;
 `;
 
-const StyledInput = styled.input`
-  width: 194px;
+const StyledDatePicker = styled(DatePicker)`
+  width: 100%;
+`;
+
+const StyledButtonStart = styled.button`
+  width: 205px;
   height: 54px;
   border: 1px solid #ccc;
   background-color: #e0e0e0;
   padding: 0 8px;
   box-sizing: border-box;
-  border-radius: ${(props) => (props.placeholder === "시작일자" ? "4px 0 0 4px" : "0 4px 4px 0")};
+  border-radius: 4px 0 0 4px;
+  clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+  cursor: pointer;
   &:focus {
     outline: none;
     border-color: #999;
   }
+  margin-right: -13px; /* 중간의 틈을 없애기 위해 조정 */
+`;
+
+const StyledButtonEnd = styled.button`
+  width: 205px;
+  height: 54px;
+  border: 1px solid #ccc;
+  background-color: #e0e0e0;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border-radius: 0 4px 4px 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10% 50%);
   cursor: pointer;
+  position: relative;
+  &:focus {
+    outline: none;
+    border-color: #999;
+  }
+  margin-left: -7px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    clip-path: polygon(90% 0, 100% 50%, 90% 100%, 100% 100%, 100% 0);
+  }
 `;
