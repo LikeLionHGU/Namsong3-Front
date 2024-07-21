@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import dummy from "../../db/data.json";
 import SearchIcon from "@mui/icons-material/Search";
+import { GoPencil } from "react-icons/go";
+
 function Diaries() {
   // 일지 검색 + 일지 추가 + 일지 리스트 부분
 
@@ -21,7 +23,9 @@ function Diaries() {
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
-          <div className="diary-add">일지 추가하기</div>
+          <div className="diary-add">
+            일지 추가하기 <GoPencil />
+          </div>
           <div className="diary-dropdown">드롭다운</div>
         </div>
         <DiaryList>
@@ -82,9 +86,22 @@ const DairyListBox = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     font-weight: bold;
-    margin-bottom: 10px;
-    .diary-add,
+    /* margin-bottom: 10px; */
+    .diary-add {
+      display: flex;
+      cursor: pointer;
+      color: gray;
+      font-size: 14px;
+      font-weight: lighter;
+      border-bottom: 1px solid lightgray;
+      > svg {
+        /* border: 2px solid red; */
+        margin-left: 5px;
+        font-size: 16px;
+      }
+    }
     .diary-dropdown {
       cursor: pointer;
       border: 2px solid lightgray;
