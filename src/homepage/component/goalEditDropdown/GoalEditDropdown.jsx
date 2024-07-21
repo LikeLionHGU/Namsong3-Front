@@ -1,9 +1,11 @@
 import { Button, Menu, MenuItem } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Fade from "@mui/material/Fade";
+import DeleteGoalModal from "./DeleteGoalModal";
 
 function GoalEditDropdown() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -12,8 +14,14 @@ function GoalEditDropdown() {
   };
 
   const handleClose = (event) => {
-    event.stopPropagation();
+    event.stopPropagation(); //뒤에 goalclick event 방지용
     setAnchorEl(null);
+  };
+
+  const handleDeleteClick = (event) => {
+    event.stopPropagation(); //뒤에 goalclick event 방지용
+    setIsDeleteModalOpen(true);
+    handleClose(event);
   };
 
   return (
@@ -50,10 +58,11 @@ function GoalEditDropdown() {
         <MenuItem sx={menuItemStyle} onClick={(event) => handleClose(event)}>
           수정하기
         </MenuItem>
-        <MenuItem sx={menuItemStyle} onClick={(event) => handleClose(event)}>
+        <MenuItem sx={menuItemStyle} onClick={(event) => handleDeleteClick(event)}>
           삭제하기
         </MenuItem>
       </Menu>
+      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
     </div>
   );
 }
