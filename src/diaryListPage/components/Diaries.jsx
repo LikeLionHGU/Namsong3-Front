@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import dummy from "../../db/data.json";
 import SearchIcon from "@mui/icons-material/Search";
 import { GoPencil } from "react-icons/go";
+import CreateDiaryModal from "./CreateDiaryModal";
 
 function Diaries() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openCreateDiaryModal = () => {
+    setIsModalOpen(true);
+  };
+
   // 일지 검색 + 일지 추가 + 일지 리스트 부분
 
   //TODO: 일지 검색
@@ -16,12 +23,9 @@ function Diaries() {
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input
-          className="search-bar"
-          placeholder="제목+내용을 입력해보세요."
-        ></input>
+        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
       </Searchbar>
-      <DairyListBox>
+      <DairyListBox onClick={openCreateDiaryModal}>
         <div className="diary-list-head">
           <div className="diary-add">
             일지 추가하기 <GoPencil />
@@ -44,6 +48,7 @@ function Diaries() {
           ))}
         </DiaryList>
       </DairyListBox>
+      {isModalOpen && <CreateDiaryModal setIsModalOpen={setIsModalOpen} />}
     </ListPart>
   );
 }
