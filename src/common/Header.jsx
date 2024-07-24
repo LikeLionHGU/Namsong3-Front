@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 100vw;
   height: 60px;
-  background-color: gray;
+  border-bottom: 1px solid #e0dfde;
   display: flex;
   align-items: center;
 `;
@@ -18,22 +18,28 @@ const RightContainer = styled.div`
   margin-left: auto;
   margin-right: 40px;
   display: flex;
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
 `;
 const HomeBtn = styled.div`
-  margin-right: 10px;
+  margin-right: 28px;
 `;
 const ProfileBtn = styled.div``;
 
 function Header() {
+  const navigate = useNavigate();
+  const handleClickHome = () => {
+    navigate("/HomePage");
+  };
   return (
     <div>
       <Wrapper>
         <LogoImg>로고</LogoImg>
         <RightContainer>
-          <Link to={"/HomePage"}>
-            <HomeBtn>홈</HomeBtn>
-          </Link>
-          <ProfileBtn>프로필</ProfileBtn>
+          <HomeBtn onClick={handleClickHome}>Home</HomeBtn>
+          <ProfileBtn>profile</ProfileBtn>
         </RightContainer>
       </Wrapper>
     </div>
