@@ -18,18 +18,7 @@ function Diaries() {
   //TODO: 일지 필터링(드롭다운, 최신순 오래된순)
   //TODO: 일지 추가
   //TODO: 일지 내용 보기
-  function Dropdown() {
-    return (
-      <>
-        <ul>
-          <ListMenu>최신순</ListMenu>
-          <ListMenu>오래된 순</ListMenu>
-        </ul>
-      </>
-    );
-  }
 
-  const [view, setView] = useState(false);
   return (
     <ListPart>
       <Searchbar>
@@ -44,18 +33,7 @@ function Diaries() {
           <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <GoPencil />
           </div>
-          <div className="diary-dropdown">
-            드롭다운
-            {/* <ul
-              onClick={() => {
-                setView(!view);
-              }}
-            >
-              최신순
-              {view ? "⌃" : "⌄"}
-              {view && <Dropdown />}
-            </ul> */}
-          </div>
+          <div className="diary-dropdown">드롭다운</div>
         </div>
         <DiaryList>
           {dummy.goals.map((goal, index) => (
@@ -83,15 +61,15 @@ export default Diaries;
 const ListPart = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 470px;
 `;
 
 const Searchbar = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid lightgray;
-  margin: 10px;
-  height: 40px;
+  margin-bottom: 12px;
+  height: 50px;
   /* width: 100%; */
   padding-left: 10px;
   > svg {
@@ -99,8 +77,8 @@ const Searchbar = styled.div`
     color: gray;
   }
   .search-bar {
+    // 진짜로 입력받을 필드 부분
     margin-left: 5px;
-
     width: 100%;
     height: 90%;
     outline: none;
@@ -112,6 +90,7 @@ const DairyListBox = styled.div`
   display: flex;
   flex-direction: column;
   /* border: 2px solid lime; */
+
   height: 100%;
 
   .diary-list-head {
@@ -120,15 +99,18 @@ const DairyListBox = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 12px;
     font-weight: bold;
+    /* border: 2px solid red; */
     /* margin-bottom: 10px; */
     .diary-add {
       display: flex;
+      align-self: end;
       cursor: pointer;
-      color: gray;
+      color: #4c9e5e;
       font-size: 14px;
       font-weight: lighter;
-      border-bottom: 1px solid lightgray;
+      border-bottom: 1.5px solid #4c9e5e;
 
       > svg {
         /* border: 2px solid red; */
@@ -138,7 +120,12 @@ const DairyListBox = styled.div`
     }
     .diary-dropdown {
       /* cursor: pointer; */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 2px solid lightgray;
+      width: 120px;
+      height: 32px;
 
       /* padding: 4px 8px; */
     }
@@ -153,7 +140,9 @@ const DairyListBox = styled.div`
 const DiaryList = styled.div`
   // 일지 목록 (스크롤되는 부분)
   display: flex;
+  margin-top: 8px;
   height: 530px;
+  width: 500px;
   flex-direction: column;
   /* border: 2px solid blue; */
   overflow: auto;
@@ -164,10 +153,13 @@ const Diary = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  margin-bottom: 20px;
+  width: 466px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  border: 1px solid #e2e2e2;
   align-items: center;
   border: 1px solid lightgray;
-  background-color: lightgray;
+  background-color: white;
   cursor: pointer;
   .diary-title-date {
     display: flex;
@@ -194,13 +186,15 @@ const Diary = styled.div`
 const Image = styled.div`
   /* border: 2px solid red; */
   display: flex;
-  height: 100px;
-  width: 130px;
+  width: 157px;
+  height: 121px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
   background-size: cover;
   background-position: center;
 `;
 
-const ListMenu = styled.li`
-  list-style: none;
-  border: 2px solid lightgray;
-`;
+// const ListMenu = styled.li`
+//   list-style: none;
+//   border: 2px solid lightgray;
+// `;
