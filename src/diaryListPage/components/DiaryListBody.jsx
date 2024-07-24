@@ -21,19 +21,6 @@ function DiaryListBody() {
           </SidePart>
           <ListPart>
             <Diaries />
-            {/* <Searchbar
-              placeholder="제목+내용을 입력해보세요.
-              "
-            ></Searchbar>
-            <DairyListBox>
-              <div className="diary-list-head">
-                <div className="diary-add">일지 추가하기</div>
-                <div className="diary-dropdown">드롭다운</div>
-              </div>
-              <DiaryList>
-                <Diaries />
-              </DiaryList>
-            </DairyListBox> */}
           </ListPart>
         </ContentWrapper>
       </CenterBox>
@@ -45,6 +32,7 @@ export default DiaryListBody;
 
 const Container = styled.div`
   display: flex;
+  padding-top: 32px;
   justify-content: center;
   width: 100%; // !! 나중에 변경해야할 부분.
   height: 100%;
@@ -53,32 +41,31 @@ const Container = styled.div`
 const CenterBox = styled.div`
   display: flex;
   justify-content: center;
-  width: 60%; //
   /* border: 2px solid black; */
 `;
 const ContentWrapper = styled.div`
   // 필요없으면 나중에 삭제해도 될지도...
   display: flex;
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
   width: 100%;
 `;
 
 const SidePart = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin-right: 23px;
   /* border: 2px solid blue; */
-  width: 40%;
+  /* width: 40%; */
 `;
 const GoalCardBox = styled.div`
   display: flex;
   justify-content: center;
-  align-items: start; // 이거 지우면 목표 카드가 위아래 중앙으로 오게됨
-  /* height: 320px; */
-  /* border: 2px solid gold; */
 `;
 const CalendarCard = styled.div`
   display: flex;
-  height: 300px;
+  height: 292px;
+  width: 282px;
   justify-content: center;
   align-items: center;
   border: 2px solid red;
