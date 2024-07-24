@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import dummy from "../../../db/data.json";
 import CreateGoalModal from "./CreateGoalModal/CreateGoalModal";
 import CreateGoal from "../../../asset/Icon/CreateGoal.svg";
@@ -7,6 +7,7 @@ import GoalEditDropdown from "./goalEditDropdown/GoalEditDropdown";
 import Taps from "../topMenu/Taps";
 import { useNavigate } from "react-router-dom";
 import GoalViewDropdown from "../topMenu/GoalViewDropdown";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +26,6 @@ function Goals() {
   const today = new Date();
 
   const isExpired = (dueDate) => {
-    // 마감되었는지 판별
     if (!dueDate) return false;
     const [year, month, day] = dueDate.split(".").map(Number);
     const goalDate = new Date(year, month - 1, day);
@@ -33,7 +33,6 @@ function Goals() {
   };
 
   const getDaysLeft = (dueDate) => {
-    // 다가오는 마감 감지
     if (!dueDate) return null;
     const [year, month, day] = dueDate.split(".").map(Number);
     const goalDate = new Date(year, month - 1, day);
@@ -43,7 +42,6 @@ function Goals() {
   };
 
   const getFilteredGoals = () => {
-    //  목표 최신순, 오래된순 필더 드롭다운
     let goals = dummy.goals;
 
     if (currentTab === "도전 중") {
@@ -74,33 +72,37 @@ function Goals() {
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
-        {filteredGoals.map((goal, index) => {
-          const daysLeft = getDaysLeft(goal.dueDate);
-          return (
-            <Wrapper key={index} onClick={handleClickGoal}>
-              <ImageContainer>
-                <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
-                {isExpired(goal.dueDate) && <ExpirationText>기한만료</ExpirationText>}
-                <GoalEditDropdown />
-              </ImageContainer>
-              <Info>
-                <InfoContainer>
-                  {daysLeft !== null && daysLeft <= 5 && daysLeft > 0 && (
-                    <DeadlineComing>⏰ 기간까지 {daysLeft}일 남았어요!</DeadlineComing>
-                  )}
-                  <Title>{goal.title}</Title>
-                  {(goal.startDate || goal.dueDate) && (
-                    <Period>
-                      {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
-                      {goal.startDate && goal.dueDate && <span> →</span>}
-                      {goal.dueDate && <DueDate>{goal.dueDate}</DueDate>}
-                    </Period>
-                  )}
-                </InfoContainer>
-              </Info>
-            </Wrapper>
-          );
-        })}
+        <TransitionGroup component={null}>
+          {filteredGoals.map((goal, index) => {
+            const daysLeft = getDaysLeft(goal.dueDate);
+            return (
+              <CSSTransition key={index} timeout={500} classNames="goal">
+                <GoalWrapper onClick={handleClickGoal}>
+                  <ImageContainer>
+                    <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
+                    {isExpired(goal.dueDate) && <ExpirationText>기한만료</ExpirationText>}
+                    <GoalEditDropdown />
+                  </ImageContainer>
+                  <Info>
+                    <InfoContainer>
+                      {daysLeft !== null && daysLeft <= 5 && daysLeft > 0 && (
+                        <DeadlineComing>⏰ 기간까지 {daysLeft}일 남았어요!</DeadlineComing>
+                      )}
+                      <Title>{goal.title}</Title>
+                      {(goal.startDate || goal.dueDate) && (
+                        <Period>
+                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
+                          {goal.startDate && goal.dueDate && <span> →</span>}
+                          {goal.dueDate && <DueDate>{goal.dueDate}</DueDate>}
+                        </Period>
+                      )}
+                    </InfoContainer>
+                  </Info>
+                </GoalWrapper>
+              </CSSTransition>
+            );
+          })}
+        </TransitionGroup>
       </GoalContainer>
       {isModalOpen && <CreateGoalModal setIsModalOpen={setIsModalOpen} />}
     </Container>
@@ -145,7 +147,29 @@ const CreateGoalModalBtn = styled.div`
   color: #c5c5c5;
 `;
 
-const Wrapper = styled.div`
+const enterAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const exitAnimation = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+`;
+
+const GoalWrapper = styled.div`
   width: 282px;
   height: 270px;
   display: flex;
@@ -153,6 +177,15 @@ const Wrapper = styled.div`
   margin-top: 20px;
   margin-right: 12px;
   margin-left: 12px;
+  animation: ${enterAnimation} 0.5s forwards;
+
+  &.goal-enter {
+    animation: ${enterAnimation} 0.5s forwards;
+  }
+
+  &.goal-exit {
+    animation: ${exitAnimation} 0.5s forwards;
+  }
 `;
 
 const ImageContainer = styled.div`
