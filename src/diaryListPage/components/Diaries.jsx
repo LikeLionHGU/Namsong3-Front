@@ -18,19 +18,44 @@ function Diaries() {
   //TODO: 일지 필터링(드롭다운, 최신순 오래된순)
   //TODO: 일지 추가
   //TODO: 일지 내용 보기
+  function Dropdown() {
+    return (
+      <>
+        <ul>
+          <ListMenu>최신순</ListMenu>
+          <ListMenu>오래된 순</ListMenu>
+        </ul>
+      </>
+    );
+  }
 
+  const [view, setView] = useState(false);
   return (
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
+        <input
+          className="search-bar"
+          placeholder="제목+내용을 입력해보세요."
+        ></input>
       </Searchbar>
-      <DairyListBox onClick={openCreateDiaryModal}>
+      <DairyListBox>
         <div className="diary-list-head">
-          <div className="diary-add">
+          <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <GoPencil />
           </div>
-          <div className="diary-dropdown">드롭다운</div>
+          <div className="diary-dropdown">
+            드롭다운
+            {/* <ul
+              onClick={() => {
+                setView(!view);
+              }}
+            >
+              최신순
+              {view ? "⌃" : "⌄"}
+              {view && <Dropdown />}
+            </ul> */}
+          </div>
         </div>
         <DiaryList>
           {dummy.goals.map((goal, index) => (
@@ -54,6 +79,7 @@ function Diaries() {
 }
 
 export default Diaries;
+
 const ListPart = styled.div`
   display: flex;
   flex-direction: column;
@@ -74,10 +100,12 @@ const Searchbar = styled.div`
   }
   .search-bar {
     margin-left: 5px;
+
     width: 100%;
-    height: 95%;
+    height: 90%;
     outline: none;
     border: none;
+    /* border: 1px solid lightgray; */
   }
 `;
 const DairyListBox = styled.div`
@@ -101,6 +129,7 @@ const DairyListBox = styled.div`
       font-size: 14px;
       font-weight: lighter;
       border-bottom: 1px solid lightgray;
+
       > svg {
         /* border: 2px solid red; */
         margin-left: 5px;
@@ -108,10 +137,10 @@ const DairyListBox = styled.div`
       }
     }
     .diary-dropdown {
-      cursor: pointer;
+      /* cursor: pointer; */
       border: 2px solid lightgray;
 
-      padding: 4px 8px;
+      /* padding: 4px 8px; */
     }
     /* .diary-dropdown {
       border: 2px solid red;
@@ -169,4 +198,9 @@ const Image = styled.div`
   width: 130px;
   background-size: cover;
   background-position: center;
+`;
+
+const ListMenu = styled.li`
+  list-style: none;
+  border: 2px solid lightgray;
 `;
