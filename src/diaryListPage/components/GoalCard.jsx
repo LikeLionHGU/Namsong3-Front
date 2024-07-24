@@ -39,37 +39,41 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  width: 250px;
-  height: 100%;
   flex-direction: column;
+  width: 282px;
+  height: 341px;
+  background-color: #f6f5f4;
+  border-radius: 12px;
   /* border: 2px solid red; */
 `;
 
 const Image = styled.div`
   display: flex;
-  height: 150px;
+  height: 168px;
   background-size: cover;
   background-position: center;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 20px;
+  padding-left: 19px;
 
-  background-color: #d9d9d9;
+  /* background-color: #d9d9d9; */
 `;
 
 const Title = styled.div`
-  font-size: 17px;
+  font-size: 20px;
   font-weight: bolder;
-  margin-top: 14px;
-  /* margin-left: 20px; */
+  margin-top: 12px;
+  /* border: 2px solid red; */
 `;
 
 const Period = styled.div`
   display: flex;
-  font-size: 13px;
+  font-size: 16px;
   color: gray;
   margin-top: 3px;
   /* margin-left: 20px; */
@@ -95,28 +99,39 @@ const Line = styled.div`
 `;
 const ExtrtaInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-  /* padding-left: 20px; */
+  flex-direction: row;
+  padding-top: 8px;
   font-size: 12px;
-  color: gray;
+
   .info-day-count,
   .info-diary-count {
-    margin-bottom: 5px;
+    /* width: 95px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-right: 8px;
+    height: 26px;
+    color: #4c9e5e;
+    background-color: #dbecdf;
+    border-radius: 4px;
+    /* border: 1px solid green; */
   }
 `;
 const Accomplished = styled.button`
   /* display: flex; */
-  /* border: 2px solid gray; */
+  border: 2px solid black;
   border: none;
-  height: 35px;
-  width: 90%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-color: #b4b4b4;
+  height: 40px;
+  width: 242px;
+  margin-top: 8px;
+  margin-bottom: 17px;
+  border-radius: 8px;
+  background-color: #4c9e5e;
   cursor: pointer;
   font-weight: bold;
-  color: #606060;
+  color: #ffffff;
   &:hover {
   }
 `;
