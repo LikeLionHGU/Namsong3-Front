@@ -8,9 +8,11 @@ import Taps from "../topMenu/Taps";
 import { useNavigate } from "react-router-dom";
 import GoalViewDropdown from "../topMenu/GoalViewDropdown";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import DeleteGoalModal from "./goalEditDropdown/DeleteGoalModal";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("전체");
   const [currentSort, setCurrentSort] = useState("최신순");
   const navigate = useNavigate();
@@ -81,7 +83,7 @@ function Goals() {
                   <ImageContainer>
                     <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
                     {isExpired(goal.dueDate) && <ExpirationText>기한만료</ExpirationText>}
-                    <GoalEditDropdown />
+                    <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
@@ -105,6 +107,7 @@ function Goals() {
         </TransitionGroup>
       </GoalContainer>
       {isModalOpen && <CreateGoalModal setIsModalOpen={setIsModalOpen} />}
+      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
     </Container>
   );
 }
