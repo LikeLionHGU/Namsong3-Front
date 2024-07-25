@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import DeleteGoalModal from "./DeleteGoalModal";
 import GoalEditDropdownBtn from "../../../../asset/Icon/GoalEditDropdownBtn.svg";
 
-function GoalEditDropdown() {
+function GoalEditDropdown({ setIsDeleteModalOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const toggleDropdown = (event) => {
@@ -41,7 +39,6 @@ function GoalEditDropdown() {
           <DropdownItem onClick={handleDeleteClick}>삭제하기</DropdownItem>
         </DropdownMenu>
       )}
-      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
     </DropdownContainer>
   );
 }

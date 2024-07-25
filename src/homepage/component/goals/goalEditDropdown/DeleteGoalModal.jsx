@@ -9,6 +9,7 @@ function DeleteGoalModal({ setIsDeleteModalOpen }) {
   const handleModalClick = (event) => {
     event.stopPropagation(event); //뒤에 goalclick event 방지용
   };
+
   return (
     <div>
       <Modal>
@@ -53,7 +54,7 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div`
-  position: absolute;
+  position: fixed; /* fixed로 변경 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -77,10 +78,12 @@ const SubTextContainer = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const SubText = styled.div`
   font-size: 16px;
   margin-top: 3px;
 `;
+
 const ButtonContainer = styled.div`
   margin-top: 16px;
   display: flex;
@@ -95,6 +98,7 @@ const Cancel = styled.div`
   align-items: center;
   border: 1px solid lightgray;
 `;
+
 const Confirm = styled.div`
   width: 100px;
   height: 40px;
