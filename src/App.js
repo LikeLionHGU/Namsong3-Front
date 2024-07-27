@@ -4,6 +4,7 @@ import { RecoilRoot } from "recoil";
 import LoginPage from "./loginPage/LoginPage";
 import Hompage from "./homepage/HomePage";
 import DiaryListPage from "./diaryListPage/DiaryListPage";
+import ChatbotPage from "./chatbotPage/ChatbotPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/HomePage" element={<Hompage />} />
           <Route path="/diarylist" element={<DiaryListPage />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
