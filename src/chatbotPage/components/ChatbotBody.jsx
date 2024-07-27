@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import dummy from "../../db/data.json";
 import sendIcon from "../../asset/Icon/send.svg";
+import LoadingModal from "./LoadingModal";
 function ChatbotBody() {
   //   let botTexts = dummy.Chatbot;
+  const [modalOpen, setModalOpen] = useState(false);
 
+  const openLoadingModal = () => {
+    setModalOpen(true);
+  };
   return (
     <div>
       <PageWrapper>
@@ -31,9 +36,18 @@ function ChatbotBody() {
               {" "}
               <span>
                 (봇이름)과 대화를 통해 충분히 오늘의 감상을 기록하셨다면{" "}
-                <a href="/chatbot">일지를 요약</a>해보세요!
+                <span
+                  className="summarize-button"
+                  onClick={openLoadingModal}
+                  href="/"
+                >
+                  일지를 요약
+                </span>
+                해보세요!
               </span>{" "}
-              <span>일지 요약하기 &gt; </span>
+              <span className="summarizeBtn" onClick={openLoadingModal}>
+                일지 요약하기 &gt;{" "}
+              </span>
             </SummarizeArea>
             <TypingBox>
               <TypingArea placeholder="메시지를 작성해주세요! "></TypingArea>
@@ -41,6 +55,7 @@ function ChatbotBody() {
             </TypingBox>
           </UserInteractField>
         </CenterBox>
+        {modalOpen && <LoadingModal setModalOpen={setModalOpen} />}
       </PageWrapper>
     </div>
   );
@@ -150,6 +165,14 @@ const SummarizeArea = styled.div`
   margin-bottom: 5px;
   /* border: 2px solid blue; */
   border: 2px solid lightgray;
+  > span > .summarize-button {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .summarizeBtn {
+    cursor: pointer;
+  }
 `;
 
 const TypingBox = styled.div`
