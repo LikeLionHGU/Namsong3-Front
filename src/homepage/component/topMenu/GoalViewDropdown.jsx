@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { CSSTransition } from "react-transition-group";
+import GoalViewDropdownIcon from "../../../asset/Icon/GoalViewDropdown.svg";
 
 function GoalViewDropdown({ currentSort, setCurrentSort }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,20 +33,51 @@ function GoalViewDropdown({ currentSort, setCurrentSort }) {
     <DropdownContainer ref={dropdownRef}>
       <Wrapper onClick={toggleDropdown}>
         <div style={{ marginLeft: "12px" }}>{currentSort}</div>
+        <Icon src={GoalViewDropdownIcon} alt="Dropdown Icon" isOpen={isDropdownOpen} />
       </Wrapper>
-      {isDropdownOpen && (
+      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
         <DropdownMenu>
           {currentSort !== "최신순" && <DropdownItem onClick={() => handleOptionClick("최신순")}>최신순</DropdownItem>}
-          {currentSort !== "오래된 순" && (
-            <DropdownItem onClick={() => handleOptionClick("오래된 순")}>오래된 순</DropdownItem>
+          {currentSort !== "오름차순" && (
+            <>
+              <DropdownItem onClick={() => handleOptionClick("오름차순")}>오름차순</DropdownItem>
+            </>
+          )}
+          {currentSort !== "내림차순" && (
+            <>
+              <Separator />
+              <DropdownItem onClick={() => handleOptionClick("내림차순")}>내림차순</DropdownItem>
+            </>
           )}
         </DropdownMenu>
-      )}
+      </CSSTransition>
     </DropdownContainer>
   );
 }
 
 export default GoalViewDropdown;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+`;
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -57,9 +90,16 @@ const Wrapper = styled.div`
   border-radius: 4px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   font-size: 12px;
-  color: #9a9a9a;
+  color: black;
+`;
+
+const Icon = styled.img`
+  transition: transform 0.3s;
+  transform: ${({ isOpen }) => (isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+  margin-right: 10px;
 `;
 
 const DropdownMenu = styled.div`
@@ -68,10 +108,18 @@ const DropdownMenu = styled.div`
   left: 0;
   background-color: white;
   border: 1px solid #e6e6e6;
+  border-radius: 4px;
   width: 120px;
   z-index: 3;
   font-size: 12px;
-  color: #9a9a9a;
+  color: black;
+
+  &.dropdown-enter {
+    animation: ${fadeIn} 300ms forwards;
+  }
+  &.dropdown-exit {
+    animation: ${fadeOut} 300ms forwards;
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -81,4 +129,9 @@ const DropdownItem = styled.div`
   &:hover {
     background-color: #f0f0f0;
   }
+`;
+
+const Separator = styled.div`
+  height: 1px;
+  background-color: #e6e6e6;
 `;

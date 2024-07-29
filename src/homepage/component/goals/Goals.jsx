@@ -13,7 +13,7 @@ import DeleteGoalModal from "./goalEditDropdown/DeleteGoalModal";
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState("전체");
+  const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
   const navigate = useNavigate();
 
@@ -54,8 +54,10 @@ function Goals() {
 
     if (currentSort === "최신순") {
       goals = goals.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-    } else if (currentSort === "오래된 순") {
-      goals = goals.sort((a, b) => new Date(a.createDate) - new Date(b.createDate));
+    } else if (currentSort === "오름차순") {
+      goals = goals.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (currentSort === "내림차순") {
+      goals = goals.sort((a, b) => b.title.localeCompare(a.title));
     }
 
     return goals;
@@ -78,23 +80,40 @@ function Goals() {
           {filteredGoals.map((goal, index) => {
             const daysLeft = getDaysLeft(goal.dueDate);
             return (
-              <CSSTransition key={index} timeout={500} classNames="goal">
-                <GoalWrapper onClick={handleClickGoal}>
-                  <ImageContainer>
+              <CSSTransition key={goal.id} timeout={500} classNames="goal">
+                <GoalWrapper>
+                  <ImageContainer onClick={handleClickGoal}>
                     <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
-                    {isExpired(goal.dueDate) && <ExpirationText>기한만료</ExpirationText>}
                     <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
                       {daysLeft !== null && daysLeft <= 5 && daysLeft > 0 && (
-                        <DeadlineComing>⏰ 기간까지 {daysLeft}일 남았어요!</DeadlineComing>
+                        <DeadlineComing>
+                          <span>D-{daysLeft}</span>
+                        </DeadlineComing>
                       )}
-                      <Title>{goal.title}</Title>
+                      {isExpired(goal.dueDate) && (
+                        <ExpirationText>
+                          <span>기한이 지났어요!</span>
+                        </ExpirationText>
+                      )}
+                      {daysLeft === null || daysLeft > 5
+                        ? !isExpired(goal.dueDate) && <div style={{ marginTop: "4px" }} />
+                        : null}
+                      <TitleFireContainer>
+                        <Title>{goal.title}</Title>
+                        {goal.writtenInSuccession >= 3 && (
+                          <Fire>
+                            {goal.writtenInSuccession}🔥
+                            {goal.writtenInSuccession >= 10 && <span>🔥</span>}
+                          </Fire>
+                        )}
+                      </TitleFireContainer>
                       {(goal.startDate || goal.dueDate) && (
                         <Period>
                           {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
-                          {goal.startDate && goal.dueDate && <span> →</span>}
+                          {goal.startDate && goal.dueDate && <span> → </span>}
                           {goal.dueDate && <DueDate>{goal.dueDate}</DueDate>}
                         </Period>
                       )}
@@ -204,19 +223,23 @@ const Image = styled.div`
 `;
 
 const ExpirationText = styled.div`
-  position: absolute;
-  top: 11px;
-  left: 11px;
-  background-color: #3ab871;
-  color: white;
+  padding: 4px 6px;
+  width: fit-content;
+  border: 1.5px solid transparent;
+  background: linear-gradient(to right, #f0efec, #f0efec) padding-box,
+    linear-gradient(to right, #586eff, #bea0e6) border-box;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 700;
-  width: 60px;
-  height: 26px;
+  margin-bottom: 4px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    background-image: linear-gradient(to right, #586eff, #bea0e6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 `;
 
 const Info = styled.div`
@@ -228,21 +251,45 @@ const Info = styled.div`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 14px;
-  margin-left: 22px;
+  margin-top: 10px;
+  margin-left: 20px;
 `;
 
 const DeadlineComing = styled.div`
-  color: #f2421b;
-  font-size: 12px;
-  font-weight: bold;
-  margin-bottom: 3px;
+  padding: 4px 6px;
+  width: fit-content;
+  border: 1.5px solid transparent;
+  background: linear-gradient(to right, #f0efec, #f0efec) padding-box,
+    linear-gradient(to right, #586eff, #bea0e6) border-box;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    background-image: linear-gradient(to right, #586eff, #bea0e6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+`;
+
+const TitleFireContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 242px;
 `;
 
 const Title = styled.div`
   font-size: 20px;
   font-weight: bolder;
   margin-bottom: 3px;
+`;
+
+const Fire = styled.div`
+  font-size: 18px;
+  display: flex;
 `;
 
 const Period = styled.div`

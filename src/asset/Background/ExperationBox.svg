@@ -1,0 +1,31 @@
+<svg width="808" height="126" viewBox="0 0 808 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_730_902)">
+<g clip-path="url(#clip0_730_902)">
+<path d="M8 16C8 9.37258 13.3726 4 20 4H788C794.627 4 800 9.37258 800 16V102C800 108.627 794.627 114 788 114H20C13.3726 114 8 108.627 8 102V16Z" fill="url(#paint0_linear_730_902)" fill-opacity="0.9" shape-rendering="crispEdges"/>
+<path d="M602.496 35.8594L779.955 -55.0279L789.082 -21.0127L607.975 70.3182L602.496 35.8594Z" fill="#BEA0E6" fill-opacity="0.8"/>
+<path d="M581.071 101.728L812.393 15.2285L817.873 49.6874L582.877 136.463L581.071 101.728Z" fill="#BEA0E6" fill-opacity="0.8"/>
+<path d="M581.071 101.728L844.715 88.0211L846.521 122.756L582.877 136.463L581.071 101.728Z" fill="#586EFF" fill-opacity="0.7"/>
+<path d="M602.496 35.8594L812.393 15.2285L817.873 49.6874L607.975 70.3182L602.496 35.8594Z" fill="#586EFF" fill-opacity="0.7"/>
+<path d="M624.063 -32.3812L779.955 -55.0279L789.082 -21.0127L633.189 1.63394L624.063 -32.3812Z" fill="#586EFF" fill-opacity="0.7"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_730_902" x="0" y="0" width="808" height="126" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="4"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_730_902"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_730_902" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_730_902" x1="800" y1="59" x2="8" y2="59" gradientUnits="userSpaceOnUse">
+<stop stop-color="#BEA0E6"/>
+<stop offset="1" stop-color="#586EFF" stop-opacity="0.9"/>
+</linearGradient>
+<clipPath id="clip0_730_902">
+<path d="M8 16C8 9.37258 13.3726 4 20 4H788C794.627 4 800 9.37258 800 16V102C800 108.627 794.627 114 788 114H20C13.3726 114 8 108.627 8 102V16Z" fill="white"/>
+</clipPath>
+</defs>
+</svg>
