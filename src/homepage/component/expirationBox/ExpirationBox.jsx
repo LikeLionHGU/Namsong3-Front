@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import dummy from "../../../db/data.json";
-import SpeakerIcon from "../../../asset/Icon/ExpirationBox.svg";
+import Background from "../../../asset/Background/ExperationBox.svg";
+import MoveToGoalIcon from "../../../asset/Icon/moveToGoal.svg";
 
 function ExpirationBox() {
   const [mostOverdueGoal, setMostOverdueGoal] = useState(null);
@@ -35,8 +36,7 @@ function ExpirationBox() {
       <Container>
         <MainContents>
           <MainTextContainer>
-            <Speaker src={SpeakerIcon} alt="" />
-            <MainText>기간이 만료되었어요 !</MainText>
+            <MainText>완료날짜가 다가오고 있어요 !</MainText>
           </MainTextContainer>
           <SubText>
             <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
@@ -48,7 +48,10 @@ function ExpirationBox() {
             목표를 달성하셨다면 ‘목표 달성' 버튼을 누르고 진행 중이시라면 기간을 수정해주세요 :)
           </SubText>
         </MainContents>
-        <MoveToGoal>목표로 이동하기</MoveToGoal>
+        <MoveToGoal>
+          목표로 이동하기
+          <img src={MoveToGoalIcon} alt="" style={{ marginLeft: "4px" }} />
+        </MoveToGoal>
       </Container>
     </Wrapper>
   );
@@ -66,19 +69,23 @@ const Container = styled.div`
   height: 110px;
   margin-top: 31px;
   border-radius: 12px;
-  border: 1px solid #e0dfde;
   position: relative;
   padding: 16px;
   box-sizing: border-box;
+  background-image: url(${Background});
+  background-position: center;
+  background-position-y: 23%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 `;
 
 const MoveToGoal = styled.div`
   position: absolute;
-  bottom: 15px;
-  right: 16px;
-  color: #5b5b5b;
+  bottom: 24px;
+  right: 22px;
+  color: white;
   font-size: 14px;
   font-weight: bold;
+  display: flex;
 `;
 
 const MainContents = styled.div`
@@ -91,20 +98,15 @@ const MainTextContainer = styled.div`
   align-items: center;
 `;
 
-const Speaker = styled.img`
-  background-color: #e6f6ed;
-  border-radius: 4px;
-  margin-right: 4px;
-`;
-
 const MainText = styled.div`
-  color: #5b5b5b;
-  font-size: 16px;
+  color: white;
+  font-size: 18px;
   font-weight: bold;
+  margin-top: 5px;
 `;
 
 const SubText = styled.div`
   font-size: 14px;
-  color: #777777;
+  color: #f5f5f5;
   margin-top: 8px;
 `;
