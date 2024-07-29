@@ -6,29 +6,33 @@
       "dueDate": "2024.08.07",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "Yes",
-      "createDate": "2024.07.16"
+      "createDate": "2024.07.16",
+      "writtenInSuccession": 6
     },
     {
-      "title": "스마트 앱 개발 공모전 최우수상",
+      "title": "앱 개발 공모전 최우수상",
       "startDate": "2024.07.20",
-      "dueDate": "2024.07.24",
+      "dueDate": "2024.08.01",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "No",
-      "createDate": "2024.07.30"
+      "createDate": "2024.07.30",
+      "writtenInSuccession": 10
     },
     {
       "title": "코드 마라톤 2024 우승",
       "startDate": "2024.07.20",
-      "dueDate": "2024.07.28",
+      "dueDate": "2024.08.03",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "No",
-      "createDate": "2024.07.18"
+      "createDate": "2024.07.18",
+      "writtenInSuccession": 4
     },
     {
       "title": "AI 해커톤 챌린지 우승",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "No",
-      "createDate": "2024.07.19"
+      "createDate": "2024.07.19",
+      "writtenInSuccession": 3
     },
     {
       "title": "모바일 앱 혁신상",
@@ -36,16 +40,18 @@
       "dueDate": "2024.07.26",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "No",
-      "createDate": "2024.07.21"
+      "createDate": "2024.07.21",
+      "writtenInSuccession": 2
     },
 
     {
-      "title": "오픈 소스 소프트웨어 챌린지 1위",
+      "title": "소프트웨어 챌린지 1위",
       "startDate": "2024.08.18",
       "dueDate": "2024.09.08",
       "imgUrl": "https://ifh.cc/g/ZzgWw6.jpg",
       "isComplete": "No",
-      "createDate": "2024.07.23"
+      "createDate": "2024.07.23",
+      "writtenInSuccession": 1
     }
   ],
 
