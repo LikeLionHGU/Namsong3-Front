@@ -67,11 +67,13 @@ const ListPart = styled.div`
 const Searchbar = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   margin-bottom: 12px;
+  border-radius: 8px;
   height: 50px;
+  background-color: #f5f5f5;
   /* width: 100%; */
-  padding-left: 10px;
+  padding-left: 22px;
   > svg {
     font-size: 20px;
     color: gray;
@@ -79,10 +81,11 @@ const Searchbar = styled.div`
   .search-bar {
     // 진짜로 입력받을 필드 부분
     margin-left: 5px;
-    width: 100%;
+    width: 92%;
     height: 90%;
     outline: none;
     border: none;
+    background-color: #f5f5f5;
     /* border: 1px solid lightgray; */
   }
 `;
