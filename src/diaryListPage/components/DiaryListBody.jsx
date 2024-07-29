@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Diaries from "./Diaries";
 import GoalCard from "./GoalCard";
+import Calendar from "./Calendar";
 
 function DiaryListBody() {
   return (
@@ -15,7 +16,8 @@ function DiaryListBody() {
               <GoalCard />
             </GoalCardBox>
             <CalendarCard>
-              달력 들어갈 부분
+              <Calendar />
+              {/* 달력 들어갈 부분 */}
               {/* CalendarCard: 달력 들어갈 부분 */}
             </CalendarCard>
           </SidePart>
@@ -64,11 +66,11 @@ const GoalCardBox = styled.div`
 `;
 const CalendarCard = styled.div`
   display: flex;
-  height: 292px;
-  width: 282px;
+  /* height: 292px; */
+  /* width: 282px; */
   justify-content: center;
   align-items: center;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 `;
 const ListPart = styled.div`
   display: flex;
