@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function CreateDiaryModal({ setIsModalOpen }) {
+  const navigate = useNavigate();
+
   const closeCreateDiaryModal = () => {
     setIsModalOpen(false);
   };
@@ -17,7 +20,7 @@ function CreateDiaryModal({ setIsModalOpen }) {
           </TopContainer>
           <MainContainer>
             <WriteMethod>
-              <TextContainer>
+              <TextContainer onClick={() => navigate("../chatbot")}>
                 <MainText>👾 (봇이름)이와 함께 일지 작성하기</MainText>
                 <SubText>
                   <div>
@@ -71,7 +74,7 @@ const Modal = styled.div`
 
 const Overlay = styled.div`
   ${modalStyles}
-  background: rgba(158, 158, 158, 0.8);
+  background: rgba(158, 158, 158, 0.2);
   cursor: pointer;
 `;
 
@@ -128,6 +131,7 @@ const WriteMethod = styled.div`
 const TextContainer = styled.div`
   margin-left: 15px;
   margin-top: 23px;
+  cursor: pointer;
 `;
 
 const MainText = styled.div`
