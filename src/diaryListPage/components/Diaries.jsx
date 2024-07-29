@@ -107,15 +107,25 @@ const DairyListBox = styled.div`
       display: flex;
       align-self: end;
       cursor: pointer;
-      color: #4c9e5e;
+      /* color: #4c9e5e; */
+      border-bottom: 1.5px solid transparent;
+      border-image: linear-gradient(0deg, #586eff 0%, #bea0e6 100%);
+      border-image-slice: 1;
+      background: linear-gradient(to right, #586eff 0%, #bea0e6 100%);
+      -webkit-background-clip: text;
+
+      -webkit-text-fill-color: transparent;
       font-size: 14px;
       font-weight: lighter;
-      border-bottom: 1.5px solid #4c9e5e;
-
       > svg {
         /* border: 2px solid red; */
         margin-left: 5px;
         font-size: 16px;
+        /* color: red; */
+        color: #586eff;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
     .diary-dropdown {
@@ -158,7 +168,7 @@ const Diary = styled.div`
   border-radius: 12px;
   border: 1px solid #e2e2e2;
   align-items: center;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   background-color: white;
   cursor: pointer;
   .diary-title-date {
@@ -187,7 +197,7 @@ const Image = styled.div`
   /* border: 2px solid red; */
   display: flex;
   width: 157px;
-  height: 121px;
+  height: 92px;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   background-size: cover;

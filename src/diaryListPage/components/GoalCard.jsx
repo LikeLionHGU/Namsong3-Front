@@ -17,11 +17,11 @@ function GoalCard() {
           </Period>
           <Line />
           <ExtrtaInfo>
-            <div className="info-day-count">12일째 목표 진행 중! </div>
+            <div className="info-day-count">12일차 </div>
             <div className="info-diary-count">작성한 일지 3개</div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
-            <Accomplished>목표 달성!</Accomplished>
+            <Accomplished>도전 완료하기</Accomplished>
           </div>
         </Info>
       </Wrapper>
@@ -92,7 +92,7 @@ const DueDate = styled.div``;
 
 const Line = styled.div`
   display: flex;
-  width: 20px;
+  width: 30px;
   height: 2px;
   padding-top: 10px;
   border-bottom: 1px solid #b5b5b5;
@@ -113,25 +113,26 @@ const ExtrtaInfo = styled.div`
     padding-right: 4px;
     margin-right: 8px;
     height: 26px;
-    color: #4c9e5e;
-    background-color: #dbecdf;
+    color: #586eff;
+    background-color: #cbd2ff7e;
     border-radius: 4px;
     /* border: 1px solid green; */
   }
 `;
 const Accomplished = styled.button`
   /* display: flex; */
-  border: 2px solid black;
-  border: none;
-  height: 40px;
+
+  /* border: none; */
+  border: 1px solid #aeaeae;
+  height: 36px;
   width: 242px;
-  margin-top: 8px;
-  margin-bottom: 17px;
+  margin-top: 12px;
+  margin-bottom: 16px;
   border-radius: 8px;
-  background-color: #4c9e5e;
+  background-color: #f5f5f5;
   cursor: pointer;
   font-weight: bold;
-  color: #ffffff;
+  color: #676767;
   &:hover {
   }
 `;
