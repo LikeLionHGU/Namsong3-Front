@@ -104,10 +104,13 @@ function Goals() {
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
                         {goal.writtenInSuccession >= 3 && (
-                          <Fire>
-                            {goal.writtenInSuccession}🔥
-                            {goal.writtenInSuccession >= 10 && <span>🔥</span>}
-                          </Fire>
+                          <FireContainer>
+                            <Fire>
+                              {goal.writtenInSuccession}🔥
+                              {goal.writtenInSuccession >= 10 && <span>🔥</span>}
+                            </Fire>
+                            <Tooltip>연속{goal.writtenInSuccession}일 작성</Tooltip>
+                          </FireContainer>
                         )}
                       </TitleFireContainer>
                       {(goal.startDate || goal.dueDate) && (
@@ -287,9 +290,50 @@ const Title = styled.div`
   margin-bottom: 3px;
 `;
 
+const FireContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+
+  &:hover div {
+    display: block;
+  }
+`;
+
 const Fire = styled.div`
   font-size: 18px;
   display: flex;
+`;
+
+const Tooltip = styled.div`
+  display: none;
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  padding: 8px;
+  background-color: white;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 4;
+  box-shadow: 2px 6px 12px rgba(0, 0, 0, 0.12), 0 0 4px rgba(0, 0, 0, 0.12);
+
+  &:before {
+    content: "";
+    border-color: white transparent;
+    border-style: solid;
+    border-width: 0 6px 8px 6.5px;
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    top: -5px;
+    width: 0;
+    z-index: 4;
+  }
 `;
 
 const Period = styled.div`
