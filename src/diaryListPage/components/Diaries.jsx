@@ -112,11 +112,10 @@ const DairyListBox = styled.div`
       cursor: pointer;
       /* color: #4c9e5e; */
       border-bottom: 1.5px solid transparent;
-      border-image: linear-gradient(0deg, #586eff 0%, #bea0e6 100%);
+      background: linear-gradient(to right, #586eff, #bea0e6) border-box;
+      border-image: linear-gradient(to right, #586eff 0%, #bea0e6 100%);
       border-image-slice: 1;
-      background: linear-gradient(to right, #586eff 0%, #bea0e6 100%);
       -webkit-background-clip: text;
-
       -webkit-text-fill-color: transparent;
       font-size: 14px;
       font-weight: lighter;
@@ -126,9 +125,11 @@ const DairyListBox = styled.div`
         font-size: 16px;
         /* color: red; */
         color: #586eff;
+        /* background-image: linear-gradient(to right, #586eff, #bea0e6);
         background-clip: text;
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-text-fill-color: #586eff;
+        -webkit-padding-box-fill-color: transparent; */
       }
     }
     .diary-dropdown {
