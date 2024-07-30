@@ -5,6 +5,7 @@ import LoginPage from "./loginPage/LoginPage";
 import Hompage from "./homepage/HomePage";
 import DiaryListPage from "./diaryListPage/DiaryListPage";
 import ChatbotPage from "./chatbotPage/ChatbotPage";
+import DiaryWritePage from "./diaryWritePage/DiaryWritePage";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/HomePage" element={<Hompage />} />
           <Route path="/diarylist" element={<DiaryListPage />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/write" element={<DiaryWritePage />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
