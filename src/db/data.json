@@ -55,6 +55,85 @@
     }
   ],
 
+  "diaries": [
+    {
+      "title": "아이디어 회의",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+      "createDate": "2024.07.23"
+    },
+    {
+      "title": "프로젝트 계획",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+      "createDate": "2024.07.24"
+    },
+    {
+      "title": "팀 빌딩 활동",
+      "createDate": "2024.07.25"
+    },
+    {
+      "title": "고객 미팅",
+      "createDate": "2024.07.26"
+    },
+    {
+      "title": "마케팅 전략 회의",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+      "createDate": "2024.07.27"
+    },
+    {
+      "title": "브레인스토밍 세션",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+      "createDate": "2024.07.28"
+    },
+    {
+      "title": "디자인 리뷰",
+      "createDate": "2024.07.29"
+    },
+    {
+      "title": "개발팀 회의",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.07.30"
+    },
+    {
+      "title": "사용자 테스트",
+      "createDate": "2024.07.31"
+    },
+    {
+      "title": "피드백 수집",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.08.01"
+    },
+    {
+      "title": "성능 평가",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.08.02"
+    },
+    {
+      "title": "버그 수정 회의",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.08.03"
+    },
+    {
+      "title": "배포 준비",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.08.04"
+    },
+    {
+      "title": "최종 점검",
+      "createDate": "2024.08.05"
+    },
+    {
+      "title": "런칭 이벤트",
+      "thumbnail": "https://ifh.cc/g/ZzgWw6.jpg",
+
+      "createDate": "2024.08.06"
+    }
+  ],
+
   "chatbot": [
     {
       "text": "안녕하세요\n저는 당신의 성장 여정을 함께할 AI (챗봇 이름)입니다 :)"
