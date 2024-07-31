@@ -20,14 +20,18 @@ const GoogleLoginBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
+
 const LoginPage = () => {
+  const handleGoogleLogin = () => {
+    // 구글 로그인 화면으로 이동시키기
+    window.location.href = `https://api.zionhann.shop/app/stepper/oauth2/authorization/google`;
+  };
   return (
     <Wrapper>
       <Login>로그인</Login>
-      <Link to={"/HomePage"}>
-        <GoogleLoginBtn>구글로 로그인</GoogleLoginBtn>
-      </Link>
+      <GoogleLoginBtn onClick={handleGoogleLogin}>구글로 로그인</GoogleLoginBtn>
     </Wrapper>
   );
 };
