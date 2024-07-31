@@ -4,13 +4,29 @@ import dummy from "../../db/data.json";
 import SearchIcon from "@mui/icons-material/Search";
 import { GoPencil } from "react-icons/go";
 import CreateDiaryModal from "./CreateDiaryModal";
+import DiaryViewDropdown from "./DiaryViewDropdown";
 
 function Diaries() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentSort, setCurrentSort] = useState("최신순");
 
   const openCreateDiaryModal = () => {
     setIsModalOpen(true);
   };
+
+  const getFilteredDiaries = () => {
+    let diaries = dummy.diaries;
+
+    if (currentSort === "최신순") {
+      diaries = diaries.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+    } else if (currentSort === "오래된 순") {
+      diaries = diaries.sort((a, b) => new Date(a.createDate) - new Date(b.createDate));
+    }
+
+    return diaries;
+  };
+
+  const filteredDiaries = getFilteredDiaries();
 
   // 일지 검색 + 일지 추가 + 일지 리스트 부분
 
@@ -23,29 +39,26 @@ function Diaries() {
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input
-          className="search-bar"
-          placeholder="제목+내용을 입력해보세요."
-        ></input>
+        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
           <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <GoPencil />
           </div>
-          <div className="diary-dropdown">드롭다운</div>
+          <DiaryViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
         </div>
         <DiaryList>
-          {dummy.goals.map((goal, index) => (
+          {filteredDiaries.map((diaries, index) => (
             <Diary key={index}>
               <div className="diary-title-date">
-                <div className="diary-title">{goal.title}</div>
+                <div className="diary-title">{diaries.title}</div>
                 <div className="diary-date">
-                  <div className="diary-end-date">{goal.dueDate}</div>
+                  <div className="diary-end-date">{diaries.createDate}</div>
                 </div>
               </div>
-              {goal.imgUrl ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
-                <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
+              {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
+                <Image style={{ backgroundImage: `url(${diaries.thumbnail})` }} />
               ) : null}
             </Diary>
           ))}
