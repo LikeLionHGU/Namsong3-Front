@@ -25,6 +25,7 @@ const Loading = () => {
       if (fetchedData) {
         setUserToken({ isLogin: true });
         setToken(fetchedData);
+        navigate("/HomePage");
       } else {
         console.log("로그인 에러");
       }
