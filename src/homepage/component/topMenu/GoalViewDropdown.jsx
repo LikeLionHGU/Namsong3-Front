@@ -107,7 +107,7 @@ const DropdownMenu = styled.div`
   top: 108%;
   left: 0;
   background-color: white;
-  border: 1px solid #e6e6e6;
+  border: 1px solid #dfdfdf;
   border-radius: 4px;
   width: 120px;
   z-index: 3;
@@ -127,11 +127,11 @@ const DropdownItem = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #eef1ff;
+    background-color: #dfdfdf;
   }
 `;
 
 const Separator = styled.div`
   height: 1px;
-  background-color: #e6e6e6;
+  background-color: #dfdfdf;
 `;
