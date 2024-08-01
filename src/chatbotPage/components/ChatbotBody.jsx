@@ -186,7 +186,7 @@ const SummarizeArea = styled.div`
   align-items: center;
   padding-left: 15px;
   padding-right: 15px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 
   border: 1.5px solid transparent;
   background: linear-gradient(to right, #eef1ff, #eef1ff) padding-box,
