@@ -1,24 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useLocation } from "react-router-dom";
+import getDiaryList from "../../apis/getDiaryList";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
+
 function GoalCard() {
+  const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
+  const [startedFrom, setStartedFrom] = useState(0);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const goalId = queryParams.get("id");
+  const csrfToken = useRecoilValue(tokenState);
+
+  const isValidDate = (dateString) => {
+    const regEx = /^\d{2}\.\d{2}\.\d{2}$/;
+    return dateString.match(regEx) != null;
+  };
+
+  const calculateDaysFromStart = (startDate) => {
+    if (!isValidDate(startDate)) return 0; // 기본값 설정
+    const [year, month, day] = startDate.split(".").map((part) => parseInt(part, 10));
+    const start = new Date(year + 2000, month - 1, day); // 2000년대를 가정
+    const today = new Date();
+    const diffTime = today - start;
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  };
+
+  useEffect(() => {
+    const fetchGoalInfo = async () => {
+      try {
+        const fetchedGoalInfo = await getDiaryList(goalId, csrfToken);
+        setGoalInfo(fetchedGoalInfo);
+        const daysFromStart = calculateDaysFromStart(fetchedGoalInfo.goal.startDate);
+        setStartedFrom(daysFromStart);
+      } catch (error) {
+        console.error("Error fetching goal info:", error);
+      }
+    };
+    fetchGoalInfo();
+  }, [goalId, csrfToken]);
+
+  if (!goalInfo.goal.title) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Container>
       <Wrapper>
-        <Image
-          style={{ backgroundImage: `url(https://ifh.cc/g/ZzgWw6.jpg)` }}
-        />
+        <Image style={{ backgroundImage: `url(https://ifh.cc/g/ZzgWw6.jpg)` }} />
         <Info>
-          <Title>중앙해커톤 우승</Title>
+          <Title>{goalInfo.goal.title}</Title>
           <Period>
-            <StartDate>24.07.17 </StartDate>
+            <StartDate>{goalInfo.goal.startDate}</StartDate>
             <ArrowForwardIcon />
-            <DueDate>24.08.07</DueDate>
+            <DueDate>{goalInfo.goal.endDate}</DueDate>
           </Period>
           <Line />
           <ExtrtaInfo>
-            <div className="info-day-count">12일차 </div>
-            <div className="info-diary-count">작성한 일지 3개</div>
+            <div className="info-day-count">{startedFrom}일차</div>
+            <div className="info-diary-count">작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개</div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
             <Accomplished>도전 완료하기</Accomplished>
