@@ -16,7 +16,7 @@ const Calendar = () => {
   const [selectedDates, setSelectedDates] = useState([]);
 
   //날짜 더미 데이터.
-  const dummyDates = ["2024-07-12", "2024-07-13", "2024-07-14"];
+  const dummyDates = ["2024-08-12", "2024-08-13", "2024-08-14"];
   useEffect(() => {
     // 특정 날짜를 받아와서 선택된 날짜 상태로 설정
     setSelectedDates(dummyDates);
