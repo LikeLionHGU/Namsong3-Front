@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import loadingGif from "../../asset/loadingRolling.gif";
+import loadingImg from "../../asset/Loading/loading.svg";
 function LoadingModal({ setModalOpen }) {
   const closeLoadingModal = () => {
     setModalOpen(false);
@@ -11,12 +12,18 @@ function LoadingModal({ setModalOpen }) {
       <ModalBackground onClick={closeLoadingModal}>
         {/* <Overlay> */}
         <Wrapper>
-          <img src={loadingGif} alt="loading" width="60px"></img>
-          <h3>AI가 일지를 요약중이에요!</h3>
+          {/* <img src={loadingGif} alt="loading" width="60px"></img> */}
+          <img
+            src={loadingImg}
+            alt="loading"
+            className="loading-img"
+            width="60px"
+          ></img>
+          <h3>steppy가 일지를 요약중이에요!</h3>
           <div className="loading-content">
-            (봇이름)과 대화 중 일지에 추가하고 싶은 내용이 떠오르셨나요?
+            steppy와 대화 중 일지에 추가하고 싶은 내용이 있었나요?
             <br />
-            그렇다면 어떤 내용을 적을지 잠시 생각해보세요 :)
+            일지 수정하기 페이지에 담아주세요 :)
           </div>
         </Wrapper>
         {/* </Overlay> */}
@@ -62,11 +69,25 @@ const Wrapper = styled.div`
   width: 350px; // 로딩모달 크기
   height: 230px;
   border-radius: 12px;
+
   /* border: 2px solid red; */
   .loading-content {
     width: 210px;
     font-size: 15px;
     text-align: center;
     /* border: 2px solid red; */
+  }
+
+  // => 이미지를 360도로 회전시켜서 로딩!!
+  .loading-img {
+    // rotate_image라는 애니메이션을 2초동안 무한으로 반복한다 (초시간 작게 바꿀수록 빠르게 돌아감)
+    animation: rotate_image 2s linear infinite;
+    transform-origin: 50% 50%; // 회전 중심
+  }
+  @keyframes rotate_image {
+    100% {
+      // 0~100퍼센트동안
+      transform: rotate(360deg); // 360도를 계속 돈다
+    }
   }
 `;

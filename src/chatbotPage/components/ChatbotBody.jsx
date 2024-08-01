@@ -36,8 +36,8 @@ function ChatbotBody() {
               <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
               <SummarizeArea>
                 <span>
-                  (봇이름)과 대화를 통해 충분히 오늘의 감상을 기록하셨다면
-                  일지를 요약해보세요!
+                  대화를 통해 충분히 오늘의 감상을 기록하셨다면 일지를
+                  요약해보세요!
                   {/* <span
                     className="summarize-button"
                     onClick={openLoadingModal}
@@ -73,6 +73,7 @@ const PageWrapper = styled.div`
   /* justify-content: center; */
   width: 100%;
   height: 100%;
+  cursor: default;
   /* border: 2px solid red; */
 
   .flex {
@@ -143,28 +144,34 @@ const ChatbotText = styled.div`
   border-radius: 8px;
   border-top-left-radius: 0px;
   margin-bottom: 8px;
+  width: fit-content;
+  font-size: 14px;
   /* border: 2px solid green; */
-  border: 2px solid lightgray;
+  /* border: 2px solid lightgray; */
 `;
 
 const User = styled.div`
   align-self: end;
   flex-direction: column;
   margin-top: 24px;
-  width: 70%;
+  width: fit-content;
+
+  border: none;
+
   /* border: 2px solid skyblue; */
   /* border: 2px solid lightgray; */
 `;
 
 const UserText = styled.div`
   display: flex;
-  background-color: white;
-  padding: 10px 20px;
+  background-color: #dfdfdf;
+  padding: 12px 12px;
+  font-size: 14px;
   border-radius: 8px;
   border-top-right-radius: 0px;
   margin-bottom: 8px;
   /* border: 2px solid blue; */
-  border: 2px solid lightgray;
+  /* border: 2px solid lightgray; */
 `;
 
 // AI 요약하기 버튼 넣는 부분 + 유저가 타이핑하는 필드
