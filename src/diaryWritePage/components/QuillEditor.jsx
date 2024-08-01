@@ -36,7 +36,7 @@ const QuillEditor = ({ mainText, onChange }) => {
       modules: {
         toolbar: toolbarOptions,
       },
-      placeholder: "AAAA", // placeholder에 들어갈 값은 나중에 적절히... props 주고받을때 처리해주기.
+      placeholder: "일지의 내용을 작성해주세요.", // placeholder에 들어갈 값은 나중에 적절히... props 주고받을때 처리해주기.
       theme: "snow",
     };
 
@@ -98,7 +98,7 @@ const QuillEditor = ({ mainText, onChange }) => {
   const handleSubmit = async (formData) => {
     // !! 백엔드 주소 바꿔주기 !
     const url = process.env.REACT_APP_BACK_URL + "/api/fillyouin/files"; // 백엔드 업로드 URL
-
+    // 파일을 업로드 할 때 : 백엔드 주소로 바로 보냄
     const config = {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("loginToken"),
@@ -129,6 +129,7 @@ const QuillEditor = ({ mainText, onChange }) => {
             backgroundColor: "#EEF1FF", // 에디터 내부 입력 부분 색깔
             width: "100%",
             height: "520px",
+            border: "2px solid lavender",
           }}
         ></div>
       </MyBlock>
@@ -143,6 +144,10 @@ const MyBlock = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: none;
+  .ql-toolbar.ql-snow {
+    border: 2px solid lavender;
+    border-bottom: none;
+  }
   &#quill-editor {
     width: 100%;
     margin: 0 auto;
