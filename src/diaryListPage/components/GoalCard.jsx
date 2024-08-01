@@ -5,16 +5,20 @@ import { useLocation } from "react-router-dom";
 import getDiaryList from "../../apis/getDiaryList";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
+import CompleteGoalModal from "./CompleteGoalModal";
 
 function GoalCard() {
   const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
   const [startedFrom, setStartedFrom] = useState(0);
+  const [isCompModalOpen, setIsCompModalOpen] = useState(false);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const goalId = queryParams.get("id");
   const csrfToken = useRecoilValue(tokenState);
-
+  const openCompModal = () => {
+    setIsCompModalOpen(true);
+  };
   const isValidDate = (dateString) => {
     const regEx = /^\d{2}\.\d{2}\.\d{2}$/;
     return dateString.match(regEx) != null;
@@ -22,7 +26,9 @@ function GoalCard() {
 
   const calculateDaysFromStart = (startDate) => {
     if (!isValidDate(startDate)) return 0; // 기본값 설정
-    const [year, month, day] = startDate.split(".").map((part) => parseInt(part, 10));
+    const [year, month, day] = startDate
+      .split(".")
+      .map((part) => parseInt(part, 10));
     const start = new Date(year + 2000, month - 1, day); // 2000년대를 가정
     const today = new Date();
     const diffTime = today - start;
@@ -34,7 +40,9 @@ function GoalCard() {
       try {
         const fetchedGoalInfo = await getDiaryList(goalId, csrfToken);
         setGoalInfo(fetchedGoalInfo);
-        const daysFromStart = calculateDaysFromStart(fetchedGoalInfo.goal.startDate);
+        const daysFromStart = calculateDaysFromStart(
+          fetchedGoalInfo.goal.startDate
+        );
         setStartedFrom(daysFromStart);
       } catch (error) {
         console.error("Error fetching goal info:", error);
@@ -50,7 +58,9 @@ function GoalCard() {
   return (
     <Container>
       <Wrapper>
-        <Image style={{ backgroundImage: `url(https://ifh.cc/g/ZzgWw6.jpg)` }} />
+        <Image
+          style={{ backgroundImage: `url(https://ifh.cc/g/ZzgWw6.jpg)` }}
+        />
         <Info>
           <Title>{goalInfo.goal.title}</Title>
           <Period>
@@ -61,13 +71,18 @@ function GoalCard() {
           <Line />
           <ExtrtaInfo>
             <div className="info-day-count">{startedFrom}일차</div>
-            <div className="info-diary-count">작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개</div>
+            <div className="info-diary-count">
+              작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개
+            </div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
-            <Accomplished>도전 완료하기</Accomplished>
+            <Accomplished onClick={openCompModal}>도전 완료하기</Accomplished>
           </div>
         </Info>
       </Wrapper>
+      {isCompModalOpen && (
+        <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />
+      )}
     </Container>
   );
 }
