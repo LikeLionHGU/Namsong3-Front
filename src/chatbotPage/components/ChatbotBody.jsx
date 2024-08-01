@@ -13,49 +13,52 @@ function ChatbotBody() {
   return (
     <div>
       <PageWrapper>
-        <CenterBox className="flex">
-          <Chattings>
-            <Chatbot className="flex">
+        <BoxWrapper>
+          <BoxTitle>steppy와 일지 작성하기</BoxTitle>
+          <CenterBox className="flex">
+            <Chattings>
+              <Chatbot className="flex">
+                <ChatbotIcon className="flex" />
+                {dummy.chatbot.map((texts, index) => (
+                  <ChatbotText key={index}>{texts.text}</ChatbotText>
+                  //   <ChatbotText key={index}>{texts.text}</ChatbotText>
+                ))}
+              </Chatbot>
+              <User>
+                {dummy.user.map((texts, index) => (
+                  <UserText key={index}>{texts.text}</UserText>
+                ))}
+              </User>
               <ChatbotIcon className="flex" />
-              {dummy.chatbot.map((texts, index) => (
-                <ChatbotText key={index}>{texts.text}</ChatbotText>
-                //   <ChatbotText key={index}>{texts.text}</ChatbotText>
-              ))}
-            </Chatbot>
-            <User>
-              {dummy.user.map((texts, index) => (
-                <UserText key={index}>{texts.text}</UserText>
-              ))}
-            </User>
-            <ChatbotIcon className="flex" />
-            <ChatbotText className="flex"> . . . </ChatbotText>
-          </Chattings>
-          <UserInteractField>
-            <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
-            <SummarizeArea>
-              {" "}
-              <span>
-                (봇이름)과 대화를 통해 충분히 오늘의 감상을 기록하셨다면{" "}
-                <span
-                  className="summarize-button"
-                  onClick={openLoadingModal}
-                  href="/"
-                >
-                  일지를 요약
+              <ChatbotText className="flex"> . . . </ChatbotText>
+            </Chattings>
+            <UserInteractField>
+              <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
+              <SummarizeArea>
+                <span>
+                  (봇이름)과 대화를 통해 충분히 오늘의 감상을 기록하셨다면
+                  일지를 요약해보세요!
+                  {/* <span
+                    className="summarize-button"
+                    onClick={openLoadingModal}
+                    href="/"
+                  > */}
+                  {/* 일지를 요약 */}
+                  {/* </span> */}
+                  {/* 해보세요! */}
+                </span>{" "}
+                <span className="summarizeBtn" onClick={openLoadingModal}>
+                  일지 요약하기 &gt;{" "}
                 </span>
-                해보세요!
-              </span>{" "}
-              <span className="summarizeBtn" onClick={openLoadingModal}>
-                일지 요약하기 &gt;{" "}
-              </span>
-            </SummarizeArea>
-            <TypingBox>
-              <TypingArea placeholder="메시지를 작성해주세요! "></TypingArea>
-              <SendButton src={sendIcon} />
-            </TypingBox>
-          </UserInteractField>
-        </CenterBox>
-        {modalOpen && <LoadingModal setModalOpen={setModalOpen} />}
+              </SummarizeArea>
+              <TypingBox>
+                <TypingArea placeholder="메시지를 작성해주세요! "></TypingArea>
+                <SendButton src={sendIcon} />
+              </TypingBox>
+            </UserInteractField>
+          </CenterBox>
+          {modalOpen && <LoadingModal setModalOpen={setModalOpen} />}
+        </BoxWrapper>
       </PageWrapper>
     </div>
   );
@@ -64,8 +67,10 @@ function ChatbotBody() {
 export default ChatbotBody;
 const PageWrapper = styled.div`
   display: flex;
-  padding: 32px;
-  justify-content: center;
+  flex-direction: column;
+  padding-top: 32px;
+  align-items: center;
+  /* justify-content: center; */
   width: 100%;
   height: 100%;
   /* border: 2px solid red; */
@@ -74,16 +79,35 @@ const PageWrapper = styled.div`
     display: flex;
   }
 `;
+const BoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const BoxTitle = styled.div`
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #586eff;
+  color: #676767;
+  font-size: 16px;
+  font-weight: bold;
+  width: 230px;
+  margin-bottom: 0px;
+  // 폰트 적용 필요 : Apple SD Gothic Neo
+`;
 const CenterBox = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
   width: 792px; // << 나중에 바꿔야 할 부분
   height: 708px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 
   padding: 21px 20px;
-  /* border: 2px solid orange; */
-  border: 2px solid lightgray;
+  background-color: #eef1ff;
+  /* border: 2px solid lightgray; */
 `;
 
 const Chatbot = styled.div`
@@ -163,13 +187,24 @@ const SummarizeArea = styled.div`
   padding-left: 15px;
   padding-right: 15px;
   margin-bottom: 5px;
+
+  border: 1.5px solid transparent;
+  background: linear-gradient(to right, #eef1ff, #eef1ff) padding-box,
+    linear-gradient(to right, #586eff, #bea0e6) border-box;
+  border-radius: 8px;
   /* border: 2px solid blue; */
-  border: 2px solid lightgray;
-  > span > .summarize-button {
+  > span {
+    background-image: linear-gradient(to right, #586eff, #bea0e6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  /* background: linear-gradient(to right, #586eff, #bea0e6) border-box; */
+  /* > span > .summarize-button {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
-  }
+  } */
   .summarizeBtn {
     cursor: pointer;
   }
@@ -183,7 +218,8 @@ const TypingBox = styled.div`
   padding-left: 15px;
   padding-right: 15px;
   /* border: 2px solid pink; */
-  background-color: #d9d9d9;
+  background-color: #dfdfdf;
+  border-radius: 8px;
   border: 2px solid lightgray;
 `;
 
@@ -196,12 +232,12 @@ const TypingArea = styled.input`
   /* padding-left: 15px; */
   font-size: 16px;
   /* border: 2px solid pink; */
-  background-color: #d9d9d9;
+  background-color: #dfdfdf;
   border: none;
 `;
 const SendButton = styled.img`
   /* background-color: ; */
-
+  cursor: pointer;
   height: 27px;
   width: 27px;
   border-radius: 4px;
