@@ -1,16 +1,48 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import DateRangePicker from "./DateRangePicker";
+import createGoal from "../../../../apis/createGoal";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../../../atom/atom";
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 function CreateGoalModal({ setIsModalOpen }) {
+  const csrfToken = useRecoilValue(tokenState);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    startDate: null,
+    endDate: null,
+  });
+
+  useEffect(() => {
+    console.log("formData updated:", formData, csrfToken);
+  }, [formData]);
+
   const closeCreateGoalModal = () => {
     setIsModalOpen(false);
   };
+
   const handleImageUploadClick = () => {
     fileInputRef.current.click();
   };
+
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
@@ -27,6 +59,41 @@ function CreateGoalModal({ setIsModalOpen }) {
     }
   };
 
+  const handleStartDateChange = (date) => {
+    setFormData({
+      ...formData,
+      startDate: formatDate(date),
+    });
+  };
+
+  const handleEndDateChange = (date) => {
+    setFormData({
+      ...formData,
+      endDate: formatDate(date),
+    });
+  };
+
+  const handleSubmit = async () => {
+    console.log("Form Data Submitted: ", formData);
+    try {
+      const { title, startDate, endDate } = formData;
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", title);
+      formDataToSend.append("startDate", startDate);
+      formDataToSend.append("endDate", endDate);
+
+      // 이미지 파일이 존재할 경우에만 추가
+      if (fileInputRef.current.files[0]) {
+        formDataToSend.append("image", fileInputRef.current.files[0]);
+      }
+      await createGoal(formDataToSend, csrfToken);
+      closeCreateGoalModal();
+    } catch (error) {
+      console.error("목표 생성 실패", error);
+    }
+  };
+
   return (
     <div>
       <Modal>
@@ -39,10 +106,21 @@ function CreateGoalModal({ setIsModalOpen }) {
           <MainContainer>
             <GoalTitleContainer>
               <ExplainText>목표작성</ExplainText>
-              <GoalTitleInput type="text" placeholder="목표이름 작성하기"></GoalTitleInput>
+              <GoalTitleInput
+                type="text"
+                placeholder="목표이름 작성하기"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
             </GoalTitleContainer>
             <PeriodContainer>
-              <DateRangePicker />
+              <DateRangePicker
+                startDate={formData.startDate}
+                setStartDate={handleStartDateChange}
+                endDate={formData.endDate}
+                setEndDate={handleEndDateChange}
+              />
               <NoPeriodContainer>
                 <Checkbox type="checkbox" />
                 <CheckboxText>진행기간을 설정하지 않을래요!</CheckboxText>
@@ -65,7 +143,7 @@ function CreateGoalModal({ setIsModalOpen }) {
               )}
               <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
             </ImageUpload>
-            <SubmitButton onClick={closeCreateGoalModal}>목표 추가하기</SubmitButton>
+            <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
           </MainContainer>
         </Wrapper>
       </Modal>
@@ -133,7 +211,6 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
   margin-top: 32px;
 `;
 
@@ -163,7 +240,6 @@ const PeriodContainer = styled.div`
 const NoPeriodContainer = styled.div`
   display: flex;
   margin-right: auto;
-
   margin-top: 3px;
 `;
 

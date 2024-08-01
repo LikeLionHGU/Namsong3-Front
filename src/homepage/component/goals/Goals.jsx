@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import dummy from "../../../db/data.json";
 import CreateGoalModal from "./CreateGoalModal/CreateGoalModal";
@@ -9,14 +9,32 @@ import { useNavigate } from "react-router-dom";
 import GoalViewDropdown from "../topMenu/GoalViewDropdown";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import DeleteGoalModal from "./goalEditDropdown/DeleteGoalModal";
+import getGoalList from "../../../apis/getGoalList";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../../atom/atom";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
+  const [goalList, setGoalList] = useState({ goals: [] });
   const navigate = useNavigate();
 
+  const csrfToken = useRecoilValue(tokenState);
+
+  useEffect(() => {
+    const fetchGoalList = async () => {
+      const fetchedGoalList = await getGoalList(csrfToken);
+      setGoalList(fetchedGoalList);
+      console.log("Fetched goalList:", fetchedGoalList);
+    };
+    fetchGoalList();
+  }, [csrfToken]);
+
+  useEffect(() => {
+    console.log("Updated goalList:", goalList);
+  }, [goalList]);
   const openCreateGoalsModal = () => {
     setIsModalOpen(true);
   };
@@ -27,16 +45,18 @@ function Goals() {
 
   const today = new Date();
 
-  const isExpired = (dueDate) => {
-    if (!dueDate) return false;
-    const [year, month, day] = dueDate.split(".").map(Number);
+  const isExpired = (endDate) => {
+    if (!endDate) return false;
+    let [year, month, day] = endDate.split(".").map(Number);
+    year += year < 50 ? 2000 : 1900; // 50을 기준으로 2000년대와 1900년대 구분
     const goalDate = new Date(year, month - 1, day);
     return goalDate < today;
   };
 
-  const getDaysLeft = (dueDate) => {
-    if (!dueDate) return null;
-    const [year, month, day] = dueDate.split(".").map(Number);
+  const getDaysLeft = (endDate) => {
+    if (!endDate) return null;
+    let [year, month, day] = endDate.split(".").map(Number);
+    year += year < 50 ? 2000 : 1900; // 50을 기준으로 2000년대와 1900년대 구분
     const goalDate = new Date(year, month - 1, day);
     const diffTime = goalDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -44,16 +64,16 @@ function Goals() {
   };
 
   const getFilteredGoals = () => {
-    let goals = dummy.goals;
+    let goals = goalList.goals || [];
 
     if (currentTab === "도전 중") {
-      goals = goals.filter((goal) => goal.isComplete === "No");
-    } else if (currentTab === "달성한 목표") {
-      goals = goals.filter((goal) => goal.isComplete === "Yes");
+      goals = goals.filter((goal) => goal.status === "OPEN");
+    } else if (currentTab === "완료한 도전") {
+      goals = goals.filter((goal) => goal.status === "CLOSE");
     }
 
     if (currentSort === "최신순") {
-      goals = goals.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+      goals = goals.sort((a, b) => new Date(b.createDate) - new Date(a.startDate));
     } else if (currentSort === "오름차순") {
       goals = goals.sort((a, b) => a.title.localeCompare(b.title));
     } else if (currentSort === "내림차순") {
@@ -78,12 +98,12 @@ function Goals() {
         </CreateGoalModalBtn>
         <TransitionGroup component={null}>
           {filteredGoals.map((goal, index) => {
-            const daysLeft = getDaysLeft(goal.dueDate);
+            const daysLeft = getDaysLeft(goal.endDate);
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper>
                   <ImageContainer onClick={handleClickGoal}>
-                    <Image style={{ backgroundImage: `url(${goal.imgUrl})` }} />
+                    <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
                     <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
@@ -93,31 +113,31 @@ function Goals() {
                           <span>D-{daysLeft}</span>
                         </DeadlineComing>
                       )}
-                      {isExpired(goal.dueDate) && (
+                      {isExpired(goal.endDate) && (
                         <ExpirationText>
                           <span>기한이 지났어요!</span>
                         </ExpirationText>
                       )}
                       {daysLeft === null || daysLeft > 5
-                        ? !isExpired(goal.dueDate) && <div style={{ marginTop: "4px" }} />
+                        ? !isExpired(goal.endDate) && <div style={{ marginTop: "4px" }} />
                         : null}
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
-                        {goal.writtenInSuccession >= 3 && (
+                        {goal.streak >= 3 && (
                           <FireContainer>
                             <Fire>
-                              {goal.writtenInSuccession}🔥
-                              {goal.writtenInSuccession >= 10 && <span>🔥</span>}
+                              {goal.streak}🔥
+                              {goal.streak >= 10 && <span>🔥</span>}
                             </Fire>
-                            <Tooltip>연속{goal.writtenInSuccession}일 작성</Tooltip>
+                            <Tooltip>연속{goal.streak}일 작성</Tooltip>
                           </FireContainer>
                         )}
                       </TitleFireContainer>
-                      {(goal.startDate || goal.dueDate) && (
+                      {(goal.startDate || goal.endDate) && (
                         <Period>
                           {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
-                          {goal.startDate && goal.dueDate && <span> → </span>}
-                          {goal.dueDate && <DueDate>{goal.dueDate}</DueDate>}
+                          {goal.startDate && goal.endDate && <span> → </span>}
+                          {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
                       )}
                     </InfoContainer>
