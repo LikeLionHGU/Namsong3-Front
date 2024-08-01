@@ -34,7 +34,8 @@ width: 100vw;
   left: 0;
   right: 0;
   bottom: 0;
-  position: fixed;`;
+  position: fixed;
+  `;
 
 const ModalBackground = styled.div`
   ${modalBase}
@@ -60,6 +61,7 @@ const Wrapper = styled.div`
   background: #ffffff;
   width: 350px; // 로딩모달 크기
   height: 230px;
+  border-radius: 12px;
   /* border: 2px solid red; */
   .loading-content {
     width: 210px;

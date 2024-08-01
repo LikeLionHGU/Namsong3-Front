@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 function CreateDiaryModal({ setIsModalOpen }) {
   const navigate = useNavigate();
 
@@ -16,11 +16,13 @@ function CreateDiaryModal({ setIsModalOpen }) {
         <Wrapper>
           <TopContainer>
             <TopText>어떤 방법으로 일지를 작성하시겠어요?</TopText>
-            <ExitButton onClick={closeCreateDiaryModal}>나가기</ExitButton>
+            <ExitButton onClick={closeCreateDiaryModal}>
+              <CloseRoundedIcon />
+            </ExitButton>
           </TopContainer>
           <MainContainer>
-            <WriteMethod>
-              <TextContainer onClick={() => navigate("../chatbot")}>
+            <WriteMethod onClick={() => navigate("../chatbot")}>
+              <TextContainer>
                 <MainText>👾 (봇이름)이와 함께 일지 작성하기</MainText>
                 <SubText>
                   <div>
@@ -33,14 +35,14 @@ function CreateDiaryModal({ setIsModalOpen }) {
                 </SubText>
               </TextContainer>
             </WriteMethod>
-            <WriteMethod>
+            <WriteMethod onClick={() => navigate("/write")}>
               <TextContainer>
                 <MainText>✍️ 직접 작성하기</MainText>
                 <SubText>
                   <div>
                     오늘만큼은 적고 싶은게 너무 많은 날, 떠오르는 생각과 느낌을
                     적고 싶은 날
-                  </div>{" "}
+                  </div>
                   <div style={{ marginTop: "3px" }}>
                     자유롭게 하루의 일지를 적어보아요!
                   </div>
@@ -86,6 +88,7 @@ const Wrapper = styled.div`
   background: #ffffff;
   width: 520px;
   height: 375px;
+  border-radius: 12px;
 `;
 
 const TopContainer = styled.div`
@@ -103,6 +106,7 @@ const TopText = styled.div`
   left: 50%;
   transform: translateX(-50%);
   width: 316px;
+  cursor: default;
 `;
 
 const ExitButton = styled.div`
@@ -110,6 +114,13 @@ const ExitButton = styled.div`
   justify-content: center;
   margin-left: auto;
   margin-right: 22px;
+  cursor: pointer;
+  /* border: 2px solid red; */
+  padding: 2px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #eef1ff;
+  }
 `;
 
 const MainContainer = styled.div`
@@ -126,12 +137,13 @@ const WriteMethod = styled.div`
   border: 1px solid lightgray;
   margin-bottom: 16px;
   color: gray;
+  cursor: pointer;
 `;
 
 const TextContainer = styled.div`
   margin-left: 15px;
   margin-top: 23px;
-  cursor: pointer;
+  cursor: pointer !important;
 `;
 
 const MainText = styled.div`
