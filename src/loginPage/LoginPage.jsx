@@ -26,7 +26,7 @@ const GoogleLoginBtn = styled.div`
 const LoginPage = () => {
   const handleGoogleLogin = () => {
     // 구글 로그인 화면으로 이동시키기
-    window.location.href = `https://api.zionhann.shop/app/stepper/oauth2/authorization/google`;
+    window.location.href = `${process.env.REACT_APP_HOST_URL}/oauth2/authorization/google`;
   };
   return (
     <Wrapper>
