@@ -134,10 +134,15 @@ const MainContainer = styled.div`
 const WriteMethod = styled.div`
   width: 472px;
   height: 120px;
-  border: 1px solid lightgray;
+  border: 1px solid #798bff;
+  border-radius: 8px;
   margin-bottom: 16px;
-  color: gray;
+  color: #6c6c6c;
+  background-color: white;
   cursor: pointer;
+  &:active {
+    background-color: #eef1ff;
+  }
 `;
 
 const TextContainer = styled.div`

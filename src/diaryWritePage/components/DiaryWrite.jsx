@@ -5,19 +5,25 @@ import styled from "styled-components";
 function DiaryWrite() {
   return (
     <Wrapper>
-      <CenterBox>
-        <DiaryHeader>
-          <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)">
-            {/* */}
-          </DiaryTitle>
-        </DiaryHeader>
-        <EditorArea>
-          <QuillEditor />
-        </EditorArea>
-        <SaveButton>
-          <button className="save-button">일지 작성하기</button>
-        </SaveButton>
-      </CenterBox>
+      <BoxWrapper>
+        <BoxTitles>
+          <BoxTitle className="title-disabled">steppy와 일지 작성하기</BoxTitle>
+          <BoxTitle>일지 수정하기</BoxTitle>
+        </BoxTitles>
+        <CenterBox>
+          <DiaryHeader>
+            <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)">
+              {/* */}
+            </DiaryTitle>
+          </DiaryHeader>
+          <EditorArea>
+            <QuillEditor />
+          </EditorArea>
+          <SaveButton>
+            <button className="save-button">일지 작성하기</button>
+          </SaveButton>
+        </CenterBox>
+      </BoxWrapper>
     </Wrapper>
   );
 }
@@ -32,15 +38,47 @@ const Wrapper = styled.div`
   height: 100%;
   /* border: 2px solid red; */
 `;
+const BoxWrapper = styled.div`
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  /* border: 2px solid red; */
+`;
+const BoxTitles = styled.div`
+  display: flex;
+  flex-direction: row;
+  .title-disabled {
+    color: #dfdfdf;
+    border-bottom: 1.5px solid #dfdfdf;
+    width: 230px;
+  }
+`;
+const BoxTitle = styled.div`
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #586eff;
+  color: #676767;
+  font-size: 16px;
+  font-weight: bold;
+  width: 165px;
+  margin-top: 32px;
+  margin-bottom: 0px;
+  // 폰트 적용 필요 : Apple SD Gothic Neo
+`;
 
 const CenterBox = styled.div`
   display: flex;
+  /* display: center; */
+
   flex-direction: column;
   justify-content: space-around;
   width: 792px;
   height: 707px;
-  margin-top: 32px;
-  border-radius: 12px;
+
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
   background-color: #eef1ff;
 
   /* border: 2px solid orange; */
@@ -89,10 +127,9 @@ const SaveButton = styled.div`
     color: white;
     font-weight: bold;
     transition: 50ms;
-    &:hover {
-      cursor: pointer;
-
-      background-color: #4759ce;
+    cursor: pointer;
+    &:active {
+      background-color: #586eff;
     }
   }
 `;
