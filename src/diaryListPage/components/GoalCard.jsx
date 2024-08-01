@@ -109,8 +109,8 @@ const ExtrtaInfo = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
     margin-right: 8px;
     height: 26px;
     color: #586eff;
@@ -129,10 +129,20 @@ const Accomplished = styled.button`
   margin-top: 12px;
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: #f5f5f5;
+  background-color: transparent;
   cursor: pointer;
   font-weight: bold;
-  color: #676767;
-  &:hover {
+  border: 1px solid #798bff;
+  color: #798bff;
+  &:active {
+    border: 1px solid #798bff;
+    background-color: #eef1ff;
+    color: #798bff;
   }
+
+  /* &:hover {
+    border: 1px solid #798bff;
+    background-color: #eef1ff;
+    color: #798bff;
+  } */
 `;

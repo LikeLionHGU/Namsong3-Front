@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import dummy from "../../db/data.json";
 import SearchIcon from "@mui/icons-material/Search";
-import { GoPencil } from "react-icons/go";
+// import { GoPencil } from "react-icons/go";
+import goPencil from "../../asset/Icon/goPencil.svg";
 import CreateDiaryModal from "./CreateDiaryModal";
 import DiaryViewDropdown from "./DiaryViewDropdown";
 
@@ -18,9 +19,13 @@ function Diaries() {
     let diaries = dummy.diaries;
 
     if (currentSort === "최신순") {
-      diaries = diaries.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+      diaries = diaries.sort(
+        (a, b) => new Date(b.createDate) - new Date(a.createDate)
+      );
     } else if (currentSort === "오래된 순") {
-      diaries = diaries.sort((a, b) => new Date(a.createDate) - new Date(b.createDate));
+      diaries = diaries.sort(
+        (a, b) => new Date(a.createDate) - new Date(b.createDate)
+      );
     }
 
     return diaries;
@@ -39,14 +44,20 @@ function Diaries() {
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
+        <input
+          className="search-bar"
+          placeholder="제목+내용을 입력해보세요."
+        ></input>
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
           <div onClick={openCreateDiaryModal} className="diary-add">
-            일지 추가하기 <GoPencil />
+            일지 추가하기 <img src={goPencil} alt="" />
           </div>
-          <DiaryViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+          <DiaryViewDropdown
+            currentSort={currentSort}
+            setCurrentSort={setCurrentSort}
+          />
         </div>
         <DiaryList>
           {filteredDiaries.map((diaries, index) => (
@@ -58,7 +69,9 @@ function Diaries() {
                 </div>
               </div>
               {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
-                <Image style={{ backgroundImage: `url(${diaries.thumbnail})` }} />
+                <Image
+                  style={{ backgroundImage: `url(${diaries.thumbnail})` }}
+                />
               ) : null}
             </Diary>
           ))}
@@ -132,17 +145,11 @@ const DairyListBox = styled.div`
       -webkit-text-fill-color: transparent;
       font-size: 14px;
       font-weight: lighter;
-      > svg {
+      > img {
         /* border: 2px solid red; */
-        margin-left: 5px;
-        font-size: 16px;
-        /* color: red; */
-        color: #586eff;
-        /* background-image: linear-gradient(to right, #586eff, #bea0e6);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: #586eff;
-        -webkit-padding-box-fill-color: transparent; */
+        margin-left: 4px;
+        margin-right: 2px;
+        margin-bottom: 5px;
       }
     }
     .diary-dropdown {
