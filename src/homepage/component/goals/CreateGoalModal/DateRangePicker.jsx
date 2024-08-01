@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,23 +15,20 @@ const CustomInputEnd = forwardRef(({ value, onClick }, ref) => (
   </StyledButtonEnd>
 ));
 
-function DateRangePicker() {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
+function DateRangePicker({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <PeriodContainer>
       <ExplainText>목표 진행기간 설정</ExplainText>
       <DateInputs>
         <StyledDatePicker
-          dateFormat="yyyy.MM.dd"
+          dateFormat="yyyy-MM-dd"
           shouldCloseOnSelect
           selected={startDate}
           onChange={(date) => setStartDate(date)}
           customInput={<CustomInputStart />}
         />
         <StyledDatePicker
-          dateFormat="yyyy.MM.dd"
+          dateFormat="yyyy-MM-dd"
           shouldCloseOnSelect
           selected={endDate}
           onChange={(date) => setEndDate(date)}
@@ -73,7 +70,6 @@ const StyledButtonStart = styled.button`
   padding: 0 8px;
   box-sizing: border-box;
   border-radius: 4px 0 0 4px;
-  clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
   cursor: pointer;
   &:focus {
     outline: none;
@@ -90,7 +86,6 @@ const StyledButtonEnd = styled.button`
   padding: 0 8px;
   box-sizing: border-box;
   border-radius: 0 4px 4px 0;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10% 50%);
   cursor: pointer;
   position: relative;
   &:focus {

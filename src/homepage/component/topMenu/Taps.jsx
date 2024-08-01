@@ -7,8 +7,8 @@ function Taps({ currentTab, setCurrentTab }) {
       <TapMenu isActive={currentTab === "도전 중"} onClick={() => setCurrentTab("도전 중")}>
         도전 중
       </TapMenu>
-      <TapMenu isActive={currentTab === "달성한 목표"} onClick={() => setCurrentTab("달성한 목표")}>
-        달성한 목표
+      <TapMenu isActive={currentTab === "완료한 도전"} onClick={() => setCurrentTab("완료한 도전")}>
+        완료한 도전
       </TapMenu>
       <TapMenu isActive={currentTab === "전체"} onClick={() => setCurrentTab("전체")}>
         전체

@@ -93,7 +93,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   cursor: pointer;
   font-size: 12px;
-  color: black;
+  color: #242424;
 `;
 
 const Icon = styled.img`
@@ -112,7 +112,7 @@ const DropdownMenu = styled.div`
   width: 120px;
   z-index: 3;
   font-size: 12px;
-  color: black;
+  color: #242424;
 
   &.dropdown-enter {
     animation: ${fadeIn} 300ms forwards;
@@ -127,7 +127,7 @@ const DropdownItem = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #eef1ff;
   }
 `;
 
