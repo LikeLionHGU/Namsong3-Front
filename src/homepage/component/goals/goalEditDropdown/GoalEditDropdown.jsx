@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import GoalEditDropdownBtn from "../../../../asset/Icon/GoalEditDropdownBtn.svg";
+import { CSSTransition } from "react-transition-group";
 
 function GoalEditDropdown({ setIsDeleteModalOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -33,17 +34,41 @@ function GoalEditDropdown({ setIsDeleteModalOpen }) {
   return (
     <DropdownContainer ref={dropdownRef} onClick={toggleDropdown}>
       <img src={GoalEditDropdownBtn} alt=""></img>
-      {isDropdownOpen && (
+      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
         <DropdownMenu>
           <DropdownItem onClick={toggleDropdown}>수정하기</DropdownItem>
+          <Separator />
+
           <DropdownItem onClick={handleDeleteClick}>삭제하기</DropdownItem>
         </DropdownMenu>
-      )}
+      </CSSTransition>
     </DropdownContainer>
   );
 }
 
 export default GoalEditDropdown;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+`;
 
 const DropdownContainer = styled.div`
   position: absolute;
@@ -63,10 +88,18 @@ const DropdownMenu = styled.div`
   right: -21%;
   background-color: white;
   border: 1px solid #e6e6e6;
+  border-radius: 4px;
   width: 66px;
   z-index: 3;
   font-size: 12px;
-  color: #9a9a9a;
+  color: #242424;
+
+  &.dropdown-enter {
+    animation: ${fadeIn} 300ms forwards;
+  }
+  &.dropdown-exit {
+    animation: ${fadeOut} 300ms forwards;
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -74,6 +107,11 @@ const DropdownItem = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #eef1ff;
   }
+`;
+
+const Separator = styled.div`
+  height: 1px;
+  background-color: #e6e6e6;
 `;
