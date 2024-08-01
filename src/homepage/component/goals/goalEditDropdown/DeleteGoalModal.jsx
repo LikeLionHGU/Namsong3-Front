@@ -21,8 +21,12 @@ function DeleteGoalModal({ setIsDeleteModalOpen }) {
             <SubText>목표를 삭제하시겠습니까?</SubText>
           </SubTextContainer>
           <ButtonContainer>
-            <Cancel onClick={(event) => closeDeleteGoalModal(event)}>취소</Cancel>
-            <Confirm onClick={(event) => closeDeleteGoalModal(event)}>확인</Confirm>
+            <Cancel onClick={(event) => closeDeleteGoalModal(event)}>
+              취소
+            </Cancel>
+            <Confirm onClick={(event) => closeDeleteGoalModal(event)}>
+              확인
+            </Confirm>
           </ButtonContainer>
         </Wrapper>
       </Modal>

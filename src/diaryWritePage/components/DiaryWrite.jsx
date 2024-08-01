@@ -36,6 +36,7 @@ const Wrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  cursor: default;
   /* border: 2px solid red; */
 `;
 const BoxWrapper = styled.div`

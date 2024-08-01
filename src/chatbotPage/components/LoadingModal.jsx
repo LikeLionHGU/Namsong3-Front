@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import loadingGif from "../../asset/loadingRolling.gif";
 import loadingImg from "../../asset/Loading/loading.svg";
 function LoadingModal({ setModalOpen }) {
   const closeLoadingModal = () => {
