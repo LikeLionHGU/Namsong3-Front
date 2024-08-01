@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import dummy from "../../../db/data.json";
 import CreateGoalModal from "./CreateGoalModal/CreateGoalModal";
 import CreateGoal from "../../../asset/Icon/CreateGoal.svg";
 import GoalEditDropdown from "./goalEditDropdown/GoalEditDropdown";
@@ -35,12 +34,13 @@ function Goals() {
   useEffect(() => {
     console.log("Updated goalList:", goalList);
   }, [goalList]);
+
   const openCreateGoalsModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleClickGoal = () => {
-    navigate("/diarylist");
+  const handleClickGoal = (goalId) => {
+    navigate(`/diarylist?id=${goalId}`);
   };
 
   const today = new Date();
@@ -97,12 +97,12 @@ function Goals() {
           목표 추가하기
         </CreateGoalModalBtn>
         <TransitionGroup component={null}>
-          {filteredGoals.map((goal, index) => {
+          {filteredGoals.map((goal) => {
             const daysLeft = getDaysLeft(goal.endDate);
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
-                <GoalWrapper>
-                  <ImageContainer onClick={handleClickGoal}>
+                <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
+                  <ImageContainer>
                     <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
                     <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
