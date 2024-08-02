@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import QuillEditor from "./QuillEditor";
 import styled from "styled-components";
 import ThumbnailModal from "./ThumbnailModal";
+import DiaryPostModal from "./DiaryPostModal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
-
 function DiaryWrite() {
-  const [thumbnailModal, setThumbnailModal] = useState(false);
+  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
+  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -16,7 +17,6 @@ function DiaryWrite() {
   const openThumbnailModal = () => {
     setThumbnailModal(true);
   };
-
   useEffect(() => {
     console.log("formData updated:", formData, csrfToken);
   }, [formData]);
@@ -24,10 +24,6 @@ function DiaryWrite() {
   return (
     <Wrapper>
       <BoxWrapper>
-        {/* <BoxTitles>
-          <BoxTitle className="title-disabled">steppy와 일지 작성하기</BoxTitle>
-          <BoxTitle>일지 수정하기</BoxTitle>
-        </BoxTitles> */}
         <CenterBox>
           <DiaryHeader>
             <DiaryTitle
@@ -60,7 +56,15 @@ function DiaryWrite() {
             </button>
           </SaveButton>
         </CenterBox>
-        {thumbnailModal && <ThumbnailModal setThumbnailModal={setThumbnailModal} />}
+        {thumbnailModal && (
+          <ThumbnailModal
+            setThumbnailModal={setThumbnailModal}
+            setPostedModal={setPostedModal}
+          />
+        )}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setPostedModal={setPostedModal} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );
