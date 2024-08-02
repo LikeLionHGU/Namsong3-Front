@@ -2,12 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import emotional from "../../asset/emoji/emotional.png";
 function CompleteGoalModal({ setIsCompModalOpen }) {
-  const closeLoadingModal = () => {
+  const closeCompModal = () => {
     setIsCompModalOpen(false);
   };
+
+  const completeGoal = () => {
+    setIsCompModalOpen(false);
+
+    /* 
+여기에 빵빠레 효과 넣어줘야할듯 ? 
+*/
+  };
+
   return (
     <div>
-      <ModalBackground onClick={closeLoadingModal}>
+      <ModalBackground onClick={closeCompModal}>
+        {/* <ModalBackground> */}
         <Wrapper>
           <img
             src={emotional}
@@ -23,7 +33,7 @@ function CompleteGoalModal({ setIsCompModalOpen }) {
             계속해서 멋진 성장을 이루어나갈 수 있도록 stepper가 함께할게요 :D
           </div>
           <CompleteBtn>
-            <button>도전 완료하기!</button>
+            <button onClick={completeGoal}>도전 완료하기!</button>
           </CompleteBtn>
         </Wrapper>
         {/* </Overlay> */}
@@ -31,6 +41,7 @@ function CompleteGoalModal({ setIsCompModalOpen }) {
     </div>
   );
 }
+
 export default CompleteGoalModal;
 
 const modalBase = `
@@ -48,6 +59,7 @@ const ModalBackground = styled.div`
 
   background: rgba(0, 0, 0, 0.2);
   z-index: 4;
+  cursor: default;
 `;
 
 const Wrapper = styled.div`
