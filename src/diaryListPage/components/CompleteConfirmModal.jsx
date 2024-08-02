@@ -52,7 +52,8 @@ function CompleteConfirmModal({
 
   return (
     <div>
-      <ModalBackground onClick={closeConfirmModal}>
+      <ModalBackground>
+        <Overlay onClick={closeConfirmModal} />
         <Wrapper>
           <h3>도전을 완료하시겠어요?</h3>
           <div className="complete-content">
@@ -91,6 +92,10 @@ const ModalBackground = styled.div`
 
   background: rgba(0, 0, 0, 0.2);
   z-index: 4;
+  cursor: default;
+`;
+const Overlay = styled.div`
+  ${modalBase}
   cursor: default;
 `;
 
