@@ -1,26 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QuillEditor from "./QuillEditor";
 import styled from "styled-components";
 import ThumbnailModal from "./ThumbnailModal";
 import DiaryPostModal from "./DiaryPostModal";
-
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
 function DiaryWrite() {
   const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
   const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+  });
+  const csrfToken = useRecoilValue(tokenState);
 
   const openThumbnailModal = () => {
     setThumbnailModal(true);
   };
+  useEffect(() => {
+    console.log("formData updated:", formData, csrfToken);
+  }, [formData]);
 
   return (
     <Wrapper>
       <BoxWrapper>
         <CenterBox>
           <DiaryHeader>
-            <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"></DiaryTitle>
+            <DiaryTitle
+              placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
+              name="title"
+              value={formData.title}
+              onChange={(e) =>
+                setFormData((formData) => ({
+                  ...formData,
+                  title: e.target.value,
+                }))
+              }
+            >
+              {/* */}
+            </DiaryTitle>
           </DiaryHeader>
           <EditorArea>
-            <QuillEditor />
+            <QuillEditor
+              onChange={(content) =>
+                setFormData((formData) => ({
+                  ...formData,
+                  content: content,
+                }))
+              }
+            />
           </EditorArea>
           <SaveButton>
             <button className="save-button" onClick={openThumbnailModal}>
