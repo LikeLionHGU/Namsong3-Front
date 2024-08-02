@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import QuillEditor from "./QuillEditor";
+import React from "react";
+import QuillEditor from "../../diaryWritePage/components/QuillEditor";
 import styled from "styled-components";
-import ThumbnailModal from "./ThumbnailModal";
+/*
 
-function DiaryWrite() {
-  const [thumbnailModal, setThumbnailModal] = useState(false);
+일지 작성하기 버튼을 누르면 여기서 수정한 내용을 
 
-  const openThumbnailModal = () => {
-    setThumbnailModal(true);
-  };
-
+*/
+function SummaryEdit() {
   return (
     <Wrapper>
       <BoxWrapper>
-        {/* <BoxTitles>
+        <BoxTitles>
           <BoxTitle className="title-disabled">steppy와 일지 작성하기</BoxTitle>
           <BoxTitle>일지 수정하기</BoxTitle>
-        </BoxTitles> */}
+        </BoxTitles>
         <CenterBox>
           <DiaryHeader>
             <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)">
@@ -27,20 +24,15 @@ function DiaryWrite() {
             <QuillEditor />
           </EditorArea>
           <SaveButton>
-            <button className="save-button" onClick={openThumbnailModal}>
-              일지 작성하기
-            </button>
+            <button className="save-button">일지 작성하기</button>
           </SaveButton>
         </CenterBox>
-        {thumbnailModal && (
-          <ThumbnailModal setThumbnailModal={setThumbnailModal} />
-        )}
       </BoxWrapper>
     </Wrapper>
   );
 }
 
-export default DiaryWrite;
+export default SummaryEdit;
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,16 +49,41 @@ const BoxWrapper = styled.div`
   flex-direction: column;
   /* border: 2px solid red; */
 `;
+const BoxTitles = styled.div`
+  display: flex;
+  flex-direction: row;
+  .title-disabled {
+    color: #dfdfdf;
+    border-bottom: 1.5px solid #dfdfdf;
+    width: 230px;
+  }
+`;
+const BoxTitle = styled.div`
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid #586eff;
+  color: #676767;
+  font-size: 16px;
+  font-weight: bold;
+  width: 165px;
+  margin-top: 32px;
+  margin-bottom: 0px;
+  // 폰트 적용 필요 : Apple SD Gothic Neo
+`;
+
 const CenterBox = styled.div`
   display: flex;
   /* display: center; */
-  margin-top: 32px;
+
   flex-direction: column;
   justify-content: space-around;
   width: 792px;
   height: 707px;
 
-  border-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
   background-color: #eef1ff;
 
   /* border: 2px solid orange; */
