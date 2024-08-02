@@ -8,6 +8,7 @@ import ChatbotPage from "./chatbotPage/ChatbotPage";
 import DiaryWritePage from "./diaryWritePage/DiaryWritePage";
 import Loading from "./loginPage/Loading";
 import DiaryBotPage from "./diaryBotPage/DiaryBotPage";
+import DiaryDetailPage from "./diaryDetailPage/DiaryDetailPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/write" element={<DiaryWritePage />} />
           <Route path="/summaryEdit" element={<DiaryBotPage />} />
+          <Route path="/detail" element={<DiaryDetailPage />} />\
           <Route path="/oauth2/redirect" element={<Loading />} />
         </Routes>
       </BrowserRouter>
