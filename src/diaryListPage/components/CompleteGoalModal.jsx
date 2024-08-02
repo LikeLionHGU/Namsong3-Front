@@ -16,7 +16,8 @@ function CompleteGoalModal({ setIsCompModalOpen }) {
 
   return (
     <div>
-      <ModalBackground onClick={closeCompModal}>
+      <ModalBackground>
+        <Overlay onClick={closeCompModal} />
         {/* <ModalBackground> */}
         <Wrapper>
           <img
@@ -61,7 +62,10 @@ const ModalBackground = styled.div`
   z-index: 4;
   cursor: default;
 `;
-
+const Overlay = styled.div`
+  ${modalBase}
+  cursor: default;
+`;
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

@@ -1,9 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import loadingImg from "../../asset/Loading/loading.svg";
+import { useNavigate } from "react-router-dom";
 function LoadingModal({ setModalOpen }) {
+  const navigate = useNavigate();
+
   const closeLoadingModal = () => {
     setModalOpen(false);
+    navigate("/summaryEdit"); // navigate하면서 요약된 내용을 보내줘야한다. 여기서 연결해야할 것 같다.
+    // summaryEdit 링크로 넘겨준 내용을 quill 에디터에 기본값으로 넣어줘야한다.
+    // -> DiaryBotPage/components/SummaryEdit 로 들어간다 !!
   };
   return (
     <div>
