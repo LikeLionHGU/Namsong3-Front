@@ -5,6 +5,7 @@ import ThumbnailModal from "./ThumbnailModal";
 import DiaryPostModal from "./DiaryPostModal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
+import { useLocation } from "react-router-dom";
 function DiaryWrite() {
   const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
   const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
@@ -13,6 +14,9 @@ function DiaryWrite() {
     content: "",
   });
   const csrfToken = useRecoilValue(tokenState);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const goalId = queryParams.get("id");
 
   const openThumbnailModal = () => {
     setThumbnailModal(true);
@@ -60,11 +64,12 @@ function DiaryWrite() {
           <ThumbnailModal
             setThumbnailModal={setThumbnailModal}
             setPostedModal={setPostedModal}
+            formData={formData}
+            goalId={goalId}
+            csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && (
-          <DiaryPostModal setPostedModal={setPostedModal} />
-        )}
+        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );

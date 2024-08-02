@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import fire from "../../asset/emoji/fire.png";
 import { useNavigate } from "react-router-dom";
-function DiaryPostModal({ setPostedModal }) {
+function DiaryPostModal({ setPostedModal, goalId }) {
   const navigate = useNavigate();
   const closeModal = () => {
     setPostedModal(false);
-    navigate("/homepage"); // !!!! 중요, 나중에 연결할때 이 부분이 diaryList?id= 링크로 연결되어야함.
+    navigate(`/diaryList?id=${goalId}`); // !!!! 중요, 나중에 연결할때 이 부분이 diaryList?id= 링크로 연결되어야함.
   };
 
   return (
