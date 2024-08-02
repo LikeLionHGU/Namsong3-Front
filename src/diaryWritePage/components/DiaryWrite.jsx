@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import QuillEditor from "./QuillEditor";
 import styled from "styled-components";
 import ThumbnailModal from "./ThumbnailModal";
+<<<<<<< Updated upstream
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 
@@ -12,6 +13,13 @@ function DiaryWrite() {
     content: "",
   });
   const csrfToken = useRecoilValue(tokenState);
+=======
+import DiaryPostModal from "./DiaryPostModal";
+
+function DiaryWrite() {
+  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
+  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+>>>>>>> Stashed changes
 
   const openThumbnailModal = () => {
     setThumbnailModal(true);
@@ -24,12 +32,9 @@ function DiaryWrite() {
   return (
     <Wrapper>
       <BoxWrapper>
-        {/* <BoxTitles>
-          <BoxTitle className="title-disabled">steppy와 일지 작성하기</BoxTitle>
-          <BoxTitle>일지 수정하기</BoxTitle>
-        </BoxTitles> */}
         <CenterBox>
           <DiaryHeader>
+<<<<<<< Updated upstream
             <DiaryTitle
               placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
               name="title"
@@ -43,6 +48,9 @@ function DiaryWrite() {
             >
               {/* */}
             </DiaryTitle>
+=======
+            <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"></DiaryTitle>
+>>>>>>> Stashed changes
           </DiaryHeader>
           <EditorArea>
             <QuillEditor
@@ -60,7 +68,19 @@ function DiaryWrite() {
             </button>
           </SaveButton>
         </CenterBox>
+<<<<<<< Updated upstream
         {thumbnailModal && <ThumbnailModal setThumbnailModal={setThumbnailModal} />}
+=======
+        {thumbnailModal && (
+          <ThumbnailModal
+            setThumbnailModal={setThumbnailModal}
+            setPostedModal={setPostedModal}
+          />
+        )}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setPostedModal={setPostedModal} />
+        )}
+>>>>>>> Stashed changes
       </BoxWrapper>
     </Wrapper>
   );

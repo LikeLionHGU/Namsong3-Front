@@ -2,20 +2,27 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-function ThumbnailModal({ setThumbnailModal }) {
+function ThumbnailModal({ setThumbnailModal, setPostedModal }) {
   // 이미지 설정//
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
 
   const closeThumbnailModal = () => {
-    // 썸네일 추가하는 모달 닫는 함수
+    // 썸네일 추가하는 모달 닫는 함수(배경누르거나 x 눌러서 닫기만할때)
     setThumbnailModal(false);
   };
 
   const handleImageUploadClick = () => {
     fileInputRef.current.click();
   };
+  const handleNextStep = () => {
+    // 대표사진 선택하기 모달에서 "다음으로" 버튼 누르고 나면 사진선택 모달은 숨기고 그 이후 모달(일지 추가 완료 모달)을 보여줘야함.
+    // *** 이 함수 안에서 일지를 백엔드로 submit해야할듯 (내용 + 대표사진) *** //
+    // 일단 임시로 "다음으로"버튼 누르면 그 다음 모달로 넘어가는 것만 해둠.
 
+    setThumbnailModal(false);
+    setPostedModal(true);
+  };
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
 
@@ -69,7 +76,7 @@ function ThumbnailModal({ setThumbnailModal }) {
           </ImageAdd>
           <Buttons>
             <NextBtn>
-              <button>다음으로</button>
+              <button onClick={handleNextStep}>다음으로</button>
               {/* <button onClick={completeGoal}>다음으로</button> */}
             </NextBtn>
           </Buttons>
