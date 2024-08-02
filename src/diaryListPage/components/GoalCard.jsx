@@ -7,18 +7,17 @@ import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 import CompleteGoalModal from "./CompleteGoalModal";
 
+// Props set하고,,, 모달에서 완료하기 버튼을 누르면 그 변화된 내용을 post로 저장해야함. (DB에 저장, 이 목표가 끝났다는 걸 알 수 있도록)
 function GoalCard() {
   const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
   const [startedFrom, setStartedFrom] = useState(0);
   const [isCompModalOpen, setIsCompModalOpen] = useState(false);
-
+  // const [isCompleted, setIsCompleted] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const goalId = queryParams.get("id");
   const csrfToken = useRecoilValue(tokenState);
-  const openCompModal = () => {
-    setIsCompModalOpen(true);
-  };
+
   const isValidDate = (dateString) => {
     const regEx = /^\d{2}\.\d{2}\.\d{2}$/;
     return dateString.match(regEx) != null;
@@ -40,6 +39,7 @@ function GoalCard() {
       try {
         const fetchedGoalInfo = await getDiaryList(goalId, csrfToken);
         setGoalInfo(fetchedGoalInfo);
+
         const daysFromStart = calculateDaysFromStart(
           fetchedGoalInfo.goal.startDate
         );
@@ -54,6 +54,10 @@ function GoalCard() {
   if (!goalInfo.goal.title) {
     return <div>Loading...</div>;
   }
+
+  const openCompModal = () => {
+    setIsCompModalOpen(true);
+  };
 
   return (
     <Container>
@@ -76,12 +80,24 @@ function GoalCard() {
             </div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
-            <Accomplished onClick={openCompModal}>도전 완료하기</Accomplished>
+            <Accomplished
+              status={goalInfo.goal.status}
+              onClick={goalInfo.goal.status === "OPEN" ? openCompModal : null}
+            >
+              {goalInfo.goal.status === "OPEN" ? "도전 완료하기" : "도전 완료"}
+              {/* 도전 완료하기 */}
+            </Accomplished>
           </div>
         </Info>
       </Wrapper>
       {isCompModalOpen && (
-        <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />
+        <CompleteGoalModal
+          status={goalInfo.goal.status}
+          setGoalInfo={setGoalInfo}
+          setIsCompModalOpen={setIsCompModalOpen}
+          goalId={goalId}
+          csrfToken={csrfToken}
+        />
       )}
     </Container>
   );
@@ -187,20 +203,30 @@ const Accomplished = styled.button`
   margin-top: 12px;
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: transparent;
+  /* background-color: transparent; */
+  background-color: ${(props) =>
+    props.status === "OPEN" ? "transparent" : "#EEF1FF"};
+
   cursor: pointer;
   font-weight: bold;
-  border: 1px solid #798bff;
-  color: #798bff;
+  /* border: 1px solid
+    ${(props) => (props.status === "OPEN" ? "#798bff;" : "#CBD2FF")};
+  color: ${(props) => (props.status === "OPEN" ? "#798bff;" : "#CBD2FF")}; */
+
+  /* 상태가 OPEN인지 CLOSED인지에 따라서 버튼 보더, 텍스트 색, 커서 모양 등 변경*/
+  ${(props) =>
+    props.status === "OPEN"
+      ? `border: 1px solid #798bff; color: #798bff; &:active {
+    border: 1px solid #798bff;
+    background-color: #eef1ff;
+    color: #798bff;}`
+      : `border: 1px solid #CBD2FF; color: #CBD2FF;
+      cursor: default;
+      `}
+
   &:active {
     border: 1px solid #798bff;
     background-color: #eef1ff;
     color: #798bff;
   }
-
-  /* &:hover {
-    border: 1px solid #798bff;
-    background-color: #eef1ff;
-    color: #798bff;
-  } */
 `;

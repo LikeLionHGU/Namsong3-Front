@@ -1,10 +1,53 @@
 import React from "react";
 import styled from "styled-components";
 import emotional from "../../asset/emoji/emotional.png";
-function CompleteGoalModal({ setIsCompModalOpen }) {
+function CompleteGoalModal({
+  status,
+  setGoalInfo,
+  setIsCompModalOpen,
+  goalId,
+  csrfToken,
+}) {
   const closeLoadingModal = () => {
     setIsCompModalOpen(false);
   };
+
+  const completeGoal = async () => {
+    // console.log("current status before update is : " + status);
+
+    const updatedGoalInfo = {
+      goal: { status: "CLOSED" },
+    };
+    setGoalInfo((prevGoalInfo) => ({
+      ...prevGoalInfo,
+      goal: { ...prevGoalInfo.goal, status: "CLOSED" },
+    }));
+
+    console.log("current status after update is : " + status);
+    // 모달 닫기
+
+    try {
+      const response = await fetch(`/api/goals/${goalId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+        body: JSON.stringify(updatedGoalInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update goal status");
+      }
+
+      console.log("Goal status updated successfully");
+    } catch (error) {
+      console.error("Error updating goal status:", error);
+    }
+
+    setIsCompModalOpen(false);
+  };
+
   return (
     <div>
       <ModalBackground onClick={closeLoadingModal}>
@@ -23,7 +66,7 @@ function CompleteGoalModal({ setIsCompModalOpen }) {
             계속해서 멋진 성장을 이루어나갈 수 있도록 stepper가 함께할게요 :D
           </div>
           <CompleteBtn>
-            <button>도전 완료하기!</button>
+            <button onClick={completeGoal}>도전 완료하기!</button>
           </CompleteBtn>
         </Wrapper>
         {/* </Overlay> */}
