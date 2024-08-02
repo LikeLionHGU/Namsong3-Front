@@ -6,11 +6,13 @@ import getDiaryList from "../../apis/getDiaryList";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 import CompleteGoalModal from "./CompleteGoalModal";
+import CompleteConfirmModal from "./CompleteConfirmModal";
 
 // Props set하고,,, 모달에서 완료하기 버튼을 누르면 그 변화된 내용을 post로 저장해야함. (DB에 저장, 이 목표가 끝났다는 걸 알 수 있도록)
 function GoalCard() {
   const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
   const [startedFrom, setStartedFrom] = useState(0);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isCompModalOpen, setIsCompModalOpen] = useState(false);
   // const [isCompleted, setIsCompleted] = useState(false);
   const location = useLocation();
@@ -56,7 +58,7 @@ function GoalCard() {
   }
 
   const openCompModal = () => {
-    setIsCompModalOpen(true);
+    setIsConfirmModalOpen(true);
   };
 
   return (
@@ -90,14 +92,18 @@ function GoalCard() {
           </div>
         </Info>
       </Wrapper>
-      {isCompModalOpen && (
-        <CompleteGoalModal
+      {isConfirmModalOpen && (
+        <CompleteConfirmModal
           status={goalInfo.goal.status}
           setGoalInfo={setGoalInfo}
-          setIsCompModalOpen={setIsCompModalOpen}
+          setIsConfirmModalOpen={setIsConfirmModalOpen}
           goalId={goalId}
           csrfToken={csrfToken}
+          setIsCompModalOpen={setIsCompModalOpen}
         />
+      )}
+      {isCompModalOpen && (
+        <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />
       )}
     </Container>
   );

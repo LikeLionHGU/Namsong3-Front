@@ -1,56 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 import emotional from "../../asset/emoji/emotional.png";
-function CompleteGoalModal({
-  status,
-  setGoalInfo,
-  setIsCompModalOpen,
-  goalId,
-  csrfToken,
-}) {
-  const closeLoadingModal = () => {
+function CompleteGoalModal({ setIsCompModalOpen }) {
+  const closeCompModal = () => {
     setIsCompModalOpen(false);
   };
 
-  const completeGoal = async () => {
-    // console.log("current status before update is : " + status);
-
-    const updatedGoalInfo = {
-      goal: { status: "CLOSED" },
-    };
-    setGoalInfo((prevGoalInfo) => ({
-      ...prevGoalInfo,
-      goal: { ...prevGoalInfo.goal, status: "CLOSED" },
-    }));
-
-    console.log("current status after update is : " + status);
-    // 모달 닫기
-
-    try {
-      const response = await fetch(`/api/goals/${goalId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-        },
-        body: JSON.stringify(updatedGoalInfo),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update goal status");
-      }
-
-      console.log("Goal status updated successfully");
-    } catch (error) {
-      console.error("Error updating goal status:", error);
-    }
-
+  const completeGoal = () => {
     setIsCompModalOpen(false);
+
+    /* 
+여기에 빵빠레 효과 넣어줘야할듯 ? 
+*/
   };
 
   return (
     <div>
-      <ModalBackground onClick={closeLoadingModal}>
+      <ModalBackground onClick={closeCompModal}>
+        {/* <ModalBackground> */}
         <Wrapper>
           <img
             src={emotional}
@@ -74,6 +41,7 @@ function CompleteGoalModal({
     </div>
   );
 }
+
 export default CompleteGoalModal;
 
 const modalBase = `
@@ -91,6 +59,7 @@ const ModalBackground = styled.div`
 
   background: rgba(0, 0, 0, 0.2);
   z-index: 4;
+  cursor: default;
 `;
 
 const Wrapper = styled.div`
