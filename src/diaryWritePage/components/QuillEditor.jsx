@@ -13,7 +13,7 @@ import "quill/dist/quill.snow.css";
 import axios from "axios";
 import styled from "styled-components";
 
-const QuillEditor = ({ mainText, onChange }) => {
+const QuillEditor = ({ onChange }) => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
@@ -42,10 +42,10 @@ const QuillEditor = ({ mainText, onChange }) => {
 
     quillRef.current = new Quill(editorRef.current, options);
 
-    const initialContent = mainText;
-    if (initialContent) {
-      quillRef.current.clipboard.dangerouslyPasteHTML(initialContent);
-    }
+    // const initialContent = mainText;
+    // if (initialContent) {
+    //   quillRef.current.clipboard.dangerouslyPasteHTML(initialContent);
+    // }
 
     // 텍스트 에디터에 변화 있으면(=타이핑하거나 지우거나 등) 변화 적용시켜주기
     quillRef.current.on("text-change", () => {
