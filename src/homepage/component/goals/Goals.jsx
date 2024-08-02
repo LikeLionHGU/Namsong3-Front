@@ -9,8 +9,8 @@ import GoalViewDropdown from "../topMenu/GoalViewDropdown";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import DeleteGoalModal from "./goalEditDropdown/DeleteGoalModal";
 import getGoalList from "../../../apis/getGoalList";
-import { useRecoilValue } from "recoil";
 import { tokenState } from "../../../atom/atom";
+import { useRecoilState } from "recoil";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,16 +20,26 @@ function Goals() {
   const [goalList, setGoalList] = useState({ goals: [] });
   const navigate = useNavigate();
 
-  const csrfToken = useRecoilValue(tokenState);
+  const [csrfToken, setCsrfToken] = useRecoilState(tokenState);
 
   useEffect(() => {
+    if (!csrfToken) return; // 토큰이 없으면 API 호출하지 않음
     const fetchGoalList = async () => {
-      const fetchedGoalList = await getGoalList(csrfToken);
-      setGoalList(fetchedGoalList);
-      console.log("Fetched goalList:", fetchedGoalList);
+      try {
+        const fetchedGoalList = await getGoalList(csrfToken);
+        setGoalList(fetchedGoalList);
+        console.log("Fetched goalList:", fetchedGoalList);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          setCsrfToken(null); // 401 에러 발생 시 토큰 초기화
+          navigate("/"); // 로그인 페이지로 이동
+        } else {
+          console.error("Error fetching goal list", error);
+        }
+      }
     };
     fetchGoalList();
-  }, [csrfToken]);
+  }, [csrfToken, navigate, setCsrfToken]);
 
   useEffect(() => {
     console.log("Updated goalList:", goalList);
@@ -73,9 +83,7 @@ function Goals() {
     }
 
     if (currentSort === "최신순") {
-      goals = goals.sort(
-        (a, b) => new Date(b.createDate) - new Date(a.startDate)
-      );
+      goals = goals.sort((a, b) => new Date(b.createDate) - new Date(a.startDate));
     } else if (currentSort === "오름차순") {
       goals = goals.sort((a, b) => a.title.localeCompare(b.title));
     } else if (currentSort === "내림차순") {
@@ -91,10 +99,7 @@ function Goals() {
     <Container>
       <TopMenu>
         <Taps currentTab={currentTab} setCurrentTab={setCurrentTab} />
-        <GoalViewDropdown
-          currentSort={currentSort}
-          setCurrentSort={setCurrentSort}
-        />
+        <GoalViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
       </TopMenu>
       <GoalContainer>
         <CreateGoalModalBtn onClick={openCreateGoalsModal}>
@@ -108,12 +113,8 @@ function Goals() {
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
                   <ImageContainer>
-                    <Image
-                      style={{ backgroundImage: `url(${goal.thumbnail})` }}
-                    />
-                    <GoalEditDropdown
-                      setIsDeleteModalOpen={setIsDeleteModalOpen}
-                    />
+                    <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
+                    <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
@@ -128,9 +129,7 @@ function Goals() {
                         </ExpirationText>
                       )}
                       {daysLeft === null || daysLeft > 5
-                        ? !isExpired(goal.endDate) && (
-                            <div style={{ marginTop: "4px" }} />
-                          )
+                        ? !isExpired(goal.endDate) && <div style={{ marginTop: "4px" }} />
                         : null}
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
@@ -146,9 +145,7 @@ function Goals() {
                       </TitleFireContainer>
                       {(goal.startDate || goal.endDate) && (
                         <Period>
-                          {goal.startDate && (
-                            <StartDate>{goal.startDate}</StartDate>
-                          )}
+                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
                           {goal.startDate && goal.endDate && <span> → </span>}
                           {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
@@ -162,9 +159,7 @@ function Goals() {
         </TransitionGroup>
       </GoalContainer>
       {isModalOpen && <CreateGoalModal setIsModalOpen={setIsModalOpen} />}
-      {isDeleteModalOpen && (
-        <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />
-      )}
+      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
     </Container>
   );
 }
