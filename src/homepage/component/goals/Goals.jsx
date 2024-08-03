@@ -15,12 +15,14 @@ import GoalDoesNotExistImg from "../../../asset/Icon/GoalDoesNotExist.svg";
 
 import img1 from "../../../asset/Random/random1.svg";
 import img2 from "../../../asset/Random/random2.svg";
+import GoalCreatedModal from "./CreateGoalModal/GoalCreatedModal";
 const backgroundArr = [img1, img2];
 // const randomIndex = Math.floor(Math.random() * backgroundArr.length);
 // const backgroundImg = backgroundArr[randomIndex];
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGoalCreatedModalOpen, setIsGoalCreatedModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
@@ -104,10 +106,7 @@ function Goals() {
     <Container>
       <TopMenu>
         <Taps currentTab={currentTab} setCurrentTab={setCurrentTab} />
-        <GoalViewDropdown
-          currentSort={currentSort}
-          setCurrentSort={setCurrentSort}
-        />
+        <GoalViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
       </TopMenu>
       <GoalContainer>
         <CreateGoalModalBtn onClick={openCreateGoalsModal}>
@@ -116,11 +115,7 @@ function Goals() {
         </CreateGoalModalBtn>
         {filteredGoals.length === 0 && (
           <GoalDoesNotExist>
-            <img
-              src={GoalDoesNotExistImg}
-              alt=""
-              style={{ marginTop: "59px", width: "40px", height: "41px" }}
-            />
+            <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
             <div
               style={{
                 color: "#676767",
@@ -146,17 +141,13 @@ function Goals() {
               }}
             >
               <div>하고 싶은 일을 적어볼까요? </div>{" "}
-              <div style={{ marginTop: "5px" }}>
-                작은 목표부터 큰 목표까지 모두 좋아요!
-              </div>
+              <div style={{ marginTop: "5px" }}>작은 목표부터 큰 목표까지 모두 좋아요!</div>
             </div>
           </GoalDoesNotExist>
         )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
-            const randomIndex = Math.floor(
-              Math.random() * backgroundArr.length
-            );
+            const randomIndex = Math.floor(Math.random() * backgroundArr.length);
             const backgroundImg = backgroundArr[randomIndex];
             const daysLeft = getDaysLeft(goal.endDate);
             return (
@@ -164,20 +155,14 @@ function Goals() {
                 <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
                   <ImageContainer>
                     {goal.thumbnail ? (
-                      <Image
-                        style={{ backgroundImage: `url(${goal.thumbnail})` }}
-                      />
+                      <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
                     ) : (
-                      <Image
-                        style={{ backgroundImage: `url(${backgroundImg})` }}
-                      />
+                      <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
                     )}
                     {/* <Image
                       style={{ backgroundImage: `url(${goal.thumbnail})` }}
                     /> */}
-                    <GoalEditDropdown
-                      setIsDeleteModalOpen={setIsDeleteModalOpen}
-                    />
+                    <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
@@ -192,9 +177,7 @@ function Goals() {
                         </ExpirationText>
                       )}
                       {daysLeft === null || daysLeft > 5
-                        ? !isExpired(goal.endDate) && (
-                            <div style={{ marginTop: "4px" }} />
-                          )
+                        ? !isExpired(goal.endDate) && <div style={{ marginTop: "4px" }} />
                         : null}
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
@@ -210,9 +193,7 @@ function Goals() {
                       </TitleFireContainer>
                       {(goal.startDate || goal.endDate) && (
                         <Period>
-                          {goal.startDate && (
-                            <StartDate>{goal.startDate}</StartDate>
-                          )}
+                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
                           {goal.startDate && goal.endDate && <span> → </span>}
                           {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
@@ -225,10 +206,11 @@ function Goals() {
           })}
         </TransitionGroup>
       </GoalContainer>
-      {isModalOpen && <CreateGoalModal setIsModalOpen={setIsModalOpen} />}
-      {isDeleteModalOpen && (
-        <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />
+      {isModalOpen && (
+        <CreateGoalModal setIsModalOpen={setIsModalOpen} setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen} />
       )}
+      {isGoalCreatedModalOpen && <GoalCreatedModal setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen} />}
+      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
     </Container>
   );
 }
