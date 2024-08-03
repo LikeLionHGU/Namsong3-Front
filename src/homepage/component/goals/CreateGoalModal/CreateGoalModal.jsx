@@ -19,7 +19,7 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-function CreateGoalModal({ setIsModalOpen }) {
+function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
 
@@ -101,7 +101,7 @@ function CreateGoalModal({ setIsModalOpen }) {
     } catch (error) {
       console.error("목표 생성 실패", error);
     }
-    window.location.reload();
+    setIsGoalCreatedModalOpen(true);
   };
 
   return (
@@ -133,19 +133,12 @@ function CreateGoalModal({ setIsModalOpen }) {
               <DatePickText>
                 <div>
                   기간
-                  {isDateSetting ? (
-                    <span style={{ color: "red" }}>*</span>
-                  ) : null}
+                  {isDateSetting ? <span style={{ color: "red" }}>*</span> : null}
                 </div>
-                <div className="date-pick-explain">
-                  목표 진행 기간을 설정할 수 있어요!
-                </div>
+                <div className="date-pick-explain">목표 진행 기간을 설정할 수 있어요!</div>
               </DatePickText>
 
-              <Toggle
-                setIsDateSetting={setIsDateSetting}
-                isDateSetting={isDateSetting}
-              />
+              <Toggle setIsDateSetting={setIsDateSetting} isDateSetting={isDateSetting} />
               {/* <Checkbox type="checkbox" />
                 <CheckboxText>종료일을 설정하지 않을래요!</CheckboxText> */}
             </NoPeriodContainer>
@@ -193,12 +186,7 @@ function CreateGoalModal({ setIsModalOpen }) {
                     </div>
                   </div>
                 )}
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileInputChange}
-                  ref={fileInputRef}
-                />
+                <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
               </ImageUpload>
             </ImgContainer>
             <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
