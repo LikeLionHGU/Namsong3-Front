@@ -140,6 +140,7 @@ const ProfileInfo = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: default;
 `;
 
 const LogoutBtn = styled.div`
