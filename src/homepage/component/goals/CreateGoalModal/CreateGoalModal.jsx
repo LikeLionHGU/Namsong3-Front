@@ -147,13 +147,31 @@ function CreateGoalModal({ setIsModalOpen }) {
                   />
                 ) : (
                   <div
-                    style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                    }}
                   >
                     <img src={ImgUpload} alt=""></img>
-                    <div style={{ color: "#AEAEAE", fontSize: "14px", marginTop: "8px" }}>사진 추가하기</div>
+                    <div
+                      style={{
+                        color: "#AEAEAE",
+                        fontSize: "14px",
+                        marginTop: "8px",
+                      }}
+                    >
+                      사진 추가하기
+                    </div>
                   </div>
                 )}
-                <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={handleFileInputChange}
+                  ref={fileInputRef}
+                />
               </ImageUpload>
             </ImgContainer>
             <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
@@ -183,7 +201,7 @@ const Modal = styled.div`
 
 const Overlay = styled.div`
   ${modalStyles}
-  background: rgba(158, 158, 158, 0.8);
+  background: rgba(0, 0, 0, 0.2);
   cursor: pointer;
 `;
 
