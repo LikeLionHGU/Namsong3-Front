@@ -6,22 +6,24 @@ import GoalViewDropdown from "../../../../asset/Icon/GoalViewDropdown.svg";
 
 const CustomInputStart = forwardRef(({ value, onClick }, ref) => (
   <StyledButton onClick={onClick} ref={ref}>
-    {value || <span style={{ color: "#676767" }}>시작일</span>} <img src={GoalViewDropdown} alt="" />
+    {value || <span style={{ color: "#676767" }}>시작일</span>}{" "}
+    <img src={GoalViewDropdown} alt="" />
   </StyledButton>
 ));
 
 const CustomInputEnd = forwardRef(({ value, onClick }, ref) => (
   <StyledButton onClick={onClick} ref={ref} style={{ marginLeft: "7px" }}>
-    {value || <span style={{ color: "#676767" }}>종료일</span>} <img src={GoalViewDropdown} alt="" />
+    {value || <span style={{ color: "#676767" }}>종료일</span>}{" "}
+    <img src={GoalViewDropdown} alt="" />
   </StyledButton>
 ));
 
 function DateRangePicker({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <PeriodContainer>
-      <ExplainText>
+      {/* <ExplainText>
         기간<span style={{ color: "red" }}>*</span>
-      </ExplainText>
+      </ExplainText> */}
       <DateInputs>
         <StyledDatePicker
           dateFormat="yyyy-MM-dd"
@@ -49,7 +51,7 @@ const PeriodContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 16px;
+  margin-top: 6px;
 `;
 
 const ExplainText = styled.div`

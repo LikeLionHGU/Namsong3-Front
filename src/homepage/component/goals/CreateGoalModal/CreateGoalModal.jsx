@@ -6,7 +6,12 @@ import { useRecoilValue } from "recoil";
 import { tokenState } from "../../../../atom/atom";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ImgUpload from "../../../../asset/Icon/ImgUpload.svg";
+import { Toggle } from "./Toggle";
 
+/* 
+- 이미지 업로드 부분 안됨
+- 날짜 선택 안해도 목표 설정 가능해야함
+ */
 const formatDate = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -15,12 +20,14 @@ const formatDate = (date) => {
 };
 
 function CreateGoalModal({ setIsModalOpen }) {
+  const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
 
   const [formData, setFormData] = useState({
     title: "",
     startDate: null,
     endDate: null,
+    thumbnail: "",
   });
 
   useEffect(() => {
@@ -87,13 +94,14 @@ function CreateGoalModal({ setIsModalOpen }) {
 
       // 이미지 파일이 존재할 경우에만 추가
       if (fileInputRef.current.files[0]) {
-        formDataToSend.append("image", fileInputRef.current.files[0]);
+        formDataToSend.append("thumbnail", fileInputRef.current.files[0]);
       }
       await createGoal(formDataToSend, csrfToken);
       closeCreateGoalModal();
     } catch (error) {
       console.error("목표 생성 실패", error);
     }
+    window.location.reload();
   };
 
   return (
@@ -118,20 +126,39 @@ function CreateGoalModal({ setIsModalOpen }) {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
+                required
               />
             </GoalTitleContainer>
-            <PeriodContainer>
-              <DateRangePicker
-                startDate={formData.startDate}
-                setStartDate={handleStartDateChange}
-                endDate={formData.endDate}
-                setEndDate={handleEndDateChange}
+            <NoPeriodContainer>
+              <DatePickText>
+                <div>
+                  기간
+                  {isDateSetting ? (
+                    <span style={{ color: "red" }}>*</span>
+                  ) : null}
+                </div>
+                <div className="date-pick-explain">
+                  목표 진행 기간을 설정할 수 있어요!
+                </div>
+              </DatePickText>
+
+              <Toggle
+                setIsDateSetting={setIsDateSetting}
+                isDateSetting={isDateSetting}
               />
-              <NoPeriodContainer>
-                <Checkbox type="checkbox" />
-                <CheckboxText>종료일을 설정하지 않을래요!</CheckboxText>
-              </NoPeriodContainer>
-            </PeriodContainer>
+              {/* <Checkbox type="checkbox" />
+                <CheckboxText>종료일을 설정하지 않을래요!</CheckboxText> */}
+            </NoPeriodContainer>
+            {isDateSetting && (
+              <PeriodContainer>
+                <DateRangePicker
+                  startDate={formData.startDate}
+                  setStartDate={handleStartDateChange}
+                  endDate={formData.endDate}
+                  setEndDate={handleEndDateChange}
+                />
+              </PeriodContainer>
+            )}
             <ImgContainer>
               <ExplainText>사진</ExplainText>
               <ImageUpload onClick={handleImageUploadClick}>
@@ -206,14 +233,19 @@ const Overlay = styled.div`
 `;
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #ffffff;
   width: 431px;
-  height: 580px;
+  /* height: 580px; */
+  min-height: 440px;
+  /* max-height: 580px; */
   border-radius: 12px;
+  cursor: default;
 `;
 
 const TopContainer = styled.div`
@@ -225,6 +257,7 @@ const TopContainer = styled.div`
 `;
 
 const TopText = styled.div`
+  display: flex;
   font-size: 18px;
   font-weight: bold;
   position: absolute;
@@ -248,7 +281,7 @@ const ExitButton = styled.div`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   margin-top: 32px;
 `;
 
@@ -259,10 +292,24 @@ const GoalTitleContainer = styled.div`
 `;
 
 const ExplainText = styled.div`
+  display: flex;
   font-size: 12px;
+  margin-left: 24px;
   margin-right: auto;
 `;
-
+const DatePickText = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  /* border: 2px solid black; */
+  margin-top: 16px;
+  margin-left: 24px;
+  .date-pick-explain {
+    color: #676767;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+`;
 const GoalTitleInput = styled.input`
   width: 373px;
   height: 45px;
@@ -270,6 +317,10 @@ const GoalTitleInput = styled.input`
   border-radius: 8px;
   border: 1px solid #dfdfdf;
   padding-left: 12px;
+  outline: none;
+  &:focus {
+    border: 1px solid #676767;
+  }
 `;
 
 const PeriodContainer = styled.div`
@@ -280,8 +331,14 @@ const PeriodContainer = styled.div`
 
 const NoPeriodContainer = styled.div`
   display: flex;
-  margin-right: auto;
+  /* flex: 1; */
+  width: 100%;
+  justify-content: space-between;
+  /* justify-content: center; */
+  /* padding-left: 12px;
+  padding-right: 12px; */
   margin-top: 3px;
+  /* border: 2px solid green; */
 `;
 
 const Checkbox = styled.input`
@@ -330,4 +387,10 @@ const SubmitButton = styled.div`
   margin-left: auto;
   margin-right: 20px;
   border-radius: 8px;
+  margin-bottom: 18px;
+  cursor: pointer;
+
+  &:active {
+    background-color: #586eff;
+  }
 `;

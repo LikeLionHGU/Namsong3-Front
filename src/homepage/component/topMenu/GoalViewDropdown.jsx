@@ -33,20 +33,37 @@ function GoalViewDropdown({ currentSort, setCurrentSort }) {
     <DropdownContainer ref={dropdownRef}>
       <Wrapper onClick={toggleDropdown}>
         <div style={{ marginLeft: "12px" }}>{currentSort}</div>
-        <Icon src={GoalViewDropdownIcon} alt="Dropdown Icon" isOpen={isDropdownOpen} />
+        <Icon
+          src={GoalViewDropdownIcon}
+          alt="Dropdown Icon"
+          isDropdownOpen={isDropdownOpen}
+        />
       </Wrapper>
-      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
+      <CSSTransition
+        in={isDropdownOpen}
+        timeout={300}
+        classNames="dropdown"
+        unmountOnExit
+      >
         <DropdownMenu>
-          {currentSort !== "최신순" && <DropdownItem onClick={() => handleOptionClick("최신순")}>최신순</DropdownItem>}
+          {currentSort !== "최신순" && (
+            <DropdownItem onClick={() => handleOptionClick("최신순")}>
+              최신순
+            </DropdownItem>
+          )}
           {currentSort !== "오름차순" && (
             <>
-              <DropdownItem onClick={() => handleOptionClick("오름차순")}>오름차순</DropdownItem>
+              <DropdownItem onClick={() => handleOptionClick("오름차순")}>
+                오름차순
+              </DropdownItem>
             </>
           )}
           {currentSort !== "내림차순" && (
             <>
               <Separator />
-              <DropdownItem onClick={() => handleOptionClick("내림차순")}>내림차순</DropdownItem>
+              <DropdownItem onClick={() => handleOptionClick("내림차순")}>
+                내림차순
+              </DropdownItem>
             </>
           )}
         </DropdownMenu>
@@ -98,7 +115,8 @@ const Wrapper = styled.div`
 
 const Icon = styled.img`
   transition: transform 0.3s;
-  transform: ${({ isOpen }) => (isOpen ? "rotate(180deg)" : "rotate(0deg)")};
+  transform: ${({ isDropdownOpen }) =>
+    isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)"};
   margin-right: 10px;
 `;
 
