@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import QuillEditor from "../../diaryWritePage/components/QuillEditor";
 
 import styled from "styled-components";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import DiaryEditDropdown from "./DiaryEditDropdown";
+import getDiaryDetail from "../../apis/getDiaryDetail";
+import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
 
-function DiaryDetail({ diaryId }) {
+function DiaryDetail({}) {
   const [deleteModal, setDeleteModal] = useState(false);
+  const [diaryDetail, setDiaryDetail] = useState([]);
+  const { diaryId } = useParams();
 
+  const csrfToken = useRecoilValue(tokenState);
   var goalId = 2;
   const dummyTitle = "아이디에이션";
   const dummyDate = "24.07.16";
@@ -15,14 +22,26 @@ function DiaryDetail({ diaryId }) {
     "'중앙해커톤 우승'이라는 새로운 목표를 새롭게 만들었다. <p>테스트 테스트</p> <h1>html테스트</h1>";
   // 컨텐츠 내용 많아지면 스크롤로 내려서 확인할 수 있도록 만듦.
 
+  useEffect(() => {
+    const fetchGoalList = async () => {
+      try {
+        const fetchedDiary = await getDiaryDetail(diaryId, csrfToken);
+        setDiaryDetail(fetchedDiary);
+      } catch (error) {
+        console.error("Error fetching diary detail:", error);
+      }
+    };
+    fetchGoalList();
+  }, [goalId, csrfToken]);
+
   return (
     <Wrapper>
       <BoxWrapper>
         <CenterBox>
           <DiaryHeader>
             <TitleDate>
-              <DiaryTitle name="title">{dummyTitle}</DiaryTitle>
-              <DiaryDate>{dummyDate}</DiaryDate>
+              <DiaryTitle name="title">{diaryDetail.title}</DiaryTitle>
+              <DiaryDate>{diaryDetail.createdDate}</DiaryDate>
             </TitleDate>
             <Dropdown>
               {/* 각 일지 수정 및 삭제 드롭다운 */}
@@ -35,7 +54,9 @@ function DiaryDetail({ diaryId }) {
           <ContentArea>
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
-              <div dangerouslySetInnerHTML={{ __html: dummyContent }}></div>
+              <div
+                dangerouslySetInnerHTML={{ __html: `${diaryDetail.content}` }}
+              ></div>
             </Contents>
           </ContentArea>
         </CenterBox>
