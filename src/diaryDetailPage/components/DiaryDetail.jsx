@@ -55,7 +55,7 @@ function DiaryDetail({}) {
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
               <div
-                dangerouslySetInnerHTML={{ __html: `${diaryDetail.content}` }}
+                dangerouslySetInnerHTML={{ __html: `${diaryDetail.content}}` }}
               ></div>
             </Contents>
           </ContentArea>

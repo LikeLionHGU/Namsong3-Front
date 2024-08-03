@@ -48,9 +48,13 @@ function Diaries() {
     let diaries = goalList.journals;
 
     if (currentSort === "최신순") {
-      diaries = diaries.sort((a, b) => formatDate(b.createdDate) - formatDate(a.createdDate));
+      diaries = diaries.sort(
+        (a, b) => formatDate(b.createdDate) - formatDate(a.createdDate)
+      );
     } else if (currentSort === "오래된 순") {
-      diaries = diaries.sort((a, b) => formatDate(a.createdDate) - formatDate(b.createdDate));
+      diaries = diaries.sort(
+        (a, b) => formatDate(a.createdDate) - formatDate(b.createdDate)
+      );
     }
 
     return diaries;
@@ -62,14 +66,20 @@ function Diaries() {
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
+        <input
+          className="search-bar"
+          placeholder="제목+내용을 입력해보세요."
+        ></input>
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
           <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <img src={goPencil} alt="" />
           </div>
-          <DiaryViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+          <DiaryViewDropdown
+            currentSort={currentSort}
+            setCurrentSort={setCurrentSort}
+          />
         </div>
         <DiaryList>
           {!isLoading && filteredDiaries.length === 0 && (
@@ -89,13 +99,17 @@ function Diaries() {
                 </div>
               </div>
               {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
-                <Image style={{ backgroundImage: `url(${diaries.thumbnail})` }} />
+                <Image
+                  style={{ backgroundImage: `url(${diaries.thumbnail})` }}
+                />
               ) : null}
             </Diary>
           ))}
         </DiaryList>
       </DairyListBox>
-      {isModalOpen && <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />}
+      {isModalOpen && (
+        <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />
+      )}
     </ListPart>
   );
 }
