@@ -57,7 +57,12 @@ function Profile() {
   return (
     <ProfileBtn ref={profileRef} onClick={toggleProfile}>
       <div style={{ cursor: "pointer" }}>프로필</div>
-      <CSSTransition in={isProfileOpen} timeout={300} classNames="profile" unmountOnExit>
+      <CSSTransition
+        in={isProfileOpen}
+        timeout={300}
+        classNames="profile"
+        unmountOnExit
+      >
         <ProfileMenu>
           <ProfileInfo>
             <img src={ProfileImg} alt="" />
@@ -78,6 +83,9 @@ const ProfileBtn = styled.div`
   justify-content: center;
   align-items: center;
   /* cursor: pointer; */
+  > div {
+    cursor: pointer;
+  }
 `;
 
 const fadeIn = keyframes`
@@ -132,6 +140,7 @@ const ProfileInfo = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: default;
 `;
 
 const LogoutBtn = styled.div`

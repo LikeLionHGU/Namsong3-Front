@@ -109,6 +109,7 @@ const CalendarContainer = styled.div`
   border-radius: 12px;
   overflow: hidden;
   padding-bottom: 10px;
+  cursor: default;
 `;
 
 const CalendarHeader = styled.div`

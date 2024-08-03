@@ -98,7 +98,10 @@ function Goals() {
     <Container>
       <TopMenu>
         <Taps currentTab={currentTab} setCurrentTab={setCurrentTab} />
-        <GoalViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+        <GoalViewDropdown
+          currentSort={currentSort}
+          setCurrentSort={setCurrentSort}
+        />
       </TopMenu>
       <GoalContainer>
         <CreateGoalModalBtn onClick={openCreateGoalsModal}>
@@ -107,7 +110,11 @@ function Goals() {
         </CreateGoalModalBtn>
         {filteredGoals.length === 0 && (
           <GoalDoesNotExist>
-            <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
+            <img
+              src={GoalDoesNotExistImg}
+              alt=""
+              style={{ marginTop: "59px", width: "40px", height: "41px" }}
+            />
             <div
               style={{
                 color: "#676767",
@@ -133,7 +140,9 @@ function Goals() {
               }}
             >
               <div>하고 싶은 일을 적어볼까요? </div>{" "}
-              <div style={{ marginTop: "5px" }}>작은 목표부터 큰 목표까지 모두 좋아요!</div>
+              <div style={{ marginTop: "5px" }}>
+                작은 목표부터 큰 목표까지 모두 좋아요!
+              </div>
             </div>
           </GoalDoesNotExist>
         )}
@@ -144,8 +153,12 @@ function Goals() {
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
                   <ImageContainer>
-                    <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
-                    <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
+                    <Image
+                      style={{ backgroundImage: `url(${goal.thumbnail})` }}
+                    />
+                    <GoalEditDropdown
+                      setIsDeleteModalOpen={setIsDeleteModalOpen}
+                    />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
@@ -160,7 +173,9 @@ function Goals() {
                         </ExpirationText>
                       )}
                       {daysLeft === null || daysLeft > 5
-                        ? !isExpired(goal.endDate) && <div style={{ marginTop: "4px" }} />
+                        ? !isExpired(goal.endDate) && (
+                            <div style={{ marginTop: "4px" }} />
+                          )
                         : null}
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
@@ -176,7 +191,9 @@ function Goals() {
                       </TitleFireContainer>
                       {(goal.startDate || goal.endDate) && (
                         <Period>
-                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
+                          {goal.startDate && (
+                            <StartDate>{goal.startDate}</StartDate>
+                          )}
                           {goal.startDate && goal.endDate && <span> → </span>}
                           {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
@@ -190,7 +207,9 @@ function Goals() {
         </TransitionGroup>
       </GoalContainer>
       {isModalOpen && <CreateGoalModal setIsModalOpen={setIsModalOpen} />}
-      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
+      {isDeleteModalOpen && (
+        <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />
+      )}
     </Container>
   );
 }
@@ -231,6 +250,7 @@ const CreateGoalModalBtn = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: #c5c5c5;
+  cursor: pointer;
 `;
 
 const GoalDoesNotExist = styled.div`
@@ -275,6 +295,7 @@ const GoalWrapper = styled.div`
   margin-top: 20px;
   margin-right: 12px;
   margin-left: 12px;
+  cursor: pointer;
   animation: ${enterAnimation} 0.5s forwards;
 
   &.goal-enter {

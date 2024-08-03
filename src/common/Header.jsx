@@ -27,6 +27,10 @@ const RightContainer = styled.div`
 `;
 const HomeBtn = styled.div`
   margin-right: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `;
 
 function Header() {
