@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import dummy from "../../db/data.json";
 import SearchIcon from "@mui/icons-material/Search";
 import goPencil from "../../asset/Icon/goPencil.svg";
 import CreateDiaryModal from "./CreateDiaryModal";
@@ -19,6 +18,7 @@ function Diaries() {
   const goalId = queryParams.get("id");
   const csrfToken = useRecoilValue(tokenState);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchGoalList = async () => {
       try {
@@ -35,17 +35,18 @@ function Diaries() {
     setIsModalOpen(true);
   };
 
+  const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split(".").map(Number);
+    return new Date(year + 2000, month - 1, day); // assuming the year is in 2000s
+  };
+
   const getFilteredDiaries = () => {
     let diaries = goalList.journals;
 
     if (currentSort === "최신순") {
-      diaries = diaries.sort(
-        (a, b) => new Date(b.createdDate) - new Date(a.createdDate)
-      );
+      diaries = diaries.sort((a, b) => formatDate(b.createdDate) - formatDate(a.createdDate));
     } else if (currentSort === "오래된 순") {
-      diaries = diaries.sort(
-        (a, b) => new Date(a.createdDate) - new Date(b.createdDate)
-      );
+      diaries = diaries.sort((a, b) => formatDate(a.createdDate) - formatDate(b.createdDate));
     }
 
     return diaries;
@@ -53,31 +54,18 @@ function Diaries() {
 
   const filteredDiaries = getFilteredDiaries();
 
-  // 일지 검색 + 일지 추가 + 일지 리스트 부분
-
-  //TODO: 일지 검색
-  //TODO: 일지 필터링(드롭다운, 최신순 오래된순)
-  //TODO: 일지 추가
-  //TODO: 일지 내용 보기
-
   return (
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input
-          className="search-bar"
-          placeholder="제목+내용을 입력해보세요."
-        ></input>
+        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
           <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <img src={goPencil} alt="" />
           </div>
-          <DiaryViewDropdown
-            currentSort={currentSort}
-            setCurrentSort={setCurrentSort}
-          />
+          <DiaryViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
         </div>
         <DiaryList>
           {filteredDiaries.map((diaries, index) => (
@@ -94,17 +82,13 @@ function Diaries() {
                 </div>
               </div>
               {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
-                <Image
-                  style={{ backgroundImage: `url(${diaries.thumbnail})` }}
-                />
+                <Image style={{ backgroundImage: `url(${diaries.thumbnail})` }} />
               ) : null}
             </Diary>
           ))}
         </DiaryList>
       </DairyListBox>
-      {isModalOpen && (
-        <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />
-      )}
+      {isModalOpen && <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />}
     </ListPart>
   );
 }
@@ -254,8 +238,3 @@ const Image = styled.div`
   background-size: cover;
   background-position: center;
 `;
-
-// const ListMenu = styled.li`
-//   list-style: none;
-//   border: 2px solid lightgray;
-// `;
