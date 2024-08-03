@@ -1,24 +1,27 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import GoalViewDropdown from "../../../../asset/Icon/GoalViewDropdown.svg";
 
 const CustomInputStart = forwardRef(({ value, onClick }, ref) => (
-  <StyledButtonStart onClick={onClick} ref={ref}>
-    {value || "시작일자"}
-  </StyledButtonStart>
+  <StyledButton onClick={onClick} ref={ref}>
+    {value || <span style={{ color: "#676767" }}>시작일</span>} <img src={GoalViewDropdown} alt="" />
+  </StyledButton>
 ));
 
 const CustomInputEnd = forwardRef(({ value, onClick }, ref) => (
-  <StyledButtonEnd onClick={onClick} ref={ref}>
-    {value || "종료일자"}
-  </StyledButtonEnd>
+  <StyledButton onClick={onClick} ref={ref} style={{ marginLeft: "7px" }}>
+    {value || <span style={{ color: "#676767" }}>종료일</span>} <img src={GoalViewDropdown} alt="" />
+  </StyledButton>
 ));
 
 function DateRangePicker({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <PeriodContainer>
-      <ExplainText>목표 진행기간 설정</ExplainText>
+      <ExplainText>
+        기간<span style={{ color: "red" }}>*</span>
+      </ExplainText>
       <DateInputs>
         <StyledDatePicker
           dateFormat="yyyy-MM-dd"
@@ -32,6 +35,7 @@ function DateRangePicker({ startDate, setStartDate, endDate, setEndDate }) {
           shouldCloseOnSelect
           selected={endDate}
           onChange={(date) => setEndDate(date)}
+          minDate={startDate}
           customInput={<CustomInputEnd />}
         />
       </DateInputs>
@@ -49,58 +53,33 @@ const PeriodContainer = styled.div`
 `;
 
 const ExplainText = styled.div`
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 12px;
+  margin-bottom: 6px;
 `;
 
 const DateInputs = styled.div`
   display: flex;
-  align-items: center;
+  width: 388px;
+  justify-content: space-between;
 `;
 
 const StyledDatePicker = styled(DatePicker)`
   width: 100%;
 `;
 
-const StyledButtonStart = styled.button`
-  width: 205px;
-  height: 54px;
-  border: 1px solid #ccc;
-  background-color: #e0e0e0;
-  padding: 0 8px;
-  box-sizing: border-box;
-  border-radius: 4px 0 0 4px;
+const StyledButton = styled.button`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 190px;
+  height: 45px;
+  border: 1px solid #dfdfdf;
+  padding: 0 15px 0 12px;
+  background-color: white;
+  border-radius: 8px;
   cursor: pointer;
   &:focus {
     outline: none;
     border-color: #999;
-  }
-  margin-right: -13px; /* 중간의 틈을 없애기 위해 조정 */
-`;
-
-const StyledButtonEnd = styled.button`
-  width: 205px;
-  height: 54px;
-  border: 1px solid #ccc;
-  background-color: #e0e0e0;
-  padding: 0 8px;
-  box-sizing: border-box;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  position: relative;
-  &:focus {
-    outline: none;
-    border-color: #999;
-  }
-  margin-left: -7px;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    clip-path: polygon(90% 0, 100% 50%, 90% 100%, 100% 100%, 100% 0);
   }
 `;
