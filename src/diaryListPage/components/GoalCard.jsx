@@ -8,6 +8,10 @@ import { tokenState } from "../../atom/atom";
 import CompleteGoalModal from "./CompleteGoalModal";
 import CompleteConfirmModal from "./CompleteConfirmModal";
 
+import img1 from "../../asset/Random/random1.svg";
+import img2 from "../../asset/Random/random2.svg";
+const backgroundArr = [img1, img2];
+
 // Props set하고,,, 모달에서 완료하기 버튼을 누르면 그 변화된 내용을 post로 저장해야함. (DB에 저장, 이 목표가 끝났다는 걸 알 수 있도록)
 function GoalCard() {
   const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
@@ -19,6 +23,10 @@ function GoalCard() {
   const queryParams = new URLSearchParams(location.search);
   const goalId = queryParams.get("id");
   const csrfToken = useRecoilValue(tokenState);
+
+  //랜덤 이미지 설정
+  const randomIndex = Math.floor(Math.random() * backgroundArr.length);
+  const backgroundImg = backgroundArr[randomIndex];
 
   const isValidDate = (dateString) => {
     const regEx = /^\d{2}\.\d{2}\.\d{2}$/;
@@ -64,9 +72,14 @@ function GoalCard() {
   return (
     <Container>
       <Wrapper>
-        <Image
-          style={{ backgroundImage: `url(https://ifh.cc/g/ZzgWw6.jpg)` }}
-        />
+        {goalInfo.goal.thumbnail ? (
+          <Image
+            style={{ backgroundImage: `url(${goalInfo.goal.thumbnail})` }}
+          />
+        ) : (
+          <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
+        )}
+        {/* <Image style={{ backgroundImage: `url(${backgroundImg})` }} /> */}
         <Info>
           <Title>{goalInfo.goal.title}</Title>
           <Period>
