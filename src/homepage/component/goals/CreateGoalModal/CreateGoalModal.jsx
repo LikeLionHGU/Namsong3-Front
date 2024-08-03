@@ -25,8 +25,8 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
 
   const [formData, setFormData] = useState({
     title: "",
-    startDate: null,
-    endDate: null,
+    startDate: "",
+    endDate: "",
     thumbnail: "",
   });
 
