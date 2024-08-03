@@ -33,13 +33,28 @@ function DiaryViewDropdown({ currentSort, setCurrentSort }) {
     <DropdownContainer ref={dropdownRef}>
       <Wrapper onClick={toggleDropdown}>
         <div style={{ marginLeft: "12px" }}>{currentSort}</div>
-        <Icon src={GoalViewDropdownIcon} alt="Dropdown Icon" isOpen={isDropdownOpen} />
+        <Icon
+          src={GoalViewDropdownIcon}
+          alt="Dropdown Icon"
+          isOpen={isDropdownOpen}
+        />
       </Wrapper>
-      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
+      <CSSTransition
+        in={isDropdownOpen}
+        timeout={300}
+        classNames="dropdown"
+        unmountOnExit
+      >
         <DropdownMenu>
-          {currentSort !== "최신순" && <DropdownItem onClick={() => handleOptionClick("최신순")}>최신순</DropdownItem>}
+          {currentSort !== "최신순" && (
+            <DropdownItem onClick={() => handleOptionClick("최신순")}>
+              최신순
+            </DropdownItem>
+          )}
           {currentSort !== "오래된 순" && (
-            <DropdownItem onClick={() => handleOptionClick("오래된 순")}>오래된 순</DropdownItem>
+            <DropdownItem onClick={() => handleOptionClick("오래된 순")}>
+              오래된 순
+            </DropdownItem>
           )}
         </DropdownMenu>
       </CSSTransition>

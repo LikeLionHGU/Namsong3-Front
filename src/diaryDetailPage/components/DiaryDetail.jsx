@@ -9,17 +9,14 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 
-function DiaryDetail({}) {
+function DiaryDetail() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [diaryDetail, setDiaryDetail] = useState([]);
-  const { diaryId } = useParams();
-
+  const { diaryId } = useParams(); //diaryId로 설정해놓은 param 값을 url로부터 가져와서 사용.
+  const { goalId } = useParams(); // goalId로 설정해놓은 param 값을 url로부터 가져와서 사용.
+  // console.log("id is : ", goalId);
   const csrfToken = useRecoilValue(tokenState);
-  var goalId = 2;
-  const dummyTitle = "아이디에이션";
-  const dummyDate = "24.07.16";
-  const dummyContent =
-    "'중앙해커톤 우승'이라는 새로운 목표를 새롭게 만들었다. <p>테스트 테스트</p> <h1>html테스트</h1>";
+
   // 컨텐츠 내용 많아지면 스크롤로 내려서 확인할 수 있도록 만듦.
 
   useEffect(() => {
@@ -55,7 +52,7 @@ function DiaryDetail({}) {
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
               <div
-                dangerouslySetInnerHTML={{ __html: `${diaryDetail.content}` }}
+                dangerouslySetInnerHTML={{ __html: `${diaryDetail.content}}` }}
               ></div>
             </Contents>
           </ContentArea>

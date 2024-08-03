@@ -23,10 +23,15 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
           <MainContainer>
             <WriteMethod onClick={() => navigate("../chatbot")}>
               <TextContainer>
-                <MainText>👾 (봇이름)이와 함께 일지 작성하기</MainText>
+                <MainText>👾 steppy와 함께 일지 작성하기</MainText>
                 <SubText>
-                  <div>무슨 일지를 써야할지 고민이 되는 날에도, 고된 일정으로 피곤한 하루에도</div>{" "}
-                  <div style={{ marginTop: "3px" }}>(봇이름)이가 chicky님의 꾸준한 기록을 도와줄게요!</div>
+                  <div>
+                    무슨 일지를 써야할지 고민이 되는 날에도, 고된 일정으로
+                    피곤한 하루에도
+                  </div>
+                  <div style={{ marginTop: "3px" }}>
+                    steppy가 chicky님의 꾸준한 기록을 도와줄게요!
+                  </div>
                 </SubText>
               </TextContainer>
             </WriteMethod>
@@ -34,8 +39,13 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
               <TextContainer>
                 <MainText>✍️ 직접 작성하기</MainText>
                 <SubText>
-                  <div>오늘만큼은 적고 싶은게 너무 많은 날, 떠오르는 생각과 느낌을 적고 싶은 날</div>
-                  <div style={{ marginTop: "3px" }}>자유롭게 하루의 일지를 적어보아요!</div>
+                  <div>
+                    오늘만큼은 적고 싶은게 너무 많은 날, 떠오르는 생각과 느낌을
+                    적고 싶은 날
+                  </div>
+                  <div style={{ marginTop: "3px" }}>
+                    자유롭게 하루의 일지를 적어보아요!
+                  </div>
                 </SubText>
               </TextContainer>
             </WriteMethod>
@@ -60,7 +70,7 @@ const modalStyles = `
 
 const Modal = styled.div`
   ${modalStyles}
-  background: rgba(158, 158, 158, 0.8);
+  background: rgba(0, 0, 0, 0.2);
   z-index: 3;
 `;
 
@@ -144,6 +154,7 @@ const TextContainer = styled.div`
 const MainText = styled.div`
   font-size: 16px;
   font-weight: 600;
+  color: #798bff;
 `;
 
 const SubText = styled.div`
