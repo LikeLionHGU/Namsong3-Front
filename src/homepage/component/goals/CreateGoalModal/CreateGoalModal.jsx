@@ -4,6 +4,8 @@ import DateRangePicker from "./DateRangePicker";
 import createGoal from "../../../../apis/createGoal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../../../atom/atom";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import ImgUpload from "../../../../asset/Icon/ImgUpload.svg";
 
 const formatDate = (date) => {
   const year = date.getFullYear();
@@ -101,11 +103,15 @@ function CreateGoalModal({ setIsModalOpen }) {
         <Wrapper>
           <TopContainer>
             <TopText>목표 추가하기</TopText>
-            <ExitButton onClick={closeCreateGoalModal}>나가기</ExitButton>
+            <ExitButton onClick={closeCreateGoalModal}>
+              <CloseRoundedIcon />
+            </ExitButton>
           </TopContainer>
           <MainContainer>
             <GoalTitleContainer>
-              <ExplainText>목표작성</ExplainText>
+              <ExplainText>
+                목표명<span style={{ color: "red" }}>*</span>
+              </ExplainText>
               <GoalTitleInput
                 type="text"
                 placeholder="목표이름 작성하기"
@@ -123,26 +129,33 @@ function CreateGoalModal({ setIsModalOpen }) {
               />
               <NoPeriodContainer>
                 <Checkbox type="checkbox" />
-                <CheckboxText>진행기간을 설정하지 않을래요!</CheckboxText>
+                <CheckboxText>종료일을 설정하지 않을래요!</CheckboxText>
               </NoPeriodContainer>
             </PeriodContainer>
-
-            <ImageUpload onClick={handleImageUploadClick}>
-              {previewUrl ? (
-                <img
-                  src={previewUrl}
-                  alt="Uploaded"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                "이미지(선택)"
-              )}
-              <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
-            </ImageUpload>
+            <ImgContainer>
+              <ExplainText>사진</ExplainText>
+              <ImageUpload onClick={handleImageUploadClick}>
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="Uploaded"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}
+                  >
+                    <img src={ImgUpload} alt=""></img>
+                    <div style={{ color: "#AEAEAE", fontSize: "14px", marginTop: "8px" }}>사진 추가하기</div>
+                  </div>
+                )}
+                <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
+              </ImageUpload>
+            </ImgContainer>
             <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
           </MainContainer>
         </Wrapper>
@@ -182,6 +195,7 @@ const Wrapper = styled.div`
   background: #ffffff;
   width: 431px;
   height: 580px;
+  border-radius: 12px;
 `;
 
 const TopContainer = styled.div`
@@ -193,8 +207,8 @@ const TopContainer = styled.div`
 `;
 
 const TopText = styled.div`
-  font-size: 20px;
-  font-weight: bolder;
+  font-size: 18px;
+  font-weight: bold;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -205,6 +219,12 @@ const ExitButton = styled.div`
   justify-content: center;
   margin-left: auto;
   margin-right: 22px;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #eef1ff;
+  }
 `;
 
 const MainContainer = styled.div`
@@ -221,14 +241,17 @@ const GoalTitleContainer = styled.div`
 `;
 
 const ExplainText = styled.div`
-  font-size: 16px;
+  font-size: 12px;
   margin-right: auto;
 `;
 
 const GoalTitleInput = styled.input`
-  width: 387px;
-  height: 54px;
-  margin-top: 3px;
+  width: 373px;
+  height: 45px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #dfdfdf;
+  padding-left: 12px;
 `;
 
 const PeriodContainer = styled.div`
@@ -246,34 +269,47 @@ const NoPeriodContainer = styled.div`
 const Checkbox = styled.input`
   width: 16px;
   height: 16px;
+  border: 1px solid #c5c5c5;
+  border-radius: 4px;
 `;
 
 const CheckboxText = styled.div`
   font-size: 12px;
   margin-top: 3px;
+  color: #676767;
+`;
+
+const ImgContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 16px;
 `;
 
 const ImageUpload = styled.div`
   width: 387px;
   height: 208px;
   display: flex;
+  border: 1px solid #dfdfdf;
+  border-radius: 8px;
   align-items: center;
   justify-content: center;
-  background-color: lightgray;
-  margin-top: 16px;
+  margin-top: 6px;
   cursor: pointer;
 `;
 
 const SubmitButton = styled.div`
-  width: 153px;
-  height: 40px;
-  background-color: lightgray;
-  color: gray;
+  width: 108px;
+  height: 37px;
+  background-color: #798bff;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: bold;
   margin-top: 25px;
   margin-left: auto;
   margin-right: 20px;
+  border-radius: 8px;
 `;
