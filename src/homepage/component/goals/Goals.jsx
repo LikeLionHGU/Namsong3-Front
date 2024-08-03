@@ -13,6 +13,12 @@ import { tokenState } from "../../../atom/atom";
 import { useRecoilState } from "recoil";
 import GoalDoesNotExistImg from "../../../asset/Icon/GoalDoesNotExist.svg";
 
+import img1 from "../../../asset/Random/random1.svg";
+import img2 from "../../../asset/Random/random2.svg";
+const backgroundArr = [img1, img2];
+// const randomIndex = Math.floor(Math.random() * backgroundArr.length);
+// const backgroundImg = backgroundArr[randomIndex];
+
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -148,14 +154,27 @@ function Goals() {
         )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
+            const randomIndex = Math.floor(
+              Math.random() * backgroundArr.length
+            );
+            const backgroundImg = backgroundArr[randomIndex];
             const daysLeft = getDaysLeft(goal.endDate);
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
                   <ImageContainer>
-                    <Image
+                    {goal.thumbnail ? (
+                      <Image
+                        style={{ backgroundImage: `url(${goal.thumbnail})` }}
+                      />
+                    ) : (
+                      <Image
+                        style={{ backgroundImage: `url(${backgroundImg})` }}
+                      />
+                    )}
+                    {/* <Image
                       style={{ backgroundImage: `url(${goal.thumbnail})` }}
-                    />
+                    /> */}
                     <GoalEditDropdown
                       setIsDeleteModalOpen={setIsDeleteModalOpen}
                     />
