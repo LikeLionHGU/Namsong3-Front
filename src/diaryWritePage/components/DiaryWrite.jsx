@@ -69,7 +69,9 @@ function DiaryWrite() {
             csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );

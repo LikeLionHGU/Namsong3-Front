@@ -83,13 +83,18 @@ function Diaries() {
         </div>
         <DiaryList>
           {!isLoading && filteredDiaries.length === 0 && (
-            <DiaryDoesNotExist>📝 일지 작성으로 목표에 한걸음 더! 📝</DiaryDoesNotExist>
+            <DiaryDoesNotExist>
+              📝 일지 작성으로 목표에 한걸음 더! 📝
+            </DiaryDoesNotExist>
           )}
           {filteredDiaries.map((diaries, index) => (
             <Diary
               key={index}
               onClick={() => {
-                navigate(`/detail/${diaries.journalId}`);
+                navigate(`${goalId}/detail/${diaries.journalId}`);
+                // navigate(`?id=${goalId}/detail/${diaries.journalId}`);
+                // navigate(`/detail/${diaries.journalId}`);
+                // navigate(`/diarylist?id=${goalId}/detail/${diaries.journalId}`);
               }}
             >
               <div className="diary-title-date">

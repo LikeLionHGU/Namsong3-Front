@@ -21,8 +21,10 @@ function App() {
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/write" element={<DiaryWritePage />} />
           <Route path="/summaryEdit" element={<DiaryBotPage />} />
-          <Route path="/detail/:diaryId" element={<DiaryDetailPage />} />
-
+          <Route
+            path="/diarylist/:goalId/detail/:diaryId"
+            element={<DiaryDetailPage />}
+          />
           <Route path="/oauth2/redirect" element={<Loading />} />
         </Routes>
       </BrowserRouter>
