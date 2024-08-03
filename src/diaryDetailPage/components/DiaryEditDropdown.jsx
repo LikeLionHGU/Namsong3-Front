@@ -1,17 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import GoalEditDropdownBtn from "../../../../asset/Icon/GoalEditDropdownBtn.svg";
+import DiaryEditDropdownBtn from "../../asset/Icon/DiaryEditDropdownBtn.svg";
 import { CSSTransition } from "react-transition-group";
+import { useNavigate } from "react-router-dom";
 
-function DiaryEditDropdown({ setIsDeleteModalOpen }) {
+function DiaryEditDropdown({ setDeleteModal }) {
+  //   console.log("???");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const navigate = useNavigate();
   const toggleDropdown = (event) => {
     setIsDropdownOpen(!isDropdownOpen);
     event.stopPropagation();
   };
 
+  const handleEditclick = (e) => {
+    setIsDropdownOpen(!isDropdownOpen);
+    /* 일지 수정하는 페이지로 이동 필요 */
+    // navigate(`/edit/${diaryId}`);
+  };
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsDropdownOpen(false);
@@ -20,7 +27,7 @@ function DiaryEditDropdown({ setIsDeleteModalOpen }) {
 
   const handleDeleteClick = (event) => {
     event.stopPropagation(); //뒤에 goalclick event 방지용
-    setIsDeleteModalOpen(true);
+    setDeleteModal(true);
     toggleDropdown(event);
   };
 
@@ -33,7 +40,7 @@ function DiaryEditDropdown({ setIsDeleteModalOpen }) {
 
   return (
     <DropdownContainer ref={dropdownRef} onClick={toggleDropdown}>
-      <img src={GoalEditDropdownBtn} alt=""></img>
+      <img src={DiaryEditDropdownBtn} alt=""></img>
       <CSSTransition
         in={isDropdownOpen}
         timeout={300}
@@ -41,9 +48,8 @@ function DiaryEditDropdown({ setIsDeleteModalOpen }) {
         unmountOnExit
       >
         <DropdownMenu>
-          <DropdownItem onClick={toggleDropdown}>수정하기</DropdownItem>
+          <DropdownItem onClick={handleEditclick}>수정하기</DropdownItem>
           <Separator />
-
           <DropdownItem onClick={handleDeleteClick}>삭제하기</DropdownItem>
         </DropdownMenu>
       </CSSTransition>
@@ -76,7 +82,8 @@ const fadeOut = keyframes`
 `;
 
 const DropdownContainer = styled.div`
-  position: absolute;
+  display: flex;
+  position: relative; // relative로 수정해야 내가 설정해두는 곳에 드롭다운 위치 가능
   top: 8px;
   right: 8px;
   width: 24px;
@@ -85,12 +92,13 @@ const DropdownContainer = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  /* border: 2px solid purple; */
 `;
 
 const DropdownMenu = styled.div`
   position: absolute;
   top: 115%;
-  right: -21%;
+  right: -120%;
   background-color: white;
   border: 1px solid #dfdfdf;
   border-radius: 4px;
