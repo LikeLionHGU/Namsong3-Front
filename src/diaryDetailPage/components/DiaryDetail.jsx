@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 // import QuillEditor from "../../diaryWritePage/components/QuillEditor";
-import DiaryEditDropdownBtn from "../../asset/Icon/DiaryEditDropdownBtn.svg";
+
 import styled from "styled-components";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-function DiaryDetail() {
+import DiaryEditDropdown from "./DiaryEditDropdown";
+
+function DiaryDetail({ diaryId }) {
   const [deleteModal, setDeleteModal] = useState(false);
 
+  var goalId = 2;
   const dummyTitle = "아이디에이션";
   const dummyDate = "24.07.16";
   const dummyContent =
@@ -22,17 +25,24 @@ function DiaryDetail() {
               <DiaryDate>{dummyDate}</DiaryDate>
             </TitleDate>
             <Dropdown>
-              <img src={DiaryEditDropdownBtn} alt=""></img>
+              {/* 각 일지 수정 및 삭제 드롭다운 */}
+              <DiaryEditDropdown
+                setDeleteModal={setDeleteModal}
+                // diaryId={diaryId} // 각 일지 아이디
+              />
             </Dropdown>
           </DiaryHeader>
           <ContentArea>
             <Contents>
+              {/* html 태그 적용된 일지 내용 보여주는 부분 */}
               <div dangerouslySetInnerHTML={{ __html: dummyContent }}></div>
             </Contents>
           </ContentArea>
         </CenterBox>
 
-        {deleteModal && <DeleteConfirmModal setDeleteModal={setDeleteModal} />}
+        {deleteModal && (
+          <DeleteConfirmModal setDeleteModal={setDeleteModal} goalId={goalId} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );
