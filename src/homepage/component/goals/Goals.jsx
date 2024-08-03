@@ -27,6 +27,7 @@ function Goals() {
   const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
   const [goalList, setGoalList] = useState({ goals: [] });
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const [csrfToken, setCsrfToken] = useRecoilState(tokenState);
@@ -45,6 +46,8 @@ function Goals() {
         } else {
           console.error("Error fetching goal list", error);
         }
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchGoalList();
@@ -113,7 +116,7 @@ function Goals() {
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
-        {filteredGoals.length === 0 && (
+        {!isLoading && filteredGoals.length === 0 && (
           <GoalDoesNotExist>
             <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
             <div
