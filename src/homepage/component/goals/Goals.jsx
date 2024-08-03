@@ -11,6 +11,7 @@ import DeleteGoalModal from "./goalEditDropdown/DeleteGoalModal";
 import getGoalList from "../../../apis/getGoalList";
 import { tokenState } from "../../../atom/atom";
 import { useRecoilState } from "recoil";
+import GoalDoesNotExistImg from "../../../asset/Icon/GoalDoesNotExist.svg";
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,9 +83,7 @@ function Goals() {
       goals = goals.filter((goal) => goal.status === "CLOSE");
     }
 
-    if (currentSort === "최신순") {
-      goals = goals.sort((a, b) => new Date(b.createDate) - new Date(a.startDate));
-    } else if (currentSort === "오름차순") {
+    if (currentSort === "오름차순") {
       goals = goals.sort((a, b) => a.title.localeCompare(b.title));
     } else if (currentSort === "내림차순") {
       goals = goals.sort((a, b) => b.title.localeCompare(a.title));
@@ -106,6 +105,38 @@ function Goals() {
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
+        {filteredGoals.length === 0 && (
+          <GoalDoesNotExist>
+            <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
+            <div
+              style={{
+                color: "#676767",
+                fontWeight: "bold",
+                fontSize: "18px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "16px",
+              }}
+            >
+              <div>첫 걸음을 내딛는 순간</div>
+              <div style={{ marginTop: "5px" }}>성장이 시작됩니다!</div>
+            </div>
+            <div
+              style={{
+                color: "#AEAEAE",
+                fontSize: "14px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              <div>하고 싶은 일을 적어볼까요? </div>{" "}
+              <div style={{ marginTop: "5px" }}>작은 목표부터 큰 목표까지 모두 좋아요!</div>
+            </div>
+          </GoalDoesNotExist>
+        )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
             const daysLeft = getDaysLeft(goal.endDate);
@@ -200,6 +231,18 @@ const CreateGoalModalBtn = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: #c5c5c5;
+`;
+
+const GoalDoesNotExist = styled.div`
+  width: 282px;
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid #aeaeae;
+  border-style: dashed;
+  margin-top: 20px;
 `;
 
 const enterAnimation = keyframes`
