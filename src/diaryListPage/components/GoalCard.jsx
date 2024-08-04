@@ -11,7 +11,8 @@ import CompleteConfirmModal from "./CompleteConfirmModal";
 import img1 from "../../asset/Random/random1.svg";
 import img2 from "../../asset/Random/random2.svg";
 const backgroundArr = [img1, img2];
-
+const randomIndex = Math.floor(Math.random() * backgroundArr.length);
+const backgroundImg = backgroundArr[randomIndex];
 // Props set하고,,, 모달에서 완료하기 버튼을 누르면 그 변화된 내용을 post로 저장해야함. (DB에 저장, 이 목표가 끝났다는 걸 알 수 있도록)
 function GoalCard() {
   const [goalInfo, setGoalInfo] = useState({ goal: {}, journals: [] });
@@ -25,8 +26,6 @@ function GoalCard() {
   const csrfToken = useRecoilValue(tokenState);
 
   //랜덤 이미지 설정
-  const randomIndex = Math.floor(Math.random() * backgroundArr.length);
-  const backgroundImg = backgroundArr[randomIndex];
 
   const isValidDate = (dateString) => {
     const regEx = /^\d{2}\.\d{2}\.\d{2}$/;
