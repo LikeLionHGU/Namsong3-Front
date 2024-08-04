@@ -36,7 +36,8 @@ const QuillEditor = ({ onChange }) => {
       modules: {
         toolbar: toolbarOptions,
       },
-      placeholder: "일지의 내용을 작성해주세요.", // placeholder에 들어갈 값은 나중에 적절히... props 주고받을때 처리해주기.
+      placeholder:
+        "일지의 내용을 작성해주세요!\n어떤 내용을 적어야 할지 막막하다면 아래 질문을 참고해주세요 🤔\n\n - 오늘 어떤 새로운 것을 배웠나요?\n - 오늘의 목표를 달성하기 위해 어떤 계획을 세웠나요? 그 계획이 효과적이었나요?\n - 내일을 위해 무엇을 준비해야 할까요?", // placeholder에 들어갈 값은 나중에 적절히... props 주고받을때 처리해주기.
       theme: "snow",
     };
 
@@ -161,5 +162,10 @@ const MyBlock = styled.div`
 
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  .ql-editor.ql-blank::before {
+    // placeholder 스타일
+    font-style: normal;
+    font-size: 14px;
   }
 `;
