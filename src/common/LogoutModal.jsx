@@ -1,81 +1,54 @@
 import React from "react";
 import styled from "styled-components";
-
-function CompleteConfirmModal({
-  status,
-  setGoalInfo,
-  setIsConfirmModalOpen,
-  goalId,
-  csrfToken,
-  setIsCompModalOpen,
-}) {
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { tokenState, UserTokenState } from "../atom/atom";
+import logout from "../apis/logout";
+import { useNavigate } from "react-router-dom";
+function LogoutModal({ setLogoutModalOpen }) {
+  const setUserToken = useSetRecoilState(UserTokenState);
+  const [csrfToken, setCsrfToekn] = useRecoilState(tokenState);
+  const navigate = useNavigate();
   const closeConfirmModal = () => {
-    setIsConfirmModalOpen(false);
+    setLogoutModalOpen(false);
   };
-
-  const completeGoal = async () => {
-    // console.log("current status before update is : " + status);
-
-    const updatedGoalInfo = {
-      goal: { status: "CLOSED" },
-    };
-    setGoalInfo((prevGoalInfo) => ({
-      ...prevGoalInfo,
-      goal: { ...prevGoalInfo.goal, status: "CLOSED" },
-    }));
-
-    console.log("current status after update is : " + status);
-    // 모달 닫기
-
+  const handleLogOut = async (event) => {
+    event.stopPropagation();
     try {
-      const response = await fetch(`/api/goals/${goalId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-        },
-        body: JSON.stringify(updatedGoalInfo),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update goal status");
-      }
-
-      console.log("Goal status updated successfully");
+      await logout(csrfToken);
+      setUserToken({ isLogin: false });
+      setCsrfToekn(null);
+      navigate("/");
     } catch (error) {
-      console.error("Error updating goal status:", error);
+      console.error("로그아웃 실패", error);
     }
-
-    setIsConfirmModalOpen(false);
-    setIsCompModalOpen(true);
   };
-
   return (
     <div>
       <ModalBackground>
         <Overlay onClick={closeConfirmModal} />
         <Wrapper>
-          <h3>도전을 완료하시겠어요?</h3>
-          <div className="complete-content">
-            완료한 도전은 재도전이 불가합니다.
+          <h3>잠시 머물러 내일을 준비해보세요</h3>
+          <div className="logout-content">
+            당신은 계속해서 성장하고 있어요!
+            <li>내일의 목표 설정하기 🎯</li>
+            <li>앞으로의 목표 다듬기 🛠</li>
             <br />
-            도전을 완료하시겠어요?
           </div>
           <Buttons>
             <CancelBtn>
               <button onClick={closeConfirmModal}>취소 </button>
             </CancelBtn>
-            <CompleteBtn>
-              <button onClick={completeGoal}>확인</button>
-            </CompleteBtn>
+            <LogoutBtn>
+              <button onClick={handleLogOut}>로그아웃</button>
+            </LogoutBtn>
           </Buttons>
         </Wrapper>
-        {/* </Overlay> */}
       </ModalBackground>
     </div>
   );
 }
-export default CompleteConfirmModal;
+
+export default LogoutModal;
 
 const modalBase = `
 width: 100vw;
@@ -109,15 +82,15 @@ const Wrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background: #ffffff;
-  width: 350px; // 로딩모달 크기
-  height: 180px;
+  min-width: 350px; // 로딩모달 크기
+  height: 187px;
   border-radius: 12px;
   padding-top: 5px;
   z-index: 5;
-  .complete-content {
+  .logout-content {
     width: 310px;
     /* height: 100px; */
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
   }
 `;
@@ -138,7 +111,7 @@ const CancelBtn = styled.div`
 const Buttons = styled.div`
   display: flex;
   flex-direction: row;
-  margin-top: 16px;
+  /* margin-top: 16px; */
   > div > button {
     display: flex;
     justify-content: center;
@@ -159,6 +132,6 @@ const Buttons = styled.div`
     }
   }
 `;
-const CompleteBtn = styled.div`
+const LogoutBtn = styled.div`
   display: flex;
 `;
