@@ -4,7 +4,7 @@ import DiaryEditDropdownBtn from "../../asset/Icon/DiaryEditDropdownBtn.svg";
 import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
 
-function DiaryEditDropdown({ setDeleteModal }) {
+function DiaryEditDropdown({ setDeleteModal, diaryDetail, goalId }) {
   //   console.log("???");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -14,10 +14,9 @@ function DiaryEditDropdown({ setDeleteModal }) {
     event.stopPropagation();
   };
 
-  const handleEditclick = (e) => {
+  const handleEditclick = () => {
     setIsDropdownOpen(!isDropdownOpen);
-    /* 일지 수정하는 페이지로 이동 필요 */
-    // navigate(`/edit/${diaryId}`);
+    navigate(`/UpdateDiary`, { state: { diaryDetail, goalId } });
   };
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -41,12 +40,7 @@ function DiaryEditDropdown({ setDeleteModal }) {
   return (
     <DropdownContainer ref={dropdownRef} onClick={toggleDropdown}>
       <img src={DiaryEditDropdownBtn} alt=""></img>
-      <CSSTransition
-        in={isDropdownOpen}
-        timeout={300}
-        classNames="dropdown"
-        unmountOnExit
-      >
+      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
         <DropdownMenu>
           <DropdownItem onClick={handleEditclick}>수정하기</DropdownItem>
           <Separator />

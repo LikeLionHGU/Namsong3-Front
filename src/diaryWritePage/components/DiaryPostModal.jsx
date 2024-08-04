@@ -6,7 +6,7 @@ function DiaryPostModal({ setPostedModal, goalId }) {
   const navigate = useNavigate();
   const closeModal = () => {
     setPostedModal(false);
-    navigate(`/diaryList?id=${goalId}`); // !!!! 중요, 나중에 연결할때 이 부분이 diaryList?id= 링크로 연결되어야함.
+    navigate(`/diaryList`, { state: { goalId } }); // !!!! 중요, 나중에 연결할때 이 부분이 diaryList?id= 링크로 연결되어야함.
   };
 
   return (

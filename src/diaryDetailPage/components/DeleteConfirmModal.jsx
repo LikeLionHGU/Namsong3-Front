@@ -10,7 +10,7 @@ function DeleteConfirmModal({ setDeleteModal, goalId }) {
   const deleteModal = () => {
     //일지 삭제하는 부분 필요.
     setDeleteModal(false);
-    navigate(`/diaryList?id=${goalId}`);
+    navigate(`/diarylist`, { state: { goalId } });
   };
   return (
     <div>

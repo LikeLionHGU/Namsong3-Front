@@ -11,18 +11,10 @@ import markDate from "../../asset/Icon/markDate.svg";
 import markDateBright from "../../asset/Icon/markDateBright.svg";
 const Calendar = () => {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  // 현재 목표 번호
-  const goalId = queryParams.get("id");
+  const goalId = location.state.goalId;
   const csrfToken = useRecoilValue(tokenState);
   const [isLoading, setIsLoading] = useState(true);
-  const {
-    weekCalendarList,
-    currentDate,
-    setCurrentDate,
-    prevMonthDaysLength,
-    totalMonthDays,
-  } = UseCalendar();
+  const { weekCalendarList, currentDate, setCurrentDate, prevMonthDaysLength, totalMonthDays } = UseCalendar();
   // localstorage에 날짜들 저장해서 새로고침해도 사라지지 않도록 함.
   const [selectedDates, setSelectedDates] = useState(() => {
     const storedDates = localStorage.getItem("selectedDates");
@@ -54,20 +46,14 @@ const Calendar = () => {
   }, [selectedDates]);
 
   const handlePrevMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
-    );
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-    );
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
   // 현재 년도 + 월  //
-  const monthYear = `${currentDate.getFullYear()} ${
-    currentDate.getMonth() + 1
-  }월`;
+  const monthYear = `${currentDate.getFullYear()} ${currentDate.getMonth() + 1}월`;
 
   // 1~9일까지를 두자릿수로 변경하는 부분 01,02,03 ... 09일
   const formatDay = (day) => (day < 10 ? `0${day}` : day);
@@ -85,14 +71,8 @@ const Calendar = () => {
   // };
 
   const isSelected = (date, isCurrentMonth, monthOffset) => {
-    const displayMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + monthOffset,
-      1
-    );
-    const formattedDate = `${displayMonth.getFullYear()}-${formatDay(
-      displayMonth.getMonth() + 1
-    )}-${formatDay(date)}`;
+    const displayMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
+    const formattedDate = `${displayMonth.getFullYear()}-${formatDay(displayMonth.getMonth() + 1)}-${formatDay(date)}`;
     return selectedDates.includes(formattedDate);
   };
 
@@ -118,19 +98,11 @@ const Calendar = () => {
             {week.map((date, dateIndex) => {
               const isCurrentMonth =
                 weekIndex * 7 + dateIndex >= prevMonthDaysLength &&
-                weekIndex * 7 + dateIndex <
-                  prevMonthDaysLength + totalMonthDays;
+                weekIndex * 7 + dateIndex < prevMonthDaysLength + totalMonthDays;
               let monthOffset = 0;
-              if (
-                !isCurrentMonth &&
-                weekIndex * 7 + dateIndex < prevMonthDaysLength
-              ) {
+              if (!isCurrentMonth && weekIndex * 7 + dateIndex < prevMonthDaysLength) {
                 monthOffset = -1;
-              } else if (
-                !isCurrentMonth &&
-                weekIndex * 7 + dateIndex >=
-                  prevMonthDaysLength + totalMonthDays
-              ) {
+              } else if (!isCurrentMonth && weekIndex * 7 + dateIndex >= prevMonthDaysLength + totalMonthDays) {
                 monthOffset = 1;
               }
               return (
@@ -234,14 +206,10 @@ const MonthDates = styled.div`
     width: 28px;
     height: 28px;
     /* 일지 작성한 날짜 && 현재 보여지는 달이면 마킹 그대로 */
-    background-image: ${(props) =>
-      props.isSelected && props.isCurrentMonth ? `url(${markDate})` : "#fff"};
+    background-image: ${(props) => (props.isSelected && props.isCurrentMonth ? `url(${markDate})` : "#fff")};
     /* 일지 작성한 날짜 && 다른 달에서 보여지는 일지 작성 날이면 투명도 낮춘 마킹 */
     // 예) 7월 달력인데 8월 1일에 일지 작성해서 날짜 표시 연하게 해둠
-    background-image: ${(props) =>
-      props.isSelected && !props.isCurrentMonth
-        ? `url(${markDateBright})`
-        : "#fff"};
+    background-image: ${(props) => (props.isSelected && !props.isCurrentMonth ? `url(${markDateBright})` : "#fff")};
   }
   color: ${(props) => (props.isCurrentMonth ? "#000" : "#bdbdbd")};
 `;

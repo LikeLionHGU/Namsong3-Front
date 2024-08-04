@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from "react";
-import QuillEditor from "./QuillEditor";
+import React, { useState } from "react";
 import styled from "styled-components";
+import QuillEditor from "./QuillEditor";
+import { useLocation } from "react-router-dom";
 import ThumbnailModal from "./ThumbnailModal";
-import DiaryPostModal from "./DiaryPostModal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
-import { useLocation } from "react-router-dom";
-function DiaryWrite() {
-  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
-  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-  });
+import DiaryPostModal from "./DiaryPostModal";
+
+function UpdateDiary() {
   const csrfToken = useRecoilValue(tokenState);
   const location = useLocation();
-  const goalId = location.state.goalId;
-
+  const { diaryDetail, goalId } = location.state;
+  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  const [formData, setFormData] = useState({
+    title: diaryDetail.title,
+    content: diaryDetail.content,
+  });
+  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
   const openThumbnailModal = () => {
     setThumbnailModal(true);
   };
-  useEffect(() => {
-    console.log("formData updated:", formData, csrfToken);
-  }, [formData]);
 
   return (
     <Wrapper>
@@ -45,6 +42,7 @@ function DiaryWrite() {
           </DiaryHeader>
           <EditorArea>
             <QuillEditor
+              mainText={diaryDetail.content}
               onChange={(content) =>
                 setFormData((formData) => ({
                   ...formData,
@@ -74,7 +72,7 @@ function DiaryWrite() {
   );
 }
 
-export default DiaryWrite;
+export default UpdateDiary;
 
 const Wrapper = styled.div`
   display: flex;

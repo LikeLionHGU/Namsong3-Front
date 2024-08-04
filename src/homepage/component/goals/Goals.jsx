@@ -61,7 +61,7 @@ function Goals() {
   };
 
   const handleClickGoal = (goalId) => {
-    navigate(`/diarylist?id=${goalId}`);
+    navigate(`/diarylist`, { state: { goalId } });
   };
 
   const today = new Date();

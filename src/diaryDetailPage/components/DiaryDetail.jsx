@@ -5,16 +5,18 @@ import styled from "styled-components";
 import DeleteConfirmModal from "./DeleteConfirmModal";
 import DiaryEditDropdown from "./DiaryEditDropdown";
 import getDiaryDetail from "../../apis/getDiaryDetail";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 
 function DiaryDetail() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [diaryDetail, setDiaryDetail] = useState([]);
-  const { diaryId } = useParams(); //diaryId로 설정해놓은 param 값을 url로부터 가져와서 사용.
-  const { goalId } = useParams(); // goalId로 설정해놓은 param 값을 url로부터 가져와서 사용.
-  // console.log("id is : ", goalId);
+  const location = useLocation();
+  const { goalId } = location.state;
+  const { diaries } = location.state;
+  const diaryId = diaries.journalId;
+  console.log("id is : ", goalId, diaries);
   const csrfToken = useRecoilValue(tokenState);
 
   // 컨텐츠 내용 많아지면 스크롤로 내려서 확인할 수 있도록 만듦.
@@ -44,6 +46,8 @@ function DiaryDetail() {
               {/* 각 일지 수정 및 삭제 드롭다운 */}
               <DiaryEditDropdown
                 setDeleteModal={setDeleteModal}
+                diaryDetail={diaryDetail}
+                goalId={goalId}
                 // diaryId={diaryId} // 각 일지 아이디
               />
             </Dropdown>
@@ -51,16 +55,12 @@ function DiaryDetail() {
           <ContentArea>
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
-              <div
-                dangerouslySetInnerHTML={{ __html: diaryDetail.content }}
-              ></div>
+              <div dangerouslySetInnerHTML={{ __html: diaryDetail.content }}></div>
             </Contents>
           </ContentArea>
         </CenterBox>
 
-        {deleteModal && (
-          <DeleteConfirmModal setDeleteModal={setDeleteModal} goalId={goalId} />
-        )}
+        {deleteModal && <DeleteConfirmModal setDeleteModal={setDeleteModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );

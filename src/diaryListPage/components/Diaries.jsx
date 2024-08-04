@@ -16,10 +16,10 @@ function Diaries() {
   const [goalList, setGoalList] = useState({ journals: [] });
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const goalId = queryParams.get("id");
+  const goalId = location.state.goalId;
   const csrfToken = useRecoilValue(tokenState);
   const navigate = useNavigate();
+  console.log("찐 막", goalId);
 
   const [searchQuery, setSearchQuery] = useState(""); // 일지 내용+제목 검색할 쿼리
   const [searchedDiaries, setSearchedDiaries] = useState({ journals: [] });
@@ -134,22 +134,24 @@ function Diaries() {
           {isSearching &&
           searchQuery !== "" &&
           searchedDiaries.journals.length > 0
-            ? searchedDiaries.journals.map((qDiary, index) => (
+            ? searchedDiaries.journals.map((diaries, index) => (
                 <Diary
                   key={index}
                   onClick={() => {
-                    navigate(`${goalId}/detail/${qDiary.journalId}`);
+                    navigate(`/detail/`, { state: { goalId, diaries } });
                   }}
                 >
                   <div className="diary-title-date">
-                    <div className="diary-title">{qDiary.title}</div>
+                    <div className="diary-title">{diaries.title}</div>
                     <div className="diary-date">
-                      <div className="diary-end-date">{qDiary.createdDate}</div>
+                      <div className="diary-end-date">
+                        {diaries.createdDate}
+                      </div>
                     </div>
                   </div>
-                  {qDiary.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
+                  {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
                     <Image
-                      style={{ backgroundImage: `url(${qDiary.thumbnail})` }}
+                      style={{ backgroundImage: `url(${diaries.thumbnail})` }}
                     />
                   ) : null}
                 </Diary>
@@ -158,10 +160,7 @@ function Diaries() {
                 <Diary
                   key={index}
                   onClick={() => {
-                    navigate(`${goalId}/detail/${diaries.journalId}`);
-                    // navigate(`?id=${goalId}/detail/${diaries.journalId}`);
-                    // navigate(`/detail/${diaries.journalId}`);
-                    // navigate(`/diarylist?id=${goalId}/detail/${diaries.journalId}`);
+                    navigate(`/detail/`, { state: { goalId, diaries } });
                   }}
                 >
                   <div className="diary-title-date">
