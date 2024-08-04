@@ -20,10 +20,9 @@ function GoalCard() {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isCompModalOpen, setIsCompModalOpen] = useState(false);
   // const [isCompleted, setIsCompleted] = useState(false);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const goalId = queryParams.get("id");
   const csrfToken = useRecoilValue(tokenState);
+  const location = useLocation();
+  const goalId = location.state.goalId;
 
   //랜덤 이미지 설정
 
