@@ -3,6 +3,15 @@ import styled from "styled-components";
 import dummy from "../../../db/data.json";
 import Background from "../../../asset/Background/ExperationBox.svg";
 import MoveToGoalIcon from "../../../asset/Icon/moveToGoal.svg";
+import banner1 from "../../../asset/Random/banner1.svg";
+import banner2 from "../../../asset/Random/banner2.svg";
+import banner3 from "../../../asset/Random/banner1.svg";
+import banner4 from "../../../asset/Random/banner4.svg";
+
+const bannerArr = [banner1, banner2, banner3, banner4];
+const randomIndex = Math.floor(Math.random() * bannerArr.length);
+const bannerImg = bannerArr[randomIndex];
+console.log("banner image: ", bannerImg);
 
 function ExpirationBox() {
   const [mostOverdueGoal, setMostOverdueGoal] = useState(null);
@@ -30,29 +39,41 @@ function ExpirationBox() {
       setMostOverdueGoal(overdueGoals[0].title);
     }
   }, []);
-
+  // const randomIndex = Math.floor(Math.random() * bannerArr.length);
+  // const bannerImg = bannerArr[randomIndex];
+  // console.log("banner image: ", bannerImg);
   return (
     <Wrapper>
-      <Container>
-        <MainContents>
-          <MainTextContainer>
-            <MainText>완료날짜가 다가오고 있어요 !</MainText>
-          </MainTextContainer>
-          <SubText>
-            <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
-              {mostOverdueGoal || "멋사인재풀등록"}
-            </span>{" "}
-            기간이 만료되었어요!
-          </SubText>
-          <SubText style={{ marginTop: "4px" }}>
-            목표를 달성하셨다면 ‘목표 달성' 버튼을 누르고 진행 중이시라면 기간을 수정해주세요 :)
-          </SubText>
-        </MainContents>
-        <MoveToGoal>
-          목표로 이동하기
-          <img src={MoveToGoalIcon} alt="" style={{ marginLeft: "4px" }} />
-        </MoveToGoal>
-      </Container>
+      {/* bannerImg있는지 없는지 여부가 아니라 마감 임박인 목표가 있는지를 확인해서 넣어줘야할듯. */}
+      {bannerImg ? (
+        <BannerContainer />
+      ) : (
+        <Container>
+          <>
+            <MainContents>
+              <MainTextContainer>
+                <MainText>완료날짜가 다가오고 있어요 !</MainText>
+              </MainTextContainer>
+              <SubText>
+                <span
+                  style={{ fontWeight: "bold", textDecoration: "underline" }}
+                >
+                  {mostOverdueGoal || "멋사인재풀등록"}
+                </span>{" "}
+                기간이 만료되었어요!
+              </SubText>
+              <SubText style={{ marginTop: "4px" }}>
+                목표를 달성하셨다면 ‘목표 달성' 버튼을 누르고 진행 중이시라면
+                기간을 수정해주세요 :)
+              </SubText>
+            </MainContents>
+            <MoveToGoal>
+              목표로 이동하기
+              <img src={MoveToGoalIcon} alt="" style={{ marginLeft: "4px" }} />
+            </MoveToGoal>
+          </>
+        </Container>
+      )}
     </Wrapper>
   );
 }
@@ -64,6 +85,19 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const BannerContainer = styled.div`
+  width: 792px;
+  height: 110px;
+  margin-top: 31px;
+  border-radius: 12px;
+  position: relative;
+  padding: 16px;
+  box-sizing: border-box;
+  background-image: url(${bannerImg});
+  background-position: center;
+  background-position-y: 23%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+`;
 const Container = styled.div`
   width: 792px;
   height: 110px;
@@ -86,6 +120,12 @@ const MoveToGoal = styled.div`
   font-size: 14px;
   font-weight: bold;
   display: flex;
+`;
+const Image = styled.div`
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px 12px 0 0;
 `;
 
 const MainContents = styled.div`
