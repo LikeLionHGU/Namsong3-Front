@@ -15,8 +15,7 @@ function DiaryWrite() {
   });
   const csrfToken = useRecoilValue(tokenState);
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const goalId = queryParams.get("id");
+  const goalId = location.state.goalId;
 
   const openThumbnailModal = () => {
     setThumbnailModal(true);
@@ -69,9 +68,7 @@ function DiaryWrite() {
             csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && (
-          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
-        )}
+        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );
