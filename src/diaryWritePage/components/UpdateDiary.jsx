@@ -5,13 +5,14 @@ import { useLocation } from "react-router-dom";
 import ThumbnailModal from "./ThumbnailModal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
-import DiaryPostModal from "./DiaryPostModal";
+import DiaryEditModal from "./DiaryEditModal";
 
 function UpdateDiary() {
   const csrfToken = useRecoilValue(tokenState);
   const location = useLocation();
   const { diaryDetail, goalId } = location.state;
-  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  const [editedModal, setEditedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  // const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
   const [formData, setFormData] = useState({
     title: diaryDetail.title,
     content: diaryDetail.content,
@@ -53,20 +54,22 @@ function UpdateDiary() {
           </EditorArea>
           <SaveButton>
             <button className="save-button" onClick={openThumbnailModal}>
-              일지 작성하기
+              수정 완료하기
             </button>
           </SaveButton>
         </CenterBox>
         {thumbnailModal && (
           <ThumbnailModal
             setThumbnailModal={setThumbnailModal}
-            setPostedModal={setPostedModal}
+            setEditedModal={setEditedModal}
             formData={formData}
-            goalId={goalId}
+            diaryDetail={diaryDetail}
             csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
+        {!thumbnailModal && editedModal && (
+          <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );
