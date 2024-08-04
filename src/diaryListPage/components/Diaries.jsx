@@ -8,6 +8,7 @@ import getDiaryList from "../../apis/getDiaryList";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 import { useLocation, useNavigate } from "react-router-dom";
+import getDiaryQuery from "../../apis/getDiaryQuery";
 
 function Diaries() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +21,9 @@ function Diaries() {
   const csrfToken = useRecoilValue(tokenState);
   const navigate = useNavigate();
 
+  const [searchQuery, setSearchQuery] = useState(""); // 일지 내용+제목 검색할 쿼리
+  const [searchedDiaries, setSearchedDiaries] = useState({ journals: [] });
+  const [isSearching, setIsSearching] = useState(false); // 현재 검색중인지 아닌지를 판별(= 검색어를 '엔터'쳤을때만 검색되도록하기 위해서 설정 )
   useEffect(() => {
     const fetchGoalList = async () => {
       setIsLoading(true);
@@ -48,57 +52,138 @@ function Diaries() {
     let diaries = goalList.journals;
 
     if (currentSort === "최신순") {
-      diaries = diaries.sort((a, b) => formatDate(b.createdDate) - formatDate(a.createdDate));
+      diaries = diaries.sort(
+        (a, b) => formatDate(b.createdDate) - formatDate(a.createdDate)
+      );
     } else if (currentSort === "오래된 순") {
-      diaries = diaries.sort((a, b) => formatDate(a.createdDate) - formatDate(b.createdDate));
+      diaries = diaries.sort(
+        (a, b) => formatDate(a.createdDate) - formatDate(b.createdDate)
+      );
     }
 
     return diaries;
   };
 
   const filteredDiaries = getFilteredDiaries();
+  useEffect(() => {
+    //searchedDiaries의 상태가 변경될때마다 바로 적용
+  }, [searchedDiaries]);
+
+  const SearchEnterHandle = (e) => {
+    if (e.key === "Enter") {
+      // 엔터키 누르면 실행
+      setIsSearching(true); // 검색 상태를 true로 설정
+
+      // 새로운 검색을 시작할 때 이전 검색 결과를 지워서 이전 기록이 보이지 않도록 함.
+      setSearchedDiaries({ journals: [] });
+
+      const fetchSearchedDiary = async () => {
+        setIsLoading(true);
+        try {
+          const fetchedSearchDiaries = await getDiaryQuery(
+            goalId,
+            searchQuery,
+            csrfToken
+          );
+          setSearchedDiaries(fetchedSearchDiaries);
+          console.log("다이어리들: ", searchedDiaries);
+          console.log("검색어: ", searchQuery);
+        } catch (error) {
+          console.error("검색한 일지를 가져오는데 실패함: ", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchSearchedDiary();
+    }
+  };
 
   return (
     <ListPart>
       <Searchbar>
         <SearchIcon />
-        <input className="search-bar" placeholder="제목+내용을 입력해보세요."></input>
+        <input
+          className="search-bar"
+          placeholder="제목+내용을 입력해보세요."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            console.log(searchQuery);
+          }}
+          onKeyDown={(e) => SearchEnterHandle(e)}
+        ></input>
       </Searchbar>
       <DairyListBox>
         <div className="diary-list-head">
           <div onClick={openCreateDiaryModal} className="diary-add">
             일지 추가하기 <img src={goPencil} alt="" />
           </div>
-          <DiaryViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+          <DiaryViewDropdown
+            currentSort={currentSort}
+            setCurrentSort={setCurrentSort}
+          />
         </div>
         <DiaryList>
           {!isLoading && filteredDiaries.length === 0 && (
-            <DiaryDoesNotExist>📝 일지 작성으로 목표에 한걸음 더! 📝</DiaryDoesNotExist>
+            <DiaryDoesNotExist>
+              📝 일지 작성으로 목표에 한걸음 더! 📝
+            </DiaryDoesNotExist>
           )}
-          {filteredDiaries.map((diaries, index) => (
-            <Diary
-              key={index}
-              onClick={() => {
-                navigate(`${goalId}/detail/${diaries.journalId}`);
-                // navigate(`?id=${goalId}/detail/${diaries.journalId}`);
-                // navigate(`/detail/${diaries.journalId}`);
-                // navigate(`/diarylist?id=${goalId}/detail/${diaries.journalId}`);
-              }}
-            >
-              <div className="diary-title-date">
-                <div className="diary-title">{diaries.title}</div>
-                <div className="diary-date">
-                  <div className="diary-end-date">{diaries.createdDate}</div>
-                </div>
-              </div>
-              {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
-                <Image style={{ backgroundImage: `url(${diaries.thumbnail})` }} />
-              ) : null}
-            </Diary>
-          ))}
+
+          {/* "현재 검색중이고(검색 후 엔터를 눌렀고), 검색어가 빈칸이 아니면서 검색 결과가 0개보다 많을때"만 보일 수 있도록 하는 일지 목록 */}
+          {isSearching &&
+          searchQuery !== "" &&
+          searchedDiaries.journals.length > 0
+            ? searchedDiaries.journals.map((qDiary, index) => (
+                <Diary
+                  key={index}
+                  onClick={() => {
+                    navigate(`${goalId}/detail/${qDiary.journalId}`);
+                  }}
+                >
+                  <div className="diary-title-date">
+                    <div className="diary-title">{qDiary.title}</div>
+                    <div className="diary-date">
+                      <div className="diary-end-date">{qDiary.createdDate}</div>
+                    </div>
+                  </div>
+                  {qDiary.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
+                    <Image
+                      style={{ backgroundImage: `url(${qDiary.thumbnail})` }}
+                    />
+                  ) : null}
+                </Diary>
+              ))
+            : filteredDiaries.map((diaries, index) => (
+                <Diary
+                  key={index}
+                  onClick={() => {
+                    navigate(`${goalId}/detail/${diaries.journalId}`);
+                    // navigate(`?id=${goalId}/detail/${diaries.journalId}`);
+                    // navigate(`/detail/${diaries.journalId}`);
+                    // navigate(`/diarylist?id=${goalId}/detail/${diaries.journalId}`);
+                  }}
+                >
+                  <div className="diary-title-date">
+                    <div className="diary-title">{diaries.title}</div>
+                    <div className="diary-date">
+                      <div className="diary-end-date">
+                        {diaries.createdDate}
+                      </div>
+                    </div>
+                  </div>
+                  {diaries.thumbnail ? ( // 이미지url이 있는지 없는지 판별, 있으면 Image 컴포넌트 보여주고 없으면 안넣음
+                    <Image
+                      style={{ backgroundImage: `url(${diaries.thumbnail})` }}
+                    />
+                  ) : null}
+                </Diary>
+              ))}
         </DiaryList>
       </DairyListBox>
-      {isModalOpen && <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />}
+      {isModalOpen && (
+        <CreateDiaryModal setIsModalOpen={setIsModalOpen} goalId={goalId} />
+      )}
     </ListPart>
   );
 }
