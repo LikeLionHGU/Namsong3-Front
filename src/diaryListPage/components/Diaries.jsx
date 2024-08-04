@@ -15,10 +15,10 @@ function Diaries() {
   const [goalList, setGoalList] = useState({ journals: [] });
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const goalId = queryParams.get("id");
+  const goalId = location.state.goalId;
   const csrfToken = useRecoilValue(tokenState);
   const navigate = useNavigate();
+  console.log("찐 막", goalId);
 
   useEffect(() => {
     const fetchGoalList = async () => {
@@ -79,10 +79,7 @@ function Diaries() {
             <Diary
               key={index}
               onClick={() => {
-                navigate(`${goalId}/detail/${diaries.journalId}`);
-                // navigate(`?id=${goalId}/detail/${diaries.journalId}`);
-                // navigate(`/detail/${diaries.journalId}`);
-                // navigate(`/diarylist?id=${goalId}/detail/${diaries.journalId}`);
+                navigate(`/detail/`, { state: { goalId, diaries } });
               }}
             >
               <div className="diary-title-date">

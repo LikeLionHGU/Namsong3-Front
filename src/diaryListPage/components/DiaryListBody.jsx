@@ -4,7 +4,8 @@ import Diaries from "./Diaries";
 import GoalCard from "./GoalCard";
 import Calendar from "./Calendar";
 
-function DiaryListBody() {
+function DiaryListBody(goalId) {
+  console.log("프롭스로 받은 골아이디", goalId);
   return (
     <Container>
       <CenterBox>
@@ -13,7 +14,7 @@ function DiaryListBody() {
           <SidePart>
             <GoalCardBox>
               {/* GoalCardBox: 목표 카드(왼쪽 상단부분위치) */}
-              <GoalCard />
+              <GoalCard goalIdNumber={goalId.goalId} />
             </GoalCardBox>
             <CalendarCard>
               <Calendar />
@@ -22,7 +23,7 @@ function DiaryListBody() {
             </CalendarCard>
           </SidePart>
           <ListPart>
-            <Diaries />
+            <Diaries goalIdNumber={goalId.goalId} />
           </ListPart>
         </ContentWrapper>
       </CenterBox>

@@ -9,6 +9,7 @@ import DiaryWritePage from "./diaryWritePage/DiaryWritePage";
 import Loading from "./loginPage/Loading";
 import DiaryBotPage from "./diaryBotPage/DiaryBotPage";
 import DiaryDetailPage from "./diaryDetailPage/DiaryDetailPage";
+import UpdateDiary from "./diaryWritePage/components/UpdateDiary";
 
 function App() {
   return (
@@ -21,11 +22,9 @@ function App() {
           <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/write" element={<DiaryWritePage />} />
           <Route path="/summaryEdit" element={<DiaryBotPage />} />
-          <Route
-            path="/diarylist/:goalId/detail/:diaryId"
-            element={<DiaryDetailPage />}
-          />
+          <Route path="/detail" element={<DiaryDetailPage />} />
           <Route path="/oauth2/redirect" element={<Loading />} />
+          <Route path="/UpdateDiary" element={<UpdateDiary />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
