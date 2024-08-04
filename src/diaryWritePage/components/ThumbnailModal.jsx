@@ -3,7 +3,13 @@ import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import createDiary from "../../apis/createDiary";
-function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, csrfToken }) {
+function ThumbnailModal({
+  setThumbnailModal,
+  setEditedModal,
+  formData,
+  diaryDetail,
+  csrfToken,
+}) {
   // 이미지 설정//
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
@@ -17,10 +23,14 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
     fileInputRef.current.click();
   };
   const handleNextStep = async () => {
-    // 대표사진 선택하기 모달에서 "다음으로" 버튼 누르고 나면 사진선택 모달은 숨기고 그 이후 모달(일지 추가 완료 모달)을 보여줘야함.
-    // *** 이 함수 안에서 일지를 백엔드로 submit해야할듯 (내용 + 대표사진) *** //
-    // 일단 임시로 "다음으로"버튼 누르면 그 다음 모달로 넘어가는 것만 해둠.
-    // 아직 이미지는 보내는거 연결안했는데 백엔드 구현되면 수정해야함
+    //
+    setThumbnailModal(false);
+    setEditedModal(true);
+    // ^^^^^^ 나중에 이 부분 지우기
+
+    // *** 이 함수 안에서 수정된 일지를 백엔드로 submit할 필요 있음 (내용 + 대표사진) *** //
+    //  TODO: (45번 라인 코드 부분)다이어리 수정하는 api 파일 생성하기 !!!!!! creatDiary말고 나중에 백엔드에서 일지 수정 api 생성하면 만들고 이 부분도 고치기.
+    // 아직 이미지는 보내는건 연결X 백엔드 구현되면 수정필요
     try {
       const { title, content } = formData;
 
@@ -32,9 +42,11 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
       if (fileInputRef.current.files[0]) {
         formDataToSend.append("image", fileInputRef.current.files[0]);
       }
-      await createDiary(formDataToSend, csrfToken, goalId);
+      //  TODO: 다이어리 수정하는 api 파일 생성하기 !!!!!! creatDiary말고 나중에
+      // 백엔드에서 일지 수정 api 생성하면 만들고 이 부분도 고치기.
+      await createDiary(formDataToSend, csrfToken, diaryDetail);
       setThumbnailModal(false);
-      setPostedModal(true);
+      setEditedModal(true);
     } catch (error) {
       console.error("일지 생성 실패", error);
     }
@@ -60,7 +72,7 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
         <Wrapper>
           <TopContainer>
             <TopText>
-              대표사진 추가하기<span>(선택)</span>
+              대표사진 수정하기<span>(선택)</span>
             </TopText>
             <ExitButton onClick={closeThumbnailModal}>
               <CloseRoundedIcon />
@@ -83,7 +95,12 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
                 <div className="image-add-text">사진 추가하기</div>
               </>
             )}
-            <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
+            <input
+              type="file"
+              style={{ display: "none" }}
+              onChange={handleFileInputChange}
+              ref={fileInputRef}
+            />
           </ImageAdd>
           <Buttons>
             <NextBtn>
