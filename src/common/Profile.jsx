@@ -3,18 +3,14 @@ import styled, { keyframes } from "styled-components";
 import { CSSTransition } from "react-transition-group";
 import ProfileImg from "../asset/Icon/Profile.svg";
 import getUserName from "../apis/getUserName";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { tokenState, UserTokenState } from "../atom/atom";
-import logout from "../apis/logout";
-import { useNavigate } from "react-router-dom";
+import LogoutModal from "./LogoutModal";
 
 function Profile() {
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const [userName, setUserName] = useState("");
-  const setUserToken = useSetRecoilState(UserTokenState);
-  const [csrfToken, setCsrfToekn] = useRecoilState(tokenState);
-  const navigate = useNavigate();
 
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -42,36 +38,33 @@ function Profile() {
     fetchUserName();
   }, []);
 
-  const handleLogoutClick = async (event) => {
-    event.stopPropagation();
-    try {
-      await logout(csrfToken);
-      setUserToken({ isLogin: false });
-      setCsrfToekn(null);
-      navigate("/");
-    } catch (error) {
-      console.error("로그아웃 실패", error);
-    }
+  const handleLogoutClick = () => {
+    setLogoutModalOpen(true);
   };
 
   return (
-    <ProfileBtn ref={profileRef} onClick={toggleProfile}>
-      <div style={{ cursor: "pointer" }}>프로필</div>
-      <CSSTransition
-        in={isProfileOpen}
-        timeout={300}
-        classNames="profile"
-        unmountOnExit
-      >
-        <ProfileMenu>
-          <ProfileInfo>
-            <img src={ProfileImg} alt="" />
-            <div style={{ marginTop: "5px" }}>{userName.name}님</div>
-          </ProfileInfo>
-          <LogoutBtn onClick={handleLogoutClick}>로그아웃</LogoutBtn>
-        </ProfileMenu>
-      </CSSTransition>
-    </ProfileBtn>
+    <>
+      <ProfileBtn ref={profileRef} onClick={toggleProfile}>
+        <div style={{ cursor: "pointer" }}>프로필</div>
+        <CSSTransition
+          in={isProfileOpen}
+          timeout={300}
+          classNames="profile"
+          unmountOnExit
+        >
+          <ProfileMenu>
+            <ProfileInfo>
+              <img src={ProfileImg} alt="" />
+              <div style={{ marginTop: "5px" }}>{userName.name}님</div>
+            </ProfileInfo>
+            <LogoutBtn onClick={handleLogoutClick}>로그아웃</LogoutBtn>
+          </ProfileMenu>
+        </CSSTransition>
+      </ProfileBtn>
+      {logoutModalOpen && (
+        <LogoutModal setLogoutModalOpen={setLogoutModalOpen} />
+      )}
+    </>
   );
 }
 
