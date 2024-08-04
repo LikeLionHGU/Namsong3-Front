@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import DateRangePicker from "./DateRangePicker";
 import createGoal from "../../../../apis/createGoal";
 import { useRecoilValue } from "recoil";
@@ -23,6 +23,9 @@ const formatDate = (date) => {
 function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
+  const [isTitleValid, setIsTitleValid] = useState(true); // 제목 유효성 상태 추가
+
+  const titleInputRef = useRef(null); // 제목 입력 필드에 대한 ref 추가
 
   const [formData, setFormData] = useState({
     title: "",
@@ -52,6 +55,9 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
       ...formData,
       [name]: value,
     });
+    if (name === "title") {
+      setIsTitleValid(true); // 제목 변경 시 유효성 상태를 true로 설정
+    }
   };
 
   const handleFileInputChange = (event) => {
@@ -84,6 +90,12 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   };
 
   const handleSubmit = async () => {
+    if (!formData.title) {
+      setIsTitleValid(false); // 제목이 없으면 유효성 상태를 false로 설정
+      titleInputRef.current.focus(); // 제목 입력 필드에 포커스 설정
+      return;
+    }
+
     console.log("Form Data Submitted: ", formData);
     try {
       const { title, startDate, endDate } = formData;
@@ -127,7 +139,9 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                required
+                maxLength={10} // 최대 글자 수 10자로 제한
+                isValid={isTitleValid} // 유효성 상태 전달
+                ref={titleInputRef} // ref 설정
               />
             </GoalTitleContainer>
             <NoPeriodContainer>
@@ -209,7 +223,6 @@ const enterAnimation = keyframes`
   }
 `;
 
-// 종료 애니메이션 정의
 const exitAnimation = keyframes`
   from {
     opacity: 1;
@@ -251,11 +264,28 @@ const Wrapper = styled.div`
   transform: translate(-50%, -50%);
   background: #ffffff;
   width: 431px;
-  /* height: 580px; */
   min-height: 440px;
-  /* max-height: 580px; */
   border-radius: 12px;
   cursor: default;
+
+  &.modal-enter {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  &.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  &.modal-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+  &.modal-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s, transform 0.5s;
+  }
 `;
 
 const TopContainer = styled.div`
@@ -291,7 +321,6 @@ const ExitButton = styled.div`
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   margin-top: 32px;
 `;
 
@@ -307,11 +336,11 @@ const ExplainText = styled.div`
   margin-left: 24px;
   margin-right: auto;
 `;
+
 const DatePickText = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  /* border: 2px solid black; */
   margin-top: 16px;
   margin-left: 24px;
   .date-pick-explain {
@@ -320,6 +349,7 @@ const DatePickText = styled.div`
     margin-top: 5px;
   }
 `;
+
 const GoalTitleInput = styled.input`
   width: 373px;
   height: 45px;
@@ -328,9 +358,21 @@ const GoalTitleInput = styled.input`
   border: 1px solid #dfdfdf;
   padding-left: 12px;
   outline: none;
-  &:focus {
-    border: 1px solid #676767;
-  }
+  ${(props) =>
+    !props.isValid &&
+    css`
+      border: 1px solid red;
+      &::placeholder {
+        color: red;
+      }
+    `}
+  ${(props) =>
+    props.isValid &&
+    css`
+      &:focus {
+        border: 1px solid #676767;
+      }
+    `}
 `;
 
 const PeriodContainer = styled.div`
@@ -347,27 +389,9 @@ const PeriodContainer = styled.div`
 
 const NoPeriodContainer = styled.div`
   display: flex;
-  /* flex: 1; */
   width: 100%;
   justify-content: space-between;
-  /* justify-content: center; */
-  /* padding-left: 12px;
-  padding-right: 12px; */
   margin-top: 3px;
-  /* border: 2px solid green; */
-`;
-
-const Checkbox = styled.input`
-  width: 16px;
-  height: 16px;
-  border: 1px solid #c5c5c5;
-  border-radius: 4px;
-`;
-
-const CheckboxText = styled.div`
-  font-size: 12px;
-  margin-top: 3px;
-  color: #676767;
 `;
 
 const ImgContainer = styled.div`
