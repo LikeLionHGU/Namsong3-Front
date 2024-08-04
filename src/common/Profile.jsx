@@ -119,7 +119,8 @@ const ProfileMenu = styled.div`
   width: 98px;
   height: 140px;
   z-index: 3;
-  font-size: 12px;
+  font-size: 11px;
+  /* font-family: Pretendard; */
   display: flex;
   flex-direction: column;
   align-items: center; /* Center items horizontally */
@@ -133,7 +134,7 @@ const ProfileMenu = styled.div`
 `;
 
 const ProfileInfo = styled.div`
-  width: 60px;
+  width: 73px;
   height: 82px;
   margin-top: 12px;
   display: flex;
