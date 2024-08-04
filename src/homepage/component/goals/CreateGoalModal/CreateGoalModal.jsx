@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import DateRangePicker from "./DateRangePicker";
 import createGoal from "../../../../apis/createGoal";
 import { useRecoilValue } from "recoil";
@@ -7,6 +7,7 @@ import { tokenState } from "../../../../atom/atom";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ImgUpload from "../../../../asset/Icon/ImgUpload.svg";
 import { Toggle } from "./Toggle";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 /* 
 - 이미지 업로드 부분 안됨
@@ -131,27 +132,25 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
             </GoalTitleContainer>
             <NoPeriodContainer>
               <DatePickText>
-                <div>
-                  기간
-                  {isDateSetting ? <span style={{ color: "red" }}>*</span> : null}
-                </div>
+                <div>기간</div>
                 <div className="date-pick-explain">목표 진행 기간을 설정할 수 있어요!</div>
               </DatePickText>
-
               <Toggle setIsDateSetting={setIsDateSetting} isDateSetting={isDateSetting} />
-              {/* <Checkbox type="checkbox" />
-                <CheckboxText>종료일을 설정하지 않을래요!</CheckboxText> */}
             </NoPeriodContainer>
-            {isDateSetting && (
-              <PeriodContainer>
-                <DateRangePicker
-                  startDate={formData.startDate}
-                  setStartDate={handleStartDateChange}
-                  endDate={formData.endDate}
-                  setEndDate={handleEndDateChange}
-                />
-              </PeriodContainer>
-            )}
+            <TransitionGroup component={null}>
+              {isDateSetting && (
+                <CSSTransition timeout={500} classNames="period">
+                  <PeriodContainer>
+                    <DateRangePicker
+                      startDate={formData.startDate}
+                      setStartDate={handleStartDateChange}
+                      endDate={formData.endDate}
+                      setEndDate={handleEndDateChange}
+                    />
+                  </PeriodContainer>
+                </CSSTransition>
+              )}
+            </TransitionGroup>
             <ImgContainer>
               <ExplainText>사진</ExplainText>
               <ImageUpload onClick={handleImageUploadClick}>
@@ -198,6 +197,29 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
 }
 
 export default CreateGoalModal;
+
+const enterAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+// 종료 애니메이션 정의
+const exitAnimation = keyframes`
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+`;
 
 const modalStyles = `
   width: 100vw;
@@ -315,6 +337,12 @@ const PeriodContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  &.period-enter {
+    animation: ${enterAnimation} 0.5s forwards;
+  }
+  &.period-exit {
+    animation: ${exitAnimation} 0.5s forwards;
+  }
 `;
 
 const NoPeriodContainer = styled.div`
