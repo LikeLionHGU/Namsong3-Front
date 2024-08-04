@@ -3,7 +3,19 @@ import UseCalendar from "./UseCalendar";
 import styled from "styled-components";
 import monthNext from "../../asset/Icon/monthNext.svg";
 import monthPrev from "../../asset/Icon/monthPrev.svg";
+import { useLocation } from "react-router-dom";
+import { tokenState } from "../../atom/atom";
+import { useRecoilValue } from "recoil";
+import getDiaryList from "../../apis/getDiaryList";
+import markDate from "../../asset/Icon/markDate.svg";
+import markDateBright from "../../asset/Icon/markDateBright.svg";
 const Calendar = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  // 현재 목표 번호
+  const goalId = queryParams.get("id");
+  const csrfToken = useRecoilValue(tokenState);
+  const [isLoading, setIsLoading] = useState(true);
   const {
     weekCalendarList,
     currentDate,
@@ -11,20 +23,36 @@ const Calendar = () => {
     prevMonthDaysLength,
     totalMonthDays,
   } = UseCalendar();
-
-  // 날짜 선택하고 저장할 useState
-  const [selectedDates, setSelectedDates] = useState([]);
-
-  //날짜 더미 데이터.
-  const dummyDates = ["2024-08-12", "2024-08-13", "2024-08-14"];
+  // localstorage에 날짜들 저장해서 새로고침해도 사라지지 않도록 함.
+  const [selectedDates, setSelectedDates] = useState(() => {
+    const storedDates = localStorage.getItem("selectedDates");
+    return storedDates ? JSON.parse(storedDates) : [];
+  });
 
   useEffect(() => {
-    // 특정 날짜를 받아와서 선택된 날짜 상태로 설정
-    setSelectedDates(dummyDates);
-    // eslint-disable-next-line
-  }, []);
+    const fetchGoalList = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedGoalList = await getDiaryList(goalId, csrfToken);
+        const datesArray = fetchedGoalList.journals.map((date) => {
+          const [year, month, day] = date.createdDate.split(".");
+          return `20${year}-${month}-${day}`;
+        });
+        setSelectedDates(datesArray);
+      } catch (error) {
+        console.error("Error fetching goal List:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchGoalList();
+  }, [goalId, csrfToken]);
 
-  // const month = monthNames[currentDate.getMonth()];
+  useEffect(() => {
+    // 로컬 저장소에 일지 작성한 날짜들 저장
+    localStorage.setItem("selectedDates", JSON.stringify(selectedDates));
+  }, [selectedDates]);
+
   const handlePrevMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
@@ -36,7 +64,6 @@ const Calendar = () => {
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
     );
   };
-
   // 현재 년도 + 월  //
   const monthYear = `${currentDate.getFullYear()} ${
     currentDate.getMonth() + 1
@@ -45,9 +72,26 @@ const Calendar = () => {
   // 1~9일까지를 두자릿수로 변경하는 부분 01,02,03 ... 09일
   const formatDay = (day) => (day < 10 ? `0${day}` : day);
   // 보여질 날짜가 선택되었는지 확인
-  const isSelected = (date) => {
-    const formattedDate = `${currentDate.getFullYear()}-${formatDay(
-      currentDate.getMonth() + 1
+  // const isSelected = (date, isCurrentMonth) => {
+  //   if (!isCurrentMonth) {
+  //     // 현재 보여지고 있는 달을 기준으로 색칠 필요 (8/1 일지 작성했는데, 8월 달력에 9월 내용이 보일떄 9/1도 표시됨을 방지 )
+  //     return false;
+  //   }
+  //   // 현재 달려겡 보여지는 날짜(yyyy-mm-dd)와 비교해서 선택된 날짜와 일치하면 색칠하도록.
+  //   const formattedDate = `${currentDate.getFullYear()}-${formatDay(
+  //     currentDate.getMonth() + 1
+  //   )}-${formatDay(date)}`;
+  //   return selectedDates.includes(formattedDate);
+  // };
+
+  const isSelected = (date, isCurrentMonth, monthOffset) => {
+    const displayMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + monthOffset,
+      1
+    );
+    const formattedDate = `${displayMonth.getFullYear()}-${formatDay(
+      displayMonth.getMonth() + 1
     )}-${formatDay(date)}`;
     return selectedDates.includes(formattedDate);
   };
@@ -55,16 +99,13 @@ const Calendar = () => {
   return (
     <CalendarContainer>
       <CalendarHeader>
-        <CalendarHeader>
-          <button onClick={handlePrevMonth}>
-            <img src={monthPrev} alt="" />
-          </button>
-          {/* <span>{month}</span> */}
-          <span>{monthYear}</span>
-          <button onClick={handleNextMonth}>
-            <img src={monthNext} alt="" />
-          </button>
-        </CalendarHeader>
+        <button onClick={handlePrevMonth}>
+          <img src={monthPrev} alt="" />
+        </button>
+        <span>{monthYear}</span>
+        <button onClick={handleNextMonth}>
+          <img src={monthNext} alt="" />
+        </button>
       </CalendarHeader>
       <WeekDays>
         {["m", "t", "w", "t", "f", "s", "s"].map((day) => (
@@ -79,11 +120,25 @@ const Calendar = () => {
                 weekIndex * 7 + dateIndex >= prevMonthDaysLength &&
                 weekIndex * 7 + dateIndex <
                   prevMonthDaysLength + totalMonthDays;
+              let monthOffset = 0;
+              if (
+                !isCurrentMonth &&
+                weekIndex * 7 + dateIndex < prevMonthDaysLength
+              ) {
+                monthOffset = -1;
+              } else if (
+                !isCurrentMonth &&
+                weekIndex * 7 + dateIndex >=
+                  prevMonthDaysLength + totalMonthDays
+              ) {
+                monthOffset = 1;
+              }
               return (
                 <MonthDates
                   key={dateIndex}
                   isCurrentMonth={isCurrentMonth}
-                  isSelected={isSelected(date)}
+                  // isSelected={isSelected(date, isCurrentMonth,monthOffset)}
+                  isSelected={isSelected(date, isCurrentMonth, monthOffset)}
                 >
                   <div className="wrote-date">{formatDay(date)}</div>
                 </MonthDates>
@@ -102,7 +157,6 @@ const CalendarContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 282px;
-  /* height: 331px; */
   min-height: 320px;
   margin-top: 20px;
   border: 1.5px solid #e2e2e2;
@@ -122,14 +176,11 @@ const CalendarHeader = styled.div`
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 15px;
-  /* border: 2px solid red; */
   span {
     display: flex;
     justify-content: center;
-    /* border: 2px solid red; */
     width: 80px;
     font-weight: bold;
-    /* padding: 5px; */
   }
   > button {
     outline: none;
@@ -155,7 +206,6 @@ const WeekDay = styled.div`
   font-size: 14px;
   text-align: center;
   color: #6d6d6d;
-  border: 2px solid transparent; // (날짜들이 몇픽셀씩 위아래로 움직여서 넣어준 부분)
 `;
 
 const Dates = styled.div``;
@@ -166,7 +216,6 @@ const Week = styled.div`
   margin-bottom: 5px;
   margin-left: 10px;
   margin-right: 10px;
-  /* border: 2px solid red; */
 `;
 
 const MonthDates = styled.div`
@@ -175,25 +224,24 @@ const MonthDates = styled.div`
   justify-content: center;
   flex: 1;
   text-align: center;
-  padding: 5px 0;
+  padding: 4px 0;
   font-size: 13px;
-
-  //일지를 작성한 날짜라면 배경색을 바꿈
   .wrote-date {
     display: flex;
-    align-self: auto;
-    justify-self: auto;
     justify-content: center;
     align-items: center;
     z-index: 3;
-    width: 22px;
-    height: 25px;
-    border-radius: 25px;
-    /* border: 2px solid red; */
-    //일지 작성한 날짜라면 초록색으로, 그렇지 않으면 흰색으로.
-    background-color: ${(props) => (props.isSelected ? "#5AC388" : "#fff")};
+    width: 28px;
+    height: 28px;
+    /* 일지 작성한 날짜 && 현재 보여지는 달이면 마킹 그대로 */
+    background-image: ${(props) =>
+      props.isSelected && props.isCurrentMonth ? `url(${markDate})` : "#fff"};
+    /* 일지 작성한 날짜 && 다른 달에서 보여지는 일지 작성 날이면 투명도 낮춘 마킹 */
+    // 예) 7월 달력인데 8월 1일에 일지 작성해서 날짜 표시 연하게 해둠
+    background-image: ${(props) =>
+      props.isSelected && !props.isCurrentMonth
+        ? `url(${markDateBright})`
+        : "#fff"};
   }
-
-  // 현재 달에 있는 날짜가 아니면 회색처리.
-  color: ${(props) => (props.isCurrentMonth ? "#000" : "#ccc")};
+  color: ${(props) => (props.isCurrentMonth ? "#000" : "#bdbdbd")};
 `;
