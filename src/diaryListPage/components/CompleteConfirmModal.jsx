@@ -125,7 +125,7 @@ const CancelBtn = styled.div`
   display: flex;
   > button {
     background-color: white !important;
-    color: #6c6c6c !important;
+    color: #242424 !important;
     border: 1.5px solid #dfdfdf !important;
     margin-right: 4px;
 
