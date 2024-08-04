@@ -34,9 +34,7 @@ function GoalCard() {
 
   const calculateDaysFromStart = (startDate) => {
     if (!isValidDate(startDate)) return 0; // 기본값 설정
-    const [year, month, day] = startDate
-      .split(".")
-      .map((part) => parseInt(part, 10));
+    const [year, month, day] = startDate.split(".").map((part) => parseInt(part, 10));
     const start = new Date(year + 2000, month - 1, day); // 2000년대를 가정
     const today = new Date();
     const diffTime = today - start;
@@ -49,9 +47,7 @@ function GoalCard() {
         const fetchedGoalInfo = await getDiaryList(goalId, csrfToken);
         setGoalInfo(fetchedGoalInfo);
 
-        const daysFromStart = calculateDaysFromStart(
-          fetchedGoalInfo.goal.startDate
-        );
+        const daysFromStart = calculateDaysFromStart(fetchedGoalInfo.goal.startDate);
         setStartedFrom(daysFromStart);
       } catch (error) {
         console.error("Error fetching goal info:", error);
@@ -72,26 +68,31 @@ function GoalCard() {
     <Container>
       <Wrapper>
         {goalInfo.goal.thumbnail ? (
-          <Image
-            style={{ backgroundImage: `url(${goalInfo.goal.thumbnail})` }}
-          />
+          <Image style={{ backgroundImage: `url(${goalInfo.goal.thumbnail})` }} />
         ) : (
           <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
         )}
         {/* <Image style={{ backgroundImage: `url(${backgroundImg})` }} /> */}
         <Info>
-          <Title>{goalInfo.goal.title}</Title>
+          <TitleFireContainer>
+            <Title>{goalInfo.goal.title}</Title>
+            {goalInfo.goal.streak >= 3 && (
+              <FireContainer>
+                <Fire>🔥{goalInfo.goal.streak >= 10 && <span>🔥</span>}</Fire>
+                <Tooltip>연속{goalInfo.goal.streak}일 작성</Tooltip>
+              </FireContainer>
+            )}
+          </TitleFireContainer>
+
           <Period>
             <StartDate>{goalInfo.goal.startDate}</StartDate>
-            <ArrowForwardIcon />
+            {goalInfo.goal.startDate && goalInfo.goal.endDate && <ArrowForwardIcon />}
             <DueDate>{goalInfo.goal.endDate}</DueDate>
           </Period>
           <Line />
           <ExtrtaInfo>
-            <div className="info-day-count">{startedFrom}일차</div>
-            <div className="info-diary-count">
-              작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개
-            </div>
+            {startedFrom >= 1 && <div className="info-day-count">{startedFrom}일차</div>}
+            <div className="info-diary-count">작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개</div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
             <Accomplished
@@ -114,9 +115,7 @@ function GoalCard() {
           setIsCompModalOpen={setIsCompModalOpen}
         />
       )}
-      {isCompModalOpen && (
-        <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />
-      )}
+      {isCompModalOpen && <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />}
     </Container>
   );
 }
@@ -157,11 +156,63 @@ const Info = styled.div`
   /* background-color: #d9d9d9; */
 `;
 
-const Title = styled.div`
-  font-size: 20px;
-  font-weight: bolder;
+const TitleFireContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 242px;
   margin-top: 12px;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: bolder;
   /* border: 2px solid red; */
+`;
+
+const Fire = styled.div`
+  font-size: 14px;
+  display: flex;
+`;
+
+const FireContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+
+  &:hover div {
+    display: block;
+  }
+`;
+
+const Tooltip = styled.div`
+  display: none;
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  padding: 8px;
+  background-color: white;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 4;
+  box-shadow: 2px 6px 12px rgba(0, 0, 0, 0.12), 0 0 4px rgba(0, 0, 0, 0.12);
+
+  &:before {
+    content: "";
+    border-color: white transparent;
+    border-style: solid;
+    border-width: 0 6px 8px 6.5px;
+    display: block;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    top: -5px;
+    width: 0;
+    z-index: 4;
+  }
 `;
 
 const Period = styled.div`
@@ -179,7 +230,11 @@ const Period = styled.div`
   }
 `;
 
-const StartDate = styled.div``;
+const StartDate = styled.div`
+  height: 24px;
+  display: flex;
+  align-items: center;
+`;
 
 const DueDate = styled.div``;
 
@@ -223,8 +278,7 @@ const Accomplished = styled.button`
   margin-bottom: 16px;
   border-radius: 8px;
   /* background-color: transparent; */
-  background-color: ${(props) =>
-    props.status === "OPEN" ? "transparent" : "#EEF1FF"};
+  background-color: ${(props) => (props.status === "OPEN" ? "transparent" : "#EEF1FF")};
 
   cursor: pointer;
   font-weight: bold;

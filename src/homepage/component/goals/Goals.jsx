@@ -12,13 +12,12 @@ import getGoalList from "../../../apis/getGoalList";
 import { tokenState } from "../../../atom/atom";
 import { useRecoilState } from "recoil";
 import GoalDoesNotExistImg from "../../../asset/Icon/GoalDoesNotExist.svg";
-
+import GoalDoesNotExistPink from "../../../asset/Icon/GoalDoesNotExistPink.svg";
 import img1 from "../../../asset/Random/random1.svg";
 import img2 from "../../../asset/Random/random2.svg";
 import GoalCreatedModal from "./CreateGoalModal/GoalCreatedModal";
+
 const backgroundArr = [img1, img2];
-// const randomIndex = Math.floor(Math.random() * backgroundArr.length);
-// const backgroundImg = backgroundArr[randomIndex];
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +32,7 @@ function Goals() {
   const [csrfToken, setCsrfToken] = useRecoilState(tokenState);
 
   useEffect(() => {
-    if (!csrfToken) return; // 토큰이 없으면 API 호출하지 않음
+    if (!csrfToken) return;
     const fetchGoalList = async () => {
       try {
         const fetchedGoalList = await getGoalList(csrfToken);
@@ -41,8 +40,8 @@ function Goals() {
         console.log("Fetched goalList:", fetchedGoalList);
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          setCsrfToken(null); // 401 에러 발생 시 토큰 초기화
-          navigate("/"); // 로그인 페이지로 이동
+          setCsrfToken(null);
+          navigate("/");
         } else {
           console.error("Error fetching goal list", error);
         }
@@ -70,7 +69,7 @@ function Goals() {
   const isExpired = (endDate) => {
     if (!endDate) return false;
     let [year, month, day] = endDate.split(".").map(Number);
-    year += year < 50 ? 2000 : 1900; // 50을 기준으로 2000년대와 1900년대 구분
+    year += year < 50 ? 2000 : 1900;
     const goalDate = new Date(year, month - 1, day);
     return goalDate < today;
   };
@@ -78,7 +77,7 @@ function Goals() {
   const getDaysLeft = (endDate) => {
     if (!endDate) return null;
     let [year, month, day] = endDate.split(".").map(Number);
-    year += year < 50 ? 2000 : 1900; // 50을 기준으로 2000년대와 1900년대 구분
+    year += year < 50 ? 2000 : 1900;
     const goalDate = new Date(year, month - 1, day);
     const diffTime = goalDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -116,7 +115,7 @@ function Goals() {
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
-        {!isLoading && filteredGoals.length === 0 && (
+        {!isLoading && filteredGoals.length === 0 && currentTab !== "완료한 도전" && (
           <GoalDoesNotExist>
             <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
             <div
@@ -148,6 +147,37 @@ function Goals() {
             </div>
           </GoalDoesNotExist>
         )}
+        {!isLoading && filteredGoals.length === 0 && currentTab === "완료한 도전" && (
+          <GoalDoesNotExist>
+            <img src={GoalDoesNotExistPink} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
+            <div
+              style={{
+                color: "#676767",
+                fontWeight: "bold",
+                fontSize: "18px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "16px",
+              }}
+            >
+              <div>작은 목표부터 시작해서</div>
+              <div style={{ marginTop: "5px" }}>하나씩 채워나가봐요!</div>
+            </div>
+            <div
+              style={{
+                color: "#AEAEAE",
+                fontSize: "14px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              <div>곧 이곳이 당신의 성취로</div> <div style={{ marginTop: "5px" }}>가득 찰 거예요!</div>
+            </div>
+          </GoalDoesNotExist>
+        )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
             const randomIndex = Math.floor(Math.random() * backgroundArr.length);
@@ -162,9 +192,6 @@ function Goals() {
                     ) : (
                       <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
                     )}
-                    {/* <Image
-                      style={{ backgroundImage: `url(${goal.thumbnail})` }}
-                    /> */}
                     <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
                   </ImageContainer>
                   <Info>
@@ -383,7 +410,7 @@ const TitleFireContainer = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bolder;
   margin-bottom: 3px;
 `;
@@ -400,7 +427,7 @@ const FireContainer = styled.div`
 `;
 
 const Fire = styled.div`
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
 `;
 
