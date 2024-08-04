@@ -1,3 +1,21 @@
+/*
+상위 컴포넌트에 들어갈 내용(DiaryWrite 참고):
+  const [editedModal, setEditedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
+
+ {thumbnailModal && (
+          <ThumbnailModal
+            setThumbnailModal={setThumbnailModal}
+            setEditedModal={setEditedModal}
+            formData={formData}
+            goalId={goalId}
+            csrfToken={csrfToken}
+          />
+        )}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setEditedModal={setEditedModal} goalId={goalId} />
+        )}
+*/
 import React from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -5,9 +23,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 function DiaryEditModal({ setEditedModal }) {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // location.state 확인
-  console.log("Location state:", location.state);
+  const { goalId, diaryDetail } = location.state;
+  const diaries = diaryDetail;
 
   // location.state가 존재하고, goalId와 diaryDetail이 존재하는지 확인
   if (
@@ -18,9 +35,7 @@ function DiaryEditModal({ setEditedModal }) {
     console.error("Missing required state data");
     return null; // 필수 데이터가 없으면 null 반환
   }
-
-  const { goalId, diaryDetail } = location.state;
-  const diaries = diaryDetail;
+  console.log("Location state:", location.state);
 
   const closeModal = () => {
     setEditedModal(false); // !! 주석 풀기 !!
@@ -28,93 +43,27 @@ function DiaryEditModal({ setEditedModal }) {
   };
 
   return (
-    <ModalBackground>
-      <Overlay onClick={closeModal} />
-      <Wrapper>
-        <div className="title">일지가 수정되었어요</div>
-        <div className="save-content">
-          변경 사항이 성공적으로 저장되었습니다
-          <br />
-          계속해서 기록을 이어가보세요!
-        </div>
-        <CompleteBtn>
-          <button onClick={closeModal}>확인하기</button>
-        </CompleteBtn>
-      </Wrapper>
-    </ModalBackground>
+    <div>
+      <ModalBackground>
+        <Overlay onClick={closeModal} />
+
+        <Wrapper>
+          <div className="title">일지가 수정되었어요</div>
+          <div className="save-content">
+            변경 사항이 성공적으로 저장되었습니다
+            <br />
+            계속해서 기록을 이어가보세요!
+          </div>
+          <CompleteBtn>
+            <button onClick={closeModal}>확인하기</button>
+          </CompleteBtn>
+        </Wrapper>
+      </ModalBackground>
+    </div>
   );
 }
 
 export default DiaryEditModal;
-// import React from "react";
-// import styled from "styled-components";
-
-// /*
-// 상위 컴포넌트에 들어갈 내용(DiaryWrite 참고):
-//   const [editedModal, setEditedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
-//   const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
-
-//   .
-//   .
-//   .
-//  {thumbnailModal && (
-//           <ThumbnailModal
-//             setThumbnailModal={setThumbnailModal}
-//             setEditedModal={setEditedModal}
-//             formData={formData}
-//             goalId={goalId}
-//             csrfToken={csrfToken}
-//           />
-//         )}
-//         {!thumbnailModal && postedModal && (
-//           <DiaryPostModal setEditedModal={setEditedModal} goalId={goalId} />
-//         )}
-// //=> goalId가 아니라 journalId로 바꿔야 할 수 있음. (url에서 param값 사용 안하면 적절히 수정 필요)
-// */
-
-// import { useLocation, useNavigate } from "react-router-dom";
-// function DiaryEditModal({ setEditedModal }) {
-//   const location = useLocation();
-//   // const goalId = location.state?.goalId;
-//   // const diaryDetail = location.state.diaryDetail;
-//   const { goalId, diaryDetail } = location.state;
-//   // const diaryId = diaryDetail.journalId;
-//   console.log("Location state:", location.state);
-//   // console.log("STATE:   ", diaryDetail);
-//   const diaryId = diaryDetail.journalId;
-//   // console.log("STATE ID:   ", diaryId);
-//   // function DiaryEditModal() {
-//   const navigate = useNavigate();
-
-//   const closeModal = () => {
-//     setEditedModal(false); // !! 주석 풀기 !!
-//     navigate(`/detail`, { state: { diaryId, goalId } });
-
-//     // navigate(`/`); //  여기서 일지 디테일 페이지로 이동
-//   };
-
-//   return (
-//     <div>
-//       <ModalBackground>
-//         <Overlay onClick={closeModal} />
-
-//         <Wrapper>
-//           <div className="title">일지가 수정되었어요</div>
-//           <div className="save-content">
-//             변경 사항이 성공적으로 저장되었습니다
-//             <br />
-//             계속해서 기록을 이어가보세요!
-//           </div>
-//           <CompleteBtn>
-//             <button onClick={closeModal}>확인하기</button>
-//           </CompleteBtn>
-//         </Wrapper>
-//       </ModalBackground>
-//     </div>
-//   );
-// }
-
-// export default DiaryEditModal;
 
 const modalBase = `
 width: 100vw;
