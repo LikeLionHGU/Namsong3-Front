@@ -2,8 +2,23 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import createChatbotRoom from "../../apis/createChatbotRoom";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
 function CreateDiaryModal({ setIsModalOpen, goalId }) {
   const navigate = useNavigate();
+  const csrfToken = useRecoilValue(tokenState);
+
+  const ClickChatbot = async () => {
+    try {
+      const chatId = await createChatbotRoom(csrfToken, goalId);
+      console.log("채팅아디", chatId.chatId);
+      closeCreateDiaryModal();
+      navigate(`../chatbot`, { state: { chatId } });
+    } catch (error) {
+      console.error("채팅방 생성 실패", error);
+    }
+  };
 
   const closeCreateDiaryModal = () => {
     setIsModalOpen(false);
@@ -21,7 +36,7 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
             </ExitButton>
           </TopContainer>
           <MainContainer>
-            <WriteMethod onClick={() => navigate("../chatbot")}>
+            <WriteMethod onClick={ClickChatbot}>
               <TextContainer>
                 <MainText>👾 steppy와 함께 일지 작성하기</MainText>
                 <SubText>

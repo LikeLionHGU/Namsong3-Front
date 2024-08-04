@@ -7,11 +7,13 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
+    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
+    "http-proxy-middleware": "^3.0.0",
     "react": "^18.3.1",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",
@@ -24,7 +26,8 @@
     "recoil-persist": "^5.1.0",
     "styled-component": "^2.8.0",
     "styled-components": "^6.1.12",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "ws": "^8.18.0"
   },
   "scripts": {
     "start": "react-scripts start",
