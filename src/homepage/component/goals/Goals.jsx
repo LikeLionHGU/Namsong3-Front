@@ -410,7 +410,7 @@ const TitleFireContainer = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bolder;
   margin-bottom: 3px;
 `;
@@ -427,7 +427,7 @@ const FireContainer = styled.div`
 `;
 
 const Fire = styled.div`
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
 `;
 
