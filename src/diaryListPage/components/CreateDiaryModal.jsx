@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import createChatbotRoom from "../../apis/createChatbotRoom";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
+import getUserName from "../../apis/getUserName";
 function CreateDiaryModal({ setIsModalOpen, goalId }) {
   const navigate = useNavigate();
   const csrfToken = useRecoilValue(tokenState);
+  const [userName, setUserName] = useState("");
 
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const fetchedUserName = await getUserName();
+      setUserName(fetchedUserName);
+      console.log("Fetched name!!!:", fetchedUserName);
+    };
+    fetchUserName();
+  }, []);
   const ClickChatbot = async () => {
     try {
       const chatId = await createChatbotRoom(csrfToken, goalId);
@@ -45,7 +55,7 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
                     피곤한 하루에도
                   </div>
                   <div style={{ marginTop: "3px" }}>
-                    steppy가 chicky님의 꾸준한 기록을 도와줄게요!
+                    steppy가 {userName.name}님의 꾸준한 기록을 도와줄게요!
                   </div>
                 </SubText>
               </TextContainer>

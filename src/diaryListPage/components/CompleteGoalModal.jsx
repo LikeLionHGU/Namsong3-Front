@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import emotional from "../../asset/emoji/emotional.png";
+import getUserName from "../../apis/getUserName";
+
 function CompleteGoalModal({ setIsCompModalOpen }) {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      const fetchedUserName = await getUserName();
+      setUserName(fetchedUserName);
+      console.log("Fetched name!!!:", fetchedUserName);
+    };
+    fetchUserName();
+  }, []);
+
   const closeCompModal = () => {
     setIsCompModalOpen(false);
   };
@@ -28,7 +41,8 @@ function CompleteGoalModal({ setIsCompModalOpen }) {
           ></img>
           <h3>도전 완료를 축하드려요</h3>
           <div className="complete-content">
-            축하드려요! 꾸준히 성장 일지를 작성한 chicky님의 모습에 큰 감동을 받았습니다
+            축하드려요! 꾸준히 성장 일지를 작성한 {userName.name}님의 모습에 큰
+            감동을 받았습니다
             <br />
             계속해서 멋진 성장을 이루어나갈 수 있도록 stepper가 함께할게요 :D
           </div>
