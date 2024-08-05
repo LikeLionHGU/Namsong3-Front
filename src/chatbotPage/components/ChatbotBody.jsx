@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import dummy from "../../db/data.json";
 import sendIcon from "../../asset/Icon/send.svg";
 import LoadingModal from "./LoadingModal";
 import { useLocation } from "react-router-dom";
@@ -8,10 +7,13 @@ import { Client } from "@stomp/stompjs";
 
 function ChatbotBody() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [messageLog, setMessageLog] = useState({ logs: [] }); // 1회로 받아오는 채팅 기록 저장용
   const [messages, setMessages] = useState([]);
   const location = useLocation();
   const chatId = location.state.chatId.chatId;
-
+  const clientRef = useRef(null); //
+  const isFirstLoadRef = useRef(true); //이 페이지가 로드 되었는가 (맨 처음 한번만 채팅 기록 가져오기위해 씀)
+  const scrollRef = useRef(); // 스크롤 채팅창 맨 아래로 넣어주기 위해 사용하는 부분
   useEffect(() => {
     console.log("WebSocket URL:", process.env.REACT_APP_WEBSOCKET_URL); // 환경 변수 값 확인용
 
@@ -19,12 +21,22 @@ function ChatbotBody() {
       brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
       onConnect: () => {
         // 채팅 기록 받아오기 (일회성) -- API로 대체 가능
-        client.subscribe(`/app/chats/${chatId}/history`, (message) => {
-          const data = JSON.parse(message.body);
-          console.log("data:!!!! ", data);
-          setMessages((prevMessages) => [...prevMessages, data]);
-          // console.log("messages: ", data.);
-        });
+        if (isFirstLoadRef.current) {
+          client.subscribe(`/app/chats/${chatId}/history`, (message) => {
+            const data = JSON.parse(message.body);
+
+            console.log("data: ", data.messages);
+            // setMessageLog(data);
+            setMessageLog((prevMessageLog) => ({
+              logs: [...prevMessageLog.logs, ...data.messages],
+            }));
+            // console.log("subscribed");
+            // console.log("data:!!!! ", data);
+            // console.log("메시지 로그: ", messageLog);
+            // console.log("messages: ", data.);
+          });
+          isFirstLoadRef.current = false; // 한번 로드하고 나면 false로 만들어서 그 이후에는 이 부분 수행 안되도록.
+        }
 
         // AI 질문 받아오기
         client.subscribe(`/user/queue/messages`, (message) => {
@@ -35,29 +47,65 @@ function ChatbotBody() {
     });
 
     client.activate(); // activate 해야 웹소켓 연결이 됨
+    clientRef.current = client; //
 
     return () => {
       client.deactivate(); // 컴포넌트 언마운트 시 연결 해제
     };
   }, [chatId]);
 
+  useEffect(() => {
+    // 채팅 기록을 받아온 걸 확인.
+    // 채팅 기록이 잘 넣어지는지 확인
+    console.log("메시지 로그: ", messageLog);
+  }, [messageLog]);
+
   const openLoadingModal = () => {
     setModalOpen(true);
   };
 
   const sendMessage = (content) => {
-    const client = new Client({
-      brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
-      onConnect: () => {
-        client.publish({
-          destination: `/app/chats/${chatId}/messages`,
-          body: JSON.stringify({ content }),
-        });
-      },
-    });
-    client.activate();
+    if (clientRef.current && content.trim()) {
+      // const client = new Client({
+      clientRef.current.publish({
+        destination: `/app/chats/${chatId}/messages`,
+        body: JSON.stringify({ content }),
+      });
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "USER", content },
+      ]);
+    }
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    // });
   };
+  // client.activate();
+  // };
 
+  /* 채팅 부분 표시할 함수 (해당 메시지, 메시지 index, 챗봇이 연속으로 보낼때 맨 위 메시지인지 아닌지 판별해서 아이콘 넣어주기) */
+  const showChatLog = (log, index, isFirstChatbotMessage) => (
+    <div key={index}>
+      {log.role === "CHATBOT" ? (
+        <>
+          {isFirstChatbotMessage && <ChatbotIcon className="flex" />}
+          <Chatbot className="flex">
+            <ChatbotText>{log.content}</ChatbotText>
+          </Chatbot>
+        </>
+      ) : (
+        <User>
+          <UserText>{log.content}</UserText>
+        </User>
+      )}
+    </div>
+  );
+
+  // 채팅 추가되면 화면이 자동으로 아래로 스크롤 되도록
+  useEffect(() => {
+    // 현재 스크롤 위치 === scrollRef.current.scrollTop
+    // 스크롤 길이 === scrollRef.current.scrollHeight
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  });
   return (
     <div>
       <PageWrapper>
@@ -65,11 +113,14 @@ function ChatbotBody() {
           <BoxTitle>steppy와 일지 작성하기</BoxTitle>
           <CenterBox className="flex">
             <Chattings>
-              {messages.map((msg, index) => (
+              {/* <ChatbotIcon className="flex" /> */}
+
+              {/* {messages.map((msg, index) => (
                 <div key={index}>
                   {msg.role === "CHATBOT" ? (
                     <Chatbot className="flex">
-                      <ChatbotIcon className="flex" />
+                      {botProfile ? <ChatbotIcon className="flex" /> : null}
+
                       <ChatbotText>{msg.content}</ChatbotText>
                     </Chatbot>
                   ) : (
@@ -78,8 +129,30 @@ function ChatbotBody() {
                     </User>
                   )}
                 </div>
-              ))}
+              ))} */}
+
+              {messageLog.logs.map((log, index) =>
+                showChatLog(
+                  log,
+                  index,
+                  index === 0 || // index가 0일때는
+                    (messageLog.logs[index - 1]?.role !== "CHATBOT" && //
+                      log.role === "CHATBOT")
+                )
+              )}
+              {messages.map((msg, index) =>
+                showChatLog(
+                  msg,
+                  index + messageLog.logs.length,
+                  index === 0 ||
+                    (messages[index - 1]?.role !== "CHATBOT" &&
+                      msg.role === "CHATBOT")
+                )
+              )}
+              {/* 채팅 화면 자동으로 맨 아래로 스크롤 되도록 */}
+              <div ref={scrollRef}></div>
             </Chattings>
+
             <UserInteractField>
               <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
               <SummarizeArea>
@@ -167,6 +240,8 @@ const CenterBox = styled.div`
 const Chatbot = styled.div`
   flex-direction: column;
   width: 70%;
+  margin-right: auto;
+  /* border: 2px solid blue; */
 `;
 
 const ChatbotIcon = styled.div`
@@ -198,10 +273,14 @@ const ChatbotText = styled.div`
 `;
 
 const User = styled.div`
-  align-self: end;
-  flex-direction: column;
+  display: flex;
+  justify-self: flex-end;
+  justify-content: end;
+  flex-direction: row;
   margin-top: 24px;
-  width: fit-content;
+  width: 70%;
+  margin-left: auto;
+  /* border: 2px solid red; */
 `;
 
 const UserText = styled.div`
@@ -212,6 +291,7 @@ const UserText = styled.div`
   border-radius: 8px;
   border-top-right-radius: 0px;
   margin-bottom: 8px;
+  width: fit-content;
 `;
 
 const UserInteractField = styled.div`
