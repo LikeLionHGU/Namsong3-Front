@@ -3,13 +3,7 @@ import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import createDiary from "../../apis/createDiary";
-function ThumbnailModal({
-  setThumbnailModal,
-  setEditedModal,
-  formData,
-  diaryDetail,
-  csrfToken,
-}) {
+function ThumbnailModal({ setThumbnailModal, setEditedModal, formData, diaryDetail, csrfToken }) {
   // 이미지 설정//
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
@@ -25,7 +19,7 @@ function ThumbnailModal({
   const handleNextStep = async () => {
     //
     setThumbnailModal(false);
-    setEditedModal(true);
+    // setEditedModal(true);
     // ^^^^^^ 나중에 이 부분 지우기
 
     // *** 이 함수 안에서 수정된 일지를 백엔드로 submit할 필요 있음 (내용 + 대표사진) *** //
@@ -95,12 +89,7 @@ function ThumbnailModal({
                 <div className="image-add-text">사진 추가하기</div>
               </>
             )}
-            <input
-              type="file"
-              style={{ display: "none" }}
-              onChange={handleFileInputChange}
-              ref={fileInputRef}
-            />
+            <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
           </ImageAdd>
           <Buttons>
             <NextBtn>
