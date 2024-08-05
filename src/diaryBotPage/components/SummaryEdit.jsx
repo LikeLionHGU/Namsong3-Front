@@ -1,32 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import QuillEditor from "../../diaryWritePage/components/QuillEditor";
 import styled from "styled-components";
+import ThumbnailModal from "../../diaryWritePage/components/ThumbnailModal";
+import DiaryPostModal from "../../diaryWritePage/components/DiaryPostModal";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
+import { useLocation } from "react-router-dom";
 /*
 
 일지 작성하기 버튼을 누르면 여기서 수정한 내용을 
 
 */
+
 function SummaryEdit() {
+  const location = useLocation();
+  const summaryText = location.state?.summaryText || "";
+  // console.log("edit page에서 확인하는 summary", summaryText);
+  const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
+  const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+  });
+  const csrfToken = useRecoilValue(tokenState);
+  const goalId = location.state.goalId;
+
+  const openThumbnailModal = () => {
+    setThumbnailModal(true);
+  };
+  useEffect(() => {
+    console.log("formData updated:", formData, csrfToken);
+  }, [formData]);
+
   return (
     <Wrapper>
       <BoxWrapper>
         <BoxTitles>
           <BoxTitle className="title-disabled">steppy와 일지 작성하기</BoxTitle>
-          <BoxTitle>일지 수정하기</BoxTitle>
+          <BoxTitle>일지 작성하기</BoxTitle>
         </BoxTitles>
         <CenterBox>
           <DiaryHeader>
-            <DiaryTitle placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)">
+            <DiaryTitle
+              placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
+              name="title"
+              value={formData.title}
+              onChange={(e) =>
+                setFormData((formData) => ({
+                  ...formData,
+                  title: e.target.value,
+                }))
+              }
+            >
               {/* */}
             </DiaryTitle>
           </DiaryHeader>
           <EditorArea>
-            <QuillEditor />
+            <QuillEditor
+              onChange={(content) =>
+                setFormData((formData) => ({
+                  ...formData,
+                  content: content,
+                }))
+              }
+              mainText={summaryText}
+            />
           </EditorArea>
           <SaveButton>
-            <button className="save-button">일지 작성하기</button>
+            <button className="save-button" onClick={openThumbnailModal}>
+              일지 작성하기
+            </button>
           </SaveButton>
         </CenterBox>
+        {thumbnailModal && (
+          <ThumbnailModal
+            setThumbnailModal={setThumbnailModal}
+            setPostedModal={setPostedModal}
+            formData={formData}
+            goalId={goalId}
+            csrfToken={csrfToken}
+          />
+        )}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );
