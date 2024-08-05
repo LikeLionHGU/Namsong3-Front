@@ -17,6 +17,8 @@ import img1 from "../../../asset/Random/random1.svg";
 import img2 from "../../../asset/Random/random2.svg";
 import GoalCreatedModal from "./CreateGoalModal/GoalCreatedModal";
 import GoalEditedModal from "./goalEditDropdown/GoalEditedModal";
+import CompleteGoalModal from "../../../diaryListPage/components/CompleteGoalModal";
+import CompleteConfirmModal from "../../../diaryListPage/components/CompleteConfirmModal";
 
 const backgroundArr = [img1, img2];
 
@@ -25,6 +27,8 @@ function Goals() {
   const [isGoalCreatedModalOpen, setIsGoalCreatedModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isGoalEditedModalOpen, setIsGoalEditedModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isCompModalOpen, setIsCompModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
   const [goalList, setGoalList] = useState({ goals: [] });
@@ -35,6 +39,9 @@ function Goals() {
 
   const [isUpdate, setIsUpdate] = useState(false);
   const [updateData, setUpdateData] = useState(null);
+
+  const [isExpiredBox, setIsExpiredBox] = useState(false);
+  const [expiredData, setExpiredData] = useState(null);
 
   useEffect(() => {
     if (!csrfToken) return;
@@ -91,7 +98,7 @@ function Goals() {
     if (currentTab === "도전 중") {
       goals = goals.filter((goal) => goal.status === "OPEN");
     } else if (currentTab === "완료한 도전") {
-      goals = goals.filter((goal) => goal.status === "CLOSE");
+      goals = goals.filter((goal) => goal.status === "CLOSED");
     }
 
     if (currentSort === "오름차순") {
@@ -188,9 +195,20 @@ function Goals() {
             const randomIndex = Math.floor(Math.random() * backgroundArr.length);
             const backgroundImg = backgroundArr[randomIndex];
             const daysLeft = getDaysLeft(goal.endDate);
+            const expired = isExpired(goal.endDate);
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
-                <GoalWrapper onClick={() => handleClickGoal(goal.goalId)}>
+                <GoalWrapper
+                  onClick={() => {
+                    if (expired) {
+                      setIsExpiredBox(true);
+                      setIsConfirmModalOpen(true);
+                      setExpiredData(goal);
+                    } else {
+                      handleClickGoal(goal.goalId);
+                    }
+                  }}
+                >
                   <ImageContainer>
                     {goal.thumbnail ? (
                       <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
@@ -212,14 +230,12 @@ function Goals() {
                           <span>D-{daysLeft}</span>
                         </DeadlineComing>
                       )}
-                      {isExpired(goal.endDate) && (
+                      {expired && (
                         <ExpirationText>
                           <span>기한이 지났어요!</span>
                         </ExpirationText>
                       )}
-                      {daysLeft === null || daysLeft > 5
-                        ? !isExpired(goal.endDate) && <div style={{ marginTop: "4px" }} />
-                        : null}
+                      {daysLeft === null || daysLeft > 5 ? !expired && <div style={{ marginTop: "4px" }} /> : null}
                       <TitleFireContainer>
                         <Title>{goal.title}</Title>
                         {goal.streak >= 3 && (
@@ -255,6 +271,7 @@ function Goals() {
           isUpdate={isUpdate}
           setIsUpdate={setIsUpdate}
           setIsGoalEditedModalOpen={setIsGoalEditedModalOpen}
+          expiredData={expiredData}
         />
       )}
       {isGoalCreatedModalOpen && (
@@ -266,6 +283,16 @@ function Goals() {
       )}
       {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} goalId={updateData.goalId} />}
       {isGoalEditedModalOpen && <GoalEditedModal />}
+      {isConfirmModalOpen && (
+        <CompleteConfirmModal
+          expiredData={expiredData}
+          setIsConfirmModalOpen={setIsConfirmModalOpen}
+          csrfToken={csrfToken}
+          setIsCompModalOpen={setIsCompModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
+      {isCompModalOpen && <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} isExpiredBox={isExpiredBox} />}
     </Container>
   );
 }
