@@ -31,6 +31,9 @@ function Goals() {
 
   const [csrfToken, setCsrfToken] = useRecoilState(tokenState);
 
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [updateData, setUpdateData] = useState(null);
+
   useEffect(() => {
     if (!csrfToken) return;
     const fetchGoalList = async () => {
@@ -51,10 +54,6 @@ function Goals() {
     };
     fetchGoalList();
   }, [csrfToken, navigate, setCsrfToken]);
-
-  useEffect(() => {
-    console.log("Updated goalList:", goalList);
-  }, [goalList]);
 
   const openCreateGoalsModal = () => {
     setIsModalOpen(true);
@@ -101,6 +100,10 @@ function Goals() {
 
     return goals;
   };
+
+  useEffect(() => {
+    console.log("Updated updateData:", updateData, isUpdate);
+  }, [updateData]);
 
   const filteredGoals = getFilteredGoals();
 
@@ -192,7 +195,13 @@ function Goals() {
                     ) : (
                       <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
                     )}
-                    <GoalEditDropdown setIsDeleteModalOpen={setIsDeleteModalOpen} />
+                    <GoalEditDropdown
+                      setIsDeleteModalOpen={setIsDeleteModalOpen}
+                      setIsUpdate={setIsUpdate}
+                      setIsModalOpen={setIsModalOpen}
+                      goal={goal}
+                      onEdit={setUpdateData}
+                    />
                   </ImageContainer>
                   <Info>
                     <InfoContainer>
@@ -237,10 +246,22 @@ function Goals() {
         </TransitionGroup>
       </GoalContainer>
       {isModalOpen && (
-        <CreateGoalModal setIsModalOpen={setIsModalOpen} setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen} />
+        <CreateGoalModal
+          setIsModalOpen={setIsModalOpen}
+          setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen}
+          updateData={updateData}
+          isUpdate={isUpdate}
+          setIsUpdate={setIsUpdate}
+        />
       )}
-      {isGoalCreatedModalOpen && <GoalCreatedModal setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen} />}
-      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} />}
+      {isGoalCreatedModalOpen && (
+        <GoalCreatedModal
+          setIsGoalCreatedModalOpen={setIsGoalCreatedModalOpen}
+          isUpdate={isUpdate}
+          updateData={updateData}
+        />
+      )}
+      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} goalId={updateData.goalId} />}
     </Container>
   );
 }

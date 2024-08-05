@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 import GoalEditDropdownBtn from "../../../../asset/Icon/GoalEditDropdownBtn.svg";
 import { CSSTransition } from "react-transition-group";
 
-function GoalEditDropdown({ setIsDeleteModalOpen }) {
+function GoalEditDropdown({ setIsDeleteModalOpen, setIsUpdate, setIsModalOpen, goal, onEdit }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -18,10 +18,18 @@ function GoalEditDropdown({ setIsDeleteModalOpen }) {
     }
   };
 
+  const handleUpdateClick = (event) => {
+    event.stopPropagation(); // 뒤에 goalclick event 방지용
+    setIsUpdate(true);
+    setIsModalOpen(true);
+    setIsDropdownOpen(false);
+    if (onEdit) onEdit(goal);
+  };
+
   const handleDeleteClick = (event) => {
-    event.stopPropagation(); //뒤에 goalclick event 방지용
+    event.stopPropagation(); // 뒤에 goalclick event 방지용
     setIsDeleteModalOpen(true);
-    toggleDropdown(event);
+    if (onEdit) onEdit(goal);
   };
 
   useEffect(() => {
@@ -36,9 +44,8 @@ function GoalEditDropdown({ setIsDeleteModalOpen }) {
       <img src={GoalEditDropdownBtn} alt=""></img>
       <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
         <DropdownMenu>
-          <DropdownItem onClick={toggleDropdown}>수정하기</DropdownItem>
+          <DropdownItem onClick={handleUpdateClick}>수정하기</DropdownItem>
           <Separator />
-
           <DropdownItem onClick={handleDeleteClick}>삭제하기</DropdownItem>
         </DropdownMenu>
       </CSSTransition>
