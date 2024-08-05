@@ -16,6 +16,7 @@ import GoalDoesNotExistPink from "../../../asset/Icon/GoalDoesNotExistPink.svg";
 import img1 from "../../../asset/Random/random1.svg";
 import img2 from "../../../asset/Random/random2.svg";
 import GoalCreatedModal from "./CreateGoalModal/GoalCreatedModal";
+import GoalEditedModal from "./goalEditDropdown/GoalEditedModal";
 
 const backgroundArr = [img1, img2];
 
@@ -23,6 +24,7 @@ function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGoalCreatedModalOpen, setIsGoalCreatedModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isGoalEditedModalOpen, setIsGoalEditedModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState("도전 중");
   const [currentSort, setCurrentSort] = useState("최신순");
   const [goalList, setGoalList] = useState({ goals: [] });
@@ -252,6 +254,7 @@ function Goals() {
           updateData={updateData}
           isUpdate={isUpdate}
           setIsUpdate={setIsUpdate}
+          setIsGoalEditedModalOpen={setIsGoalEditedModalOpen}
         />
       )}
       {isGoalCreatedModalOpen && (
@@ -262,6 +265,7 @@ function Goals() {
         />
       )}
       {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} goalId={updateData.goalId} />}
+      {isGoalEditedModalOpen && <GoalEditedModal />}
     </Container>
   );
 }
