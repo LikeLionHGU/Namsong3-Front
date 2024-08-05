@@ -3,13 +3,7 @@ import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import createDiary from "../../apis/createDiary";
-function ThumbnailModal({
-  setThumbnailModal,
-  setEditedModal,
-  formData,
-  diaryDetail,
-  csrfToken,
-}) {
+function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, csrfToken }) {
   // 이미지 설정//
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
@@ -24,8 +18,7 @@ function ThumbnailModal({
   };
   const handleNextStep = async () => {
     //
-    setThumbnailModal(false);
-    setEditedModal(true);
+    // setPostedModal(true);
     // ^^^^^^ 나중에 이 부분 지우기
 
     // *** 이 함수 안에서 수정된 일지를 백엔드로 submit할 필요 있음 (내용 + 대표사진) *** //
@@ -44,9 +37,9 @@ function ThumbnailModal({
       }
       //  TODO: 다이어리 수정하는 api 파일 생성하기 !!!!!! creatDiary말고 나중에
       // 백엔드에서 일지 수정 api 생성하면 만들고 이 부분도 고치기.
-      await createDiary(formDataToSend, csrfToken, diaryDetail);
+      await createDiary(formDataToSend, csrfToken, goalId);
       setThumbnailModal(false);
-      setEditedModal(true);
+      setPostedModal(true);
     } catch (error) {
       console.error("일지 생성 실패", error);
     }
@@ -95,12 +88,7 @@ function ThumbnailModal({
                 <div className="image-add-text">사진 추가하기</div>
               </>
             )}
-            <input
-              type="file"
-              style={{ display: "none" }}
-              onChange={handleFileInputChange}
-              ref={fileInputRef}
-            />
+            <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
           </ImageAdd>
           <Buttons>
             <NextBtn>

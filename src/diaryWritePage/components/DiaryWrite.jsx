@@ -21,7 +21,7 @@ function DiaryWrite() {
     setThumbnailModal(true);
   };
   useEffect(() => {
-    console.log("formData updated:", formData, csrfToken);
+    console.log("formData updated:", formData, csrfToken, goalId);
   }, [formData]);
 
   return (
