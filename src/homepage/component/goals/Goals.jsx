@@ -20,7 +20,12 @@ import GoalEditedModal from "./goalEditDropdown/GoalEditedModal";
 import CompleteGoalModal from "../../../diaryListPage/components/CompleteGoalModal";
 import CompleteConfirmModal from "../../../diaryListPage/components/CompleteConfirmModal";
 
+import stamp1 from "../../../asset/Random/stamp1.svg";
+import stamp2 from "../../../asset/Random/stamp2.svg";
+import stamp3 from "../../../asset/Random/stamp3.svg";
+
 const backgroundArr = [img1, img2];
+const complete_stamps = [stamp1, stamp2, stamp3];
 
 function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +47,13 @@ function Goals() {
 
   const [isExpiredBox, setIsExpiredBox] = useState(false);
   const [expiredData, setExpiredData] = useState(null);
+
+  // useEffect(()=>{
+  // const randomStampIndex = Math.floor(
+  //   Math.random() * complete_stamps.length
+  // );
+  // const completeStamps = complete_stamps[randomStampIndex];
+  // })
 
   useEffect(() => {
     if (!csrfToken) return;
@@ -120,82 +132,106 @@ function Goals() {
     <Container>
       <TopMenu>
         <Taps currentTab={currentTab} setCurrentTab={setCurrentTab} />
-        <GoalViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+        <GoalViewDropdown
+          currentSort={currentSort}
+          setCurrentSort={setCurrentSort}
+        />
       </TopMenu>
       <GoalContainer>
         <CreateGoalModalBtn onClick={openCreateGoalsModal}>
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
-        {!isLoading && filteredGoals.length === 0 && currentTab !== "완료한 도전" && (
-          <GoalDoesNotExist>
-            <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
-            <div
-              style={{
-                color: "#676767",
-                fontWeight: "bold",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "16px",
-              }}
-            >
-              <div>첫 걸음을 내딛는 순간</div>
-              <div style={{ marginTop: "5px" }}>성장이 시작됩니다!</div>
-            </div>
-            <div
-              style={{
-                color: "#AEAEAE",
-                fontSize: "14px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "10px",
-              }}
-            >
-              <div>하고 싶은 일을 적어볼까요? </div>{" "}
-              <div style={{ marginTop: "5px" }}>작은 목표부터 큰 목표까지 모두 좋아요!</div>
-            </div>
-          </GoalDoesNotExist>
-        )}
-        {!isLoading && filteredGoals.length === 0 && currentTab === "완료한 도전" && (
-          <GoalDoesNotExist>
-            <img src={GoalDoesNotExistPink} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
-            <div
-              style={{
-                color: "#676767",
-                fontWeight: "bold",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "16px",
-              }}
-            >
-              <div>작은 목표부터 시작해서</div>
-              <div style={{ marginTop: "5px" }}>하나씩 채워나가봐요!</div>
-            </div>
-            <div
-              style={{
-                color: "#AEAEAE",
-                fontSize: "14px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "10px",
-              }}
-            >
-              <div>곧 이곳이 당신의 성취로</div> <div style={{ marginTop: "5px" }}>가득 찰 거예요!</div>
-            </div>
-          </GoalDoesNotExist>
-        )}
+        {!isLoading &&
+          filteredGoals.length === 0 &&
+          currentTab !== "완료한 도전" && (
+            <GoalDoesNotExist>
+              <img
+                src={GoalDoesNotExistImg}
+                alt=""
+                style={{ marginTop: "59px", width: "40px", height: "41px" }}
+              />
+              <div
+                style={{
+                  color: "#676767",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <div>첫 걸음을 내딛는 순간</div>
+                <div style={{ marginTop: "5px" }}>성장이 시작됩니다!</div>
+              </div>
+              <div
+                style={{
+                  color: "#AEAEAE",
+                  fontSize: "14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <div>하고 싶은 일을 적어볼까요? </div>{" "}
+                <div style={{ marginTop: "5px" }}>
+                  작은 목표부터 큰 목표까지 모두 좋아요!
+                </div>
+              </div>
+            </GoalDoesNotExist>
+          )}
+        {!isLoading &&
+          filteredGoals.length === 0 &&
+          currentTab === "완료한 도전" && (
+            <GoalDoesNotExist>
+              <img
+                src={GoalDoesNotExistPink}
+                alt=""
+                style={{ marginTop: "59px", width: "40px", height: "41px" }}
+              />
+              <div
+                style={{
+                  color: "#676767",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <div>작은 목표부터 시작해서</div>
+                <div style={{ marginTop: "5px" }}>하나씩 채워나가봐요!</div>
+              </div>
+              <div
+                style={{
+                  color: "#AEAEAE",
+                  fontSize: "14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <div>곧 이곳이 당신의 성취로</div>{" "}
+                <div style={{ marginTop: "5px" }}>가득 찰 거예요!</div>
+              </div>
+            </GoalDoesNotExist>
+          )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
-            const randomIndex = Math.floor(Math.random() * backgroundArr.length);
+            const randomIndex = Math.floor(
+              Math.random() * backgroundArr.length
+            );
             const backgroundImg = backgroundArr[randomIndex];
             const daysLeft = getDaysLeft(goal.endDate);
             const expired = isExpired(goal.endDate);
+            const randomStampIndex = Math.floor(
+              Math.random() * complete_stamps.length
+            );
+            const completeStamps = complete_stamps[randomStampIndex];
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper
@@ -209,35 +245,84 @@ function Goals() {
                     }
                   }}
                 >
-                  <ImageContainer>
-                    {goal.thumbnail ? (
-                      <Image style={{ backgroundImage: `url(${goal.thumbnail})` }} />
-                    ) : (
-                      <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
-                    )}
-                    <GoalEditDropdown
-                      setIsDeleteModalOpen={setIsDeleteModalOpen}
-                      setIsUpdate={setIsUpdate}
-                      setIsModalOpen={setIsModalOpen}
-                      goal={goal}
-                      onEdit={setUpdateData}
-                    />
-                  </ImageContainer>
+                  {goal?.status === "CLOSED" ? (
+                    <>
+                      <CompleteStamp>
+                        <img src={completeStamps} alt="" />
+                        {/* // style={{
+                        //   backgroundImage: `url(${completeStamps})`,
+                        // }} */}
+                      </CompleteStamp>
+                      <ImageContainer>
+                        {goal.thumbnail ? (
+                          <Image
+                            style={{
+                              backgroundImage: `url(${goal.thumbnail})`,
+                              filter: "brightness(0.5) saturate(0%)",
+                            }}
+                          />
+                        ) : (
+                          <Image
+                            style={{
+                              backgroundImage: `url(${backgroundImg})`,
+                              filter: "saturate(0%)",
+                            }}
+                          />
+                        )}
+                        <GoalEditDropdown
+                          setIsDeleteModalOpen={setIsDeleteModalOpen}
+                          setIsUpdate={setIsUpdate}
+                          setIsModalOpen={setIsModalOpen}
+                          goal={goal}
+                          onEdit={setUpdateData}
+                        />
+                      </ImageContainer>
+                    </>
+                  ) : (
+                    <ImageContainer>
+                      {goal.thumbnail ? (
+                        <Image
+                          style={{
+                            backgroundImage: `url(${goal.thumbnail})`,
+                          }}
+                        />
+                      ) : (
+                        <Image
+                          style={{ backgroundImage: `url(${backgroundImg})` }}
+                        />
+                      )}
+                      <GoalEditDropdown
+                        setIsDeleteModalOpen={setIsDeleteModalOpen}
+                        setIsUpdate={setIsUpdate}
+                        setIsModalOpen={setIsModalOpen}
+                        goal={goal}
+                        onEdit={setUpdateData}
+                      />
+                    </ImageContainer>
+                  )}
+
                   <Info>
                     <InfoContainer>
-                      {daysLeft !== null && daysLeft <= 5 && daysLeft > 0 && (
-                        <DeadlineComing>
-                          <span>D-{daysLeft}</span>
-                        </DeadlineComing>
-                      )}
-                      {expired && (
+                      {daysLeft !== null &&
+                        daysLeft <= 5 &&
+                        daysLeft > 0 &&
+                        goal?.status === "OPEN" && (
+                          <DeadlineComing>
+                            <span>D-{daysLeft}</span>
+                          </DeadlineComing>
+                        )}
+                      {expired && goal?.status === "OPEN" && (
                         <ExpirationText>
                           <span>기한이 지났어요!</span>
                         </ExpirationText>
                       )}
-                      {daysLeft === null || daysLeft > 5 ? !expired && <div style={{ marginTop: "4px" }} /> : null}
+                      {daysLeft === null || daysLeft > 5
+                        ? !expired && <div style={{ marginTop: "4px" }} />
+                        : null}
                       <TitleFireContainer>
-                        <Title>{goal.title}</Title>
+                        <Title isOpen={goal?.status === "OPEN"}>
+                          {goal.title}
+                        </Title>
                         {goal.streak >= 3 && (
                           <FireContainer>
                             <Fire>
@@ -249,8 +334,10 @@ function Goals() {
                         )}
                       </TitleFireContainer>
                       {(goal.startDate || goal.endDate) && (
-                        <Period>
-                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
+                        <Period isOpen={goal?.status === "OPEN"}>
+                          {goal.startDate && (
+                            <StartDate>{goal.startDate}</StartDate>
+                          )}
                           {goal.startDate && goal.endDate && <span> → </span>}
                           {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
@@ -281,7 +368,12 @@ function Goals() {
           updateData={updateData}
         />
       )}
-      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} goalId={updateData.goalId} />}
+      {isDeleteModalOpen && (
+        <DeleteGoalModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          goalId={updateData.goalId}
+        />
+      )}
       {isGoalEditedModalOpen && <GoalEditedModal />}
       {isConfirmModalOpen && (
         <CompleteConfirmModal
@@ -292,12 +384,39 @@ function Goals() {
           setIsModalOpen={setIsModalOpen}
         />
       )}
-      {isCompModalOpen && <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} isExpiredBox={isExpiredBox} />}
+      {isCompModalOpen && (
+        <CompleteGoalModal
+          setIsCompModalOpen={setIsCompModalOpen}
+          isExpiredBox={isExpiredBox}
+        />
+      )}
     </Container>
   );
 }
 
 export default Goals;
+
+const CompleteStamp = styled.div`
+  display: flex;
+  position: absolute;
+  z-index: 4;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  > img {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 100%;
+    height: 100%;
+    width: 141px;
+    height: 135px;
+  }
+  /* border: 4px solid blue; */
+
+  /* background-size: 100px 100px; */
+`;
 
 const Container = styled.div`
   display: flex;
@@ -378,6 +497,7 @@ const GoalWrapper = styled.div`
   margin-top: 20px;
   margin-right: 12px;
   margin-left: 12px;
+  /* border: 2px solid red; */
   cursor: pointer;
   animation: ${enterAnimation} 0.5s forwards;
 
@@ -392,6 +512,7 @@ const GoalWrapper = styled.div`
 
 const ImageContainer = styled.div`
   position: relative;
+  /* position: absolute; */
   height: 168px;
 `;
 
@@ -465,6 +586,7 @@ const Title = styled.div`
   font-size: 18px;
   font-weight: bolder;
   margin-bottom: 3px;
+  color: ${(props) => (props.isOpen ? "black" : "lightgray")};
 `;
 
 const FireContainer = styled.div`
@@ -516,7 +638,8 @@ const Tooltip = styled.div`
 const Period = styled.div`
   display: flex;
   font-size: 16px;
-  color: #9a9a9a;
+  /* color: #afafaf; */
+  color: ${(props) => (props.isOpen ? "#9a9a9a" : "#afafaf")};
 `;
 
 const StartDate = styled.div`
