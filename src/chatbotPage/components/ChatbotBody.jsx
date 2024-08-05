@@ -19,13 +19,15 @@ function ChatbotBody() {
       brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
       onConnect: () => {
         // 채팅 기록 받아오기 (일회성) -- API로 대체 가능
-        client.subscribe(`${process.env.REACT_APP_HOST_URL}/app/chats/${chatId}/history`, (message) => {
+        client.subscribe(`/app/chats/${chatId}/history`, (message) => {
           const data = JSON.parse(message.body);
-          setMessages((prevMessages) => [...prevMessages, ...data]);
+          console.log("data:!!!! ", data);
+          setMessages((prevMessages) => [...prevMessages, data]);
+          // console.log("messages: ", data.);
         });
 
         // AI 질문 받아오기
-        client.subscribe(`${process.env.REACT_APP_HOST_URL}/user/queue/messages`, (message) => {
+        client.subscribe(`/user/queue/messages`, (message) => {
           const data = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, data]);
         });
@@ -65,14 +67,14 @@ function ChatbotBody() {
             <Chattings>
               {messages.map((msg, index) => (
                 <div key={index}>
-                  {msg.sender === "bot" ? (
+                  {msg.role === "CHATBOT" ? (
                     <Chatbot className="flex">
                       <ChatbotIcon className="flex" />
-                      <ChatbotText>{msg.text}</ChatbotText>
+                      <ChatbotText>{msg.content}</ChatbotText>
                     </Chatbot>
                   ) : (
                     <User>
-                      <UserText>{msg.text}</UserText>
+                      <UserText>{msg.content}</UserText>
                     </User>
                   )}
                 </div>
@@ -81,7 +83,10 @@ function ChatbotBody() {
             <UserInteractField>
               <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
               <SummarizeArea>
-                <span>대화를 통해 충분히 오늘의 감상을 기록하셨다면 일지를 요약해보세요!</span>{" "}
+                <span>
+                  대화를 통해 충분히 오늘의 감상을 기록하셨다면 일지를
+                  요약해보세요!
+                </span>{" "}
                 <span className="summarizeBtn" onClick={openLoadingModal}>
                   일지 요약하기 &gt;{" "}
                 </span>
