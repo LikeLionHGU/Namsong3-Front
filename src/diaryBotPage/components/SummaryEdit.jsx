@@ -23,8 +23,9 @@ function SummaryEdit() {
     content: "",
   });
   const csrfToken = useRecoilValue(tokenState);
-  const goalId = location.state.goalId;
+  const goalId = location.state?.goalId;
 
+  console.log("<<<<<<<<goalID : ", goalId);
   const openThumbnailModal = () => {
     setThumbnailModal(true);
   };
@@ -32,6 +33,15 @@ function SummaryEdit() {
     console.log("formData updated:", formData, csrfToken);
   }, [formData]);
 
+  // summaryText가 있을 때 formData.content를 업데이트
+  useEffect(() => {
+    if (summaryText) {
+      setFormData((formData) => ({
+        ...formData,
+        content: summaryText,
+      }));
+    }
+  }, [summaryText]);
   return (
     <Wrapper>
       <BoxWrapper>

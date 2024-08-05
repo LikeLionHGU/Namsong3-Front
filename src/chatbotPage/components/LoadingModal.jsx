@@ -6,22 +6,14 @@ import postChatSummary from "../../apis/postChatSummary";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useRecoilValue } from "recoil";
-// import { tokenState } from "../recoil/atoms";
-// import { postChatSummary } from "../api"; // Adjust the import path as needed
-// import styled from "styled-components";
-// import loadingImg from "../../asset/loading.svg"; // Adjust the import path as needed
-
-function LoadingModal({ chatId, setModalOpen }) {
+function LoadingModal({ chatId, setModalOpen, goalId }) {
   const csrfToken = useRecoilValue(tokenState);
   const navigate = useNavigate();
   const [summaryText, setSummaryText] = useState("");
 
   const closeLoadingModal = () => {
     setModalOpen(false);
-    navigate("/summaryEdit", { state: { summaryText } });
+    navigate("/summaryEdit", { state: { summaryText, goalId } });
   };
 
   useEffect(() => {
@@ -63,69 +55,6 @@ function LoadingModal({ chatId, setModalOpen }) {
 }
 
 export default LoadingModal;
-
-// function LoadingModal({ chatId, setModalOpen }) {
-//   const csrfToken = useRecoilValue(tokenState);
-
-//   const navigate = useNavigate();
-//   // const location = useLocation();
-//   const [summaryText, setSummaryText] = useState("");
-//   // const { summary } = location.state;
-//   const closeLoadingModal = () => {
-//     setModalOpen(false);
-//     navigate("/summaryEdit", { state: { summaryText } }); // navigate하면서 요약된 내용을 보내줘야한다. 여기서 연결해야할 것 같다.
-//   };
-
-//   useEffect(() => {
-//     console.log("chatid: ", chatId);
-
-//     const summaryFetch = async () => {
-//       try {
-//         const summary = await postChatSummary(chatId, csrfToken);
-
-//         console.log("summary : ", summary);
-//         // summary = fetchedSummary;
-//         setSummaryText(summary.content);
-//         console.log("아아아악summary : ", summary.content);
-//         closeLoadingModal(); // 일지 받아오고 나면 모달 닫기
-//       } catch (error) {
-//         console.error("Error fetching diary detail:", error);
-//         console.log("summary AAA");
-//       }
-//     };
-//     summaryFetch();
-//   }, [chatId, csrfToken]);
-
-//   useEffect(() => {
-//     if (summaryText) {
-//       closeLoadingModal(); // Navigate only after summaryText is updated
-//     }
-//   }, [summaryText]); // 값 변하면 업데이트
-//   return (
-//     <div>
-//       <ModalBackground>
-//         {/* <Overlay> */}
-//         <Wrapper>
-//           <img
-//             src={loadingImg}
-//             alt="loading"
-//             className="loading-img"
-//             width="60px"
-//           ></img>
-//           <h3>steppy가 일지를 요약중이에요!</h3>
-//           <div className="loading-content">
-//             steppy와 대화 중 일지에 추가하고 싶은 내용이 있었나요?
-//             <br />
-//             일지 수정하기 페이지에 담아주세요 :)
-//           </div>
-//         </Wrapper>
-//         {/* </Overlay> */}
-//       </ModalBackground>
-//     </div>
-//   );
-// }
-
-// export default LoadingModal;
 
 const modalBase = `
 width: 100vw;
