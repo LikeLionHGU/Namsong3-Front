@@ -33,7 +33,9 @@ function GoalCard() {
 
   const calculateDaysFromStart = (startDate) => {
     if (!isValidDate(startDate)) return 0; // 기본값 설정
-    const [year, month, day] = startDate.split(".").map((part) => parseInt(part, 10));
+    const [year, month, day] = startDate
+      .split(".")
+      .map((part) => parseInt(part, 10));
     const start = new Date(year + 2000, month - 1, day); // 2000년대를 가정
     const today = new Date();
     const diffTime = today - start;
@@ -46,7 +48,9 @@ function GoalCard() {
         const fetchedGoalInfo = await getDiaryList(goalId, csrfToken);
         setGoalInfo(fetchedGoalInfo);
 
-        const daysFromStart = calculateDaysFromStart(fetchedGoalInfo.goal.startDate);
+        const daysFromStart = calculateDaysFromStart(
+          fetchedGoalInfo.goal.startDate
+        );
         setStartedFrom(daysFromStart);
         console.log("목표정보", goalInfo);
       } catch (error) {
@@ -68,15 +72,17 @@ function GoalCard() {
     <Container>
       <Wrapper>
         {goalInfo.goal.thumbnail ? (
-          <Image style={{ backgroundImage: `url(${goalInfo.goal.thumbnail})` }} />
+          <Image
+            style={{ backgroundImage: `url(${goalInfo.goal.thumbnail})` }}
+          />
         ) : (
           <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
         )}
         {/* <Image style={{ backgroundImage: `url(${backgroundImg})` }} /> */}
         <Info>
           <TitleFireContainer>
-            <Title>{goalInfo.goal.title}</Title>
-            {goalInfo.goal.streak >= 3 && (
+            <Title>{goalInfo?.goal.title}</Title>
+            {goalInfo.goal.streak >= 1 && (
               <FireContainer>
                 <Fire>🔥{goalInfo.goal.streak >= 10 && <span>🔥</span>}</Fire>
                 <Tooltip>연속{goalInfo.goal.streak}일 작성</Tooltip>
@@ -86,13 +92,19 @@ function GoalCard() {
 
           <Period>
             <StartDate>{goalInfo.goal.startDate}</StartDate>
-            {goalInfo.goal.startDate && goalInfo.goal.endDate && <ArrowForwardIcon />}
+            {goalInfo.goal.startDate && goalInfo.goal.endDate && (
+              <ArrowForwardIcon />
+            )}
             <DueDate>{goalInfo.goal.endDate}</DueDate>
           </Period>
           <Line />
           <ExtrtaInfo>
-            {startedFrom >= 1 && <div className="info-day-count">{startedFrom}일차</div>}
-            <div className="info-diary-count">작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개</div>
+            {startedFrom >= 1 && (
+              <div className="info-day-count">{startedFrom}일차</div>
+            )}
+            <div className="info-diary-count">
+              작성한 일지 {goalInfo.journals ? goalInfo.journals.length : 0}개
+            </div>
           </ExtrtaInfo>
           <div className="accomplish-btn">
             <Accomplished
@@ -113,7 +125,9 @@ function GoalCard() {
           setIsCompModalOpen={setIsCompModalOpen}
         />
       )}
-      {isCompModalOpen && <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />}
+      {isCompModalOpen && (
+        <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} />
+      )}
     </Container>
   );
 }
@@ -276,7 +290,8 @@ const Accomplished = styled.button`
   margin-bottom: 16px;
   border-radius: 8px;
   /* background-color: transparent; */
-  background-color: ${(props) => (props.status === "OPEN" ? "transparent" : "#EEF1FF")};
+  background-color: ${(props) =>
+    props.status === "OPEN" ? "transparent" : "#EEF1FF"};
 
   cursor: pointer;
   font-weight: bold;
