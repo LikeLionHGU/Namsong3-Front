@@ -1,69 +1,78 @@
 import React from "react";
 import styled from "styled-components";
+import updateGoal from "../../apis/updateGoal";
+
+const parseDate = (dateString) => {
+  if (!dateString) return ""; // dateString이 없을 경우 빈 문자열 반환
+  const [year, month, day] = dateString.split(".").map(Number);
+  const fullYear = year < 50 ? 2000 + year : 1900 + year;
+  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+};
 
 function CompleteConfirmModal({
-  status,
-  setGoalInfo,
+  goalInfo,
   setIsConfirmModalOpen,
-  goalId,
   csrfToken,
   setIsCompModalOpen,
+  expiredData,
+  setIsModalOpen,
 }) {
   const closeConfirmModal = () => {
     setIsConfirmModalOpen(false);
   };
 
+  const handleClickCancle = () => {
+    setIsConfirmModalOpen(false);
+    if (expiredData !== undefined) {
+      setIsModalOpen(true);
+    }
+  };
+  console.log("dmdkr glaemfj", expiredData);
+
   const completeGoal = async () => {
-    // console.log("current status before update is : " + status);
-
-    const updatedGoalInfo = {
-      goal: { status: "CLOSED" },
-    };
-    setGoalInfo((prevGoalInfo) => ({
-      ...prevGoalInfo,
-      goal: { ...prevGoalInfo.goal, status: "CLOSED" },
-    }));
-
-    console.log("current status after update is : " + status);
-    // 모달 닫기
+    const data = expiredData || goalInfo.goal;
+    if (!data) {
+      console.error("No valid data provided");
+      return;
+    }
 
     try {
-      const response = await fetch(`/api/goals/${goalId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": csrfToken,
-        },
-        body: JSON.stringify(updatedGoalInfo),
-      });
+      const { title, startDate, endDate, thumbnail, goalId } = data;
 
-      if (!response.ok) {
-        throw new Error("Failed to update goal status");
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", title);
+      formDataToSend.append("startDate", parseDate(startDate)); // 날짜 형식 변환
+      formDataToSend.append("endDate", parseDate(endDate)); // 날짜 형식 변환
+      formDataToSend.append("status", "CLOSED");
+
+      if (thumbnail) {
+        formDataToSend.append("thumbnail", thumbnail);
+      } else {
+        formDataToSend.append("thumbnail", "");
       }
-
-      console.log("Goal status updated successfully");
+      await updateGoal(formDataToSend, csrfToken, goalId);
+      setIsConfirmModalOpen(false);
+      setIsCompModalOpen(true);
     } catch (error) {
       console.error("Error updating goal status:", error);
     }
-
-    setIsConfirmModalOpen(false);
-    setIsCompModalOpen(true);
   };
 
   return (
     <div>
       <ModalBackground>
         <Overlay onClick={closeConfirmModal} />
-        <Wrapper>
+        <Wrapper isExpired={expiredData !== undefined}>
           <h3>도전을 완료하시겠어요?</h3>
           <div className="complete-content">
+            {expiredData !== undefined && <div>목표 기간이 만료되었어요.</div>}
             완료한 도전은 재도전이 불가합니다.
             <br />
             도전을 완료하시겠어요?
           </div>
           <Buttons>
             <CancelBtn>
-              <button onClick={closeConfirmModal}>취소 </button>
+              <button onClick={handleClickCancle}>취소 </button>
             </CancelBtn>
             <CompleteBtn>
               <button onClick={completeGoal}>확인</button>
@@ -110,7 +119,7 @@ const Wrapper = styled.div`
   transform: translate(-50%, -50%);
   background: #ffffff;
   width: 350px; // 로딩모달 크기
-  height: 180px;
+  height: ${(props) => (props.isExpired ? "187px" : "180px")};
   border-radius: 12px;
   padding-top: 5px;
   z-index: 5;

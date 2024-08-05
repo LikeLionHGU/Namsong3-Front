@@ -31,6 +31,7 @@ function CreateGoalModal({
   isUpdate,
   setIsUpdate,
   setIsGoalEditedModalOpen,
+  expiredData,
 }) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
@@ -43,15 +44,28 @@ function CreateGoalModal({
   const titleInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    title: isUpdate && updateData?.title ? updateData.title : "",
-    startDate: isUpdate && updateData?.startDate ? parseDate(updateData.startDate) : "",
-    endDate: isUpdate && updateData?.endDate ? parseDate(updateData.endDate) : "",
-    thumbnail: isUpdate && updateData?.thumbnail ? updateData.thumbnail : "",
+    title: isUpdate && updateData?.title ? updateData.title : expiredData?.title ? expiredData.title : "",
+    startDate:
+      isUpdate && updateData?.startDate
+        ? parseDate(updateData.startDate)
+        : expiredData?.startDate
+        ? parseDate(expiredData.startDate)
+        : "",
+    endDate:
+      isUpdate && updateData?.endDate
+        ? parseDate(updateData.endDate)
+        : expiredData?.endDate
+        ? parseDate(expiredData.endDate)
+        : "",
+    thumbnail:
+      isUpdate && updateData?.thumbnail ? updateData.thumbnail : expiredData?.thumbnail ? expiredData.thumbnail : "",
   });
 
-  const goalId = isUpdate && updateData.goalId;
-  const status = isUpdate && updateData.status;
-  const [previewUrl, setPreviewUrl] = useState(isUpdate && updateData?.thumbnail ? updateData.thumbnail : null);
+  const goalId = isUpdate && updateData.goalId ? updateData.goalId : expiredData?.goalId;
+  const status = isUpdate && updateData.status ? updateData.status : expiredData?.status;
+  const [previewUrl, setPreviewUrl] = useState(
+    isUpdate && updateData?.thumbnail ? updateData.thumbnail : expiredData?.thumbnail ? expiredData.thumbnail : null
+  );
 
   useEffect(() => {
     console.log("formData updated:", formData, csrfToken, updateData, isUpdate);
@@ -147,16 +161,17 @@ function CreateGoalModal({
     console.log("Form Data Submitted: ", formData);
     try {
       const { title, startDate, endDate } = formData;
+      const updateDataSource = expiredData || updateData; // expiredData가 있으면 사용, 없으면 updateData 사용
 
       const formDataToSend = new FormData();
       formDataToSend.append("title", title);
       formDataToSend.append(
         "startDate",
-        dateChanged.startDate ? startDate : isDateSetting ? parseDate(updateData.startDate) : ""
+        dateChanged.startDate ? startDate : isDateSetting ? parseDate(updateDataSource.startDate) : ""
       );
       formDataToSend.append(
         "endDate",
-        dateChanged.endDate ? endDate : isDateSetting ? parseDate(updateData.endDate) : ""
+        dateChanged.endDate ? endDate : isDateSetting ? parseDate(updateDataSource.endDate) : ""
       );
       formDataToSend.append("status", status);
 
@@ -193,11 +208,12 @@ function CreateGoalModal({
         <Overlay onClick={closeCreateGoalModal} />
         <Wrapper>
           <TopContainer>
-            <TopText>{isUpdate ? "목표 수정하기" : "목표 추가하기"}</TopText>
+            <TopText>{expiredData || isUpdate ? "목표 수정하기" : "목표 추가하기"}</TopText>
             <ExitButton onClick={closeCreateGoalModal}>
               <CloseRoundedIcon />
             </ExitButton>
           </TopContainer>
+          {expiredData !== undefined && <ExpiredText>만료된 기간을 수정해주세요!</ExpiredText>}
           <MainContainer>
             <GoalTitleContainer>
               <ExplainText>
@@ -272,7 +288,7 @@ function CreateGoalModal({
                 <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
               </ImageUpload>
             </ImgContainer>
-            {isUpdate ? (
+            {expiredData || isUpdate ? (
               <SubmitButton onClick={handleUpdateSubmit}>수정 완료하기</SubmitButton>
             ) : (
               <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
@@ -390,6 +406,16 @@ const ExitButton = styled.div`
   &:hover {
     background-color: #eef1ff;
   }
+`;
+
+const ExpiredText = styled.div`
+  color: #fd5e2b;
+  border-bottom: 1px solid #fd7e55;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
 `;
 
 const MainContainer = styled.div`

@@ -48,6 +48,7 @@ function GoalCard() {
 
         const daysFromStart = calculateDaysFromStart(fetchedGoalInfo.goal.startDate);
         setStartedFrom(daysFromStart);
+        console.log("목표정보", goalInfo);
       } catch (error) {
         console.error("Error fetching goal info:", error);
       }
@@ -106,10 +107,8 @@ function GoalCard() {
       </Wrapper>
       {isConfirmModalOpen && (
         <CompleteConfirmModal
-          status={goalInfo.goal.status}
-          setGoalInfo={setGoalInfo}
+          goalInfo={goalInfo}
           setIsConfirmModalOpen={setIsConfirmModalOpen}
-          goalId={goalId}
           csrfToken={csrfToken}
           setIsCompModalOpen={setIsCompModalOpen}
         />
