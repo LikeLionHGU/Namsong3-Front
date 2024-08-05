@@ -1,14 +1,22 @@
 import React from "react";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { tokenState } from "../../../../atom/atom";
+import deleteGoal from "../../../../apis/deleteGoal";
 
-function DeleteGoalModal({ setIsDeleteModalOpen }) {
+function DeleteGoalModal({ setIsDeleteModalOpen, goalId }) {
+  const csrfToken = useRecoilValue(tokenState);
   const closeDeleteGoalModal = () => {
     setIsDeleteModalOpen(false);
   };
-  const handleDeleteGoal = () => {
-    /* 목표 삭제하는 로직 필요*/
-
-    setIsDeleteModalOpen(false);
+  const handleDeleteGoal = async () => {
+    try {
+      await deleteGoal(csrfToken, goalId);
+      setIsDeleteModalOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("목표 삭제 실패", error);
+    }
   };
   return (
     <div>

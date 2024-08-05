@@ -8,11 +8,8 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ImgUpload from "../../../../asset/Icon/ImgUpload.svg";
 import { Toggle } from "./Toggle";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import updateGoal from "../../../../apis/updateGoal";
 
-/* 
-- 이미지 업로드 부분 안됨
-- 날짜 선택 안해도 목표 설정 가능해야함
- */
 const formatDate = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -20,26 +17,41 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
+const parseDate = (dateString) => {
+  const [year, month, day] = dateString.split(".").map(Number);
+  const fullYear = year < 50 ? 2000 + year : 1900 + year;
+  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+};
+
+function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen, updateData, isUpdate, setIsUpdate }) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
-  const [isTitleValid, setIsTitleValid] = useState(true); // 제목 유효성 상태 추가
-
-  const titleInputRef = useRef(null); // 제목 입력 필드에 대한 ref 추가
-
-  const [formData, setFormData] = useState({
-    title: "",
-    startDate: "",
-    endDate: "",
-    thumbnail: "",
+  const [isTitleValid, setIsTitleValid] = useState(true);
+  const [dateChanged, setDateChanged] = useState({
+    startDate: false,
+    endDate: false,
   });
 
+  const titleInputRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    title: isUpdate && updateData?.title ? updateData.title : "",
+    startDate: isUpdate && updateData?.startDate ? parseDate(updateData.startDate) : "",
+    endDate: isUpdate && updateData?.endDate ? parseDate(updateData.endDate) : "",
+    thumbnail: isUpdate && updateData?.thumbnail ? updateData.thumbnail : "",
+  });
+
+  const goalId = isUpdate && updateData.goalId;
+  const status = isUpdate && updateData.status;
+  const [previewUrl, setPreviewUrl] = useState(isUpdate && updateData?.thumbnail ? updateData.thumbnail : null);
+
   useEffect(() => {
-    console.log("formData updated:", formData, csrfToken);
+    console.log("formData updated:", formData, csrfToken, updateData, isUpdate);
   }, [formData]);
 
   const closeCreateGoalModal = () => {
     setIsModalOpen(false);
+    setIsUpdate(false);
   };
 
   const handleImageUploadClick = () => {
@@ -47,7 +59,6 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   };
 
   const fileInputRef = useRef(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +67,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
       [name]: value,
     });
     if (name === "title") {
-      setIsTitleValid(true); // 제목 변경 시 유효성 상태를 true로 설정
+      setIsTitleValid(true);
     }
   };
 
@@ -76,6 +87,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   };
 
   const handleStartDateChange = (date) => {
+    setDateChanged({ ...dateChanged, startDate: true });
     setFormData({
       ...formData,
       startDate: formatDate(date),
@@ -83,6 +95,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
   };
 
   const handleEndDateChange = (date) => {
+    setDateChanged({ ...dateChanged, endDate: true });
     setFormData({
       ...formData,
       endDate: formatDate(date),
@@ -91,8 +104,8 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
 
   const handleSubmit = async () => {
     if (!formData.title) {
-      setIsTitleValid(false); // 제목이 없으면 유효성 상태를 false로 설정
-      titleInputRef.current.focus(); // 제목 입력 필드에 포커스 설정
+      setIsTitleValid(false);
+      titleInputRef.current.focus();
       return;
     }
 
@@ -105,16 +118,65 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
       formDataToSend.append("startDate", startDate);
       formDataToSend.append("endDate", endDate);
 
-      // 이미지 파일이 존재할 경우에만 추가
       if (fileInputRef.current.files[0]) {
         formDataToSend.append("thumbnail", fileInputRef.current.files[0]);
       }
       await createGoal(formDataToSend, csrfToken);
       closeCreateGoalModal();
+      setIsGoalCreatedModalOpen(true);
     } catch (error) {
       console.error("목표 생성 실패", error);
     }
-    setIsGoalCreatedModalOpen(true);
+  };
+
+  const handleUpdateSubmit = async () => {
+    if (!formData.title) {
+      setIsTitleValid(false);
+      titleInputRef.current.focus();
+      return;
+    }
+
+    console.log("Form Data Submitted: ", formData);
+    try {
+      const { title, startDate, endDate } = formData;
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", title);
+      formDataToSend.append(
+        "startDate",
+        dateChanged.startDate ? startDate : isDateSetting ? parseDate(updateData.startDate) : ""
+      );
+      formDataToSend.append(
+        "endDate",
+        dateChanged.endDate ? endDate : isDateSetting ? parseDate(updateData.endDate) : ""
+      );
+      formDataToSend.append("status", status);
+
+      if (fileInputRef.current.files[0]) {
+        formDataToSend.append("thumbnail", fileInputRef.current.files[0]);
+      }
+      await updateGoal(formDataToSend, csrfToken, goalId);
+      closeCreateGoalModal();
+      setIsGoalCreatedModalOpen(true);
+    } catch (error) {
+      console.error("목표 수정 실패", error);
+    }
+  };
+
+  const handleToggleDateSetting = () => {
+    const newIsDateSetting = !isDateSetting;
+    setIsDateSetting(newIsDateSetting);
+    if (!newIsDateSetting) {
+      setFormData({
+        ...formData,
+        startDate: "",
+        endDate: "",
+      });
+      setDateChanged({
+        startDate: false,
+        endDate: false,
+      });
+    }
   };
 
   return (
@@ -123,7 +185,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
         <Overlay onClick={closeCreateGoalModal} />
         <Wrapper>
           <TopContainer>
-            <TopText>목표 추가하기</TopText>
+            <TopText>{isUpdate ? "목표 수정하기" : "목표 추가하기"}</TopText>
             <ExitButton onClick={closeCreateGoalModal}>
               <CloseRoundedIcon />
             </ExitButton>
@@ -139,9 +201,9 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                maxLength={10} // 최대 글자 수 10자로 제한
-                isValid={isTitleValid} // 유효성 상태 전달
-                ref={titleInputRef} // ref 설정
+                maxLength={10}
+                isValid={isTitleValid}
+                ref={titleInputRef}
               />
             </GoalTitleContainer>
             <NoPeriodContainer>
@@ -149,7 +211,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
                 <div>기간</div>
                 <div className="date-pick-explain">목표 진행 기간을 설정할 수 있어요!</div>
               </DatePickText>
-              <Toggle setIsDateSetting={setIsDateSetting} isDateSetting={isDateSetting} />
+              <Toggle setIsDateSetting={handleToggleDateSetting} isDateSetting={isDateSetting} />
             </NoPeriodContainer>
             <TransitionGroup component={null}>
               {isDateSetting && (
@@ -202,7 +264,11 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen }) {
                 <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
               </ImageUpload>
             </ImgContainer>
-            <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
+            {isUpdate ? (
+              <SubmitButton onClick={handleUpdateSubmit}>수정 완료하기</SubmitButton>
+            ) : (
+              <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
+            )}
           </MainContainer>
         </Wrapper>
       </Modal>

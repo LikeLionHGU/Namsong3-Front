@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,38 +6,33 @@ import GoalViewDropdown from "../../../../asset/Icon/GoalViewDropdown.svg";
 
 const CustomInputStart = forwardRef(({ value, onClick }, ref) => (
   <StyledButton onClick={onClick} ref={ref}>
-    {value || <span style={{ color: "#676767" }}>시작일</span>}{" "}
-    <img src={GoalViewDropdown} alt="" />
+    {value || <span style={{ color: "#676767" }}>시작일</span>} <img src={GoalViewDropdown} alt="" />
   </StyledButton>
 ));
 
 const CustomInputEnd = forwardRef(({ value, onClick }, ref) => (
   <StyledButton onClick={onClick} ref={ref} style={{ marginLeft: "7px" }}>
-    {value || <span style={{ color: "#676767" }}>종료일</span>}{" "}
-    <img src={GoalViewDropdown} alt="" />
+    {value || <span style={{ color: "#676767" }}>종료일</span>} <img src={GoalViewDropdown} alt="" />
   </StyledButton>
 ));
 
 function DateRangePicker({ startDate, setStartDate, endDate, setEndDate }) {
   return (
     <PeriodContainer>
-      {/* <ExplainText>
-        기간<span style={{ color: "red" }}>*</span>
-      </ExplainText> */}
       <DateInputs>
         <StyledDatePicker
           dateFormat="yyyy-MM-dd"
           shouldCloseOnSelect
-          selected={startDate}
+          selected={startDate ? new Date(startDate) : null}
           onChange={(date) => setStartDate(date)}
           customInput={<CustomInputStart />}
         />
         <StyledDatePicker
           dateFormat="yyyy-MM-dd"
           shouldCloseOnSelect
-          selected={endDate}
+          selected={endDate ? new Date(endDate) : null}
           onChange={(date) => setEndDate(date)}
-          minDate={startDate}
+          minDate={startDate ? new Date(startDate) : null}
           customInput={<CustomInputEnd />}
         />
       </DateInputs>
@@ -52,11 +47,6 @@ const PeriodContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-top: 6px;
-`;
-
-const ExplainText = styled.div`
-  font-size: 12px;
-  margin-bottom: 6px;
 `;
 
 const DateInputs = styled.div`
