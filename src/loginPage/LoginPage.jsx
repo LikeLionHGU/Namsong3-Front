@@ -32,7 +32,6 @@ const LoginPage = () => {
   const Token = useRecoilValue(tokenState);
 
   useEffect(() => {
-    // UserToken이 null이 아니고, false가 아닌 경우에만 navigate 호출
     if (Token !== null && UserToken !== false) {
       navigate(`/HomePage`);
     }
