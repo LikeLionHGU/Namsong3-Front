@@ -14,6 +14,7 @@ function ChatbotBody() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const location = useLocation();
   const chatId = location.state.chatId.chatId;
+  const goalId = location.state.goalId;
   const clientRef = useRef(null); //
   const isFirstLoadRef = useRef(true); //이 페이지가 로드 되었는가 (맨 처음 한번만 채팅 기록 가져오기위해 씀)
   const scrollRef = useRef(); // 스크롤 채팅창 맨 아래로 넣어주기 위해 사용하는 부분
@@ -201,7 +202,11 @@ function ChatbotBody() {
             </UserInteractField>
           </CenterBox>
           {modalOpen && (
-            <LoadingModal chatId={chatId} setModalOpen={setModalOpen} />
+            <LoadingModal
+              chatId={chatId}
+              goalId={goalId}
+              setModalOpen={setModalOpen}
+            />
           )}
         </BoxWrapper>
       </PageWrapper>
