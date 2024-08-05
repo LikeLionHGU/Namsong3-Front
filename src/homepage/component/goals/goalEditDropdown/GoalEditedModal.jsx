@@ -2,11 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 function GoalEditedModal() {
-  const navigate = useNavigate();
-
   const closeModal = () => {
-    //   setEditedModal(false); // !! 주석 풀기 !!
-    navigate(`/`); //  여기서 일지 디테일 페이지로 이동
+    window.location.reload();
   };
 
   return (

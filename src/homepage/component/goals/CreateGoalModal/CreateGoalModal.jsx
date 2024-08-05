@@ -18,12 +18,20 @@ const formatDate = (date) => {
 };
 
 const parseDate = (dateString) => {
+  if (!dateString) return "";
   const [year, month, day] = dateString.split(".").map(Number);
   const fullYear = year < 50 ? 2000 + year : 1900 + year;
   return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 };
 
-function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen, updateData, isUpdate, setIsUpdate }) {
+function CreateGoalModal({
+  setIsModalOpen,
+  setIsGoalCreatedModalOpen,
+  updateData,
+  isUpdate,
+  setIsUpdate,
+  setIsGoalEditedModalOpen,
+}) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
   const [isTitleValid, setIsTitleValid] = useState(true);
@@ -157,7 +165,7 @@ function CreateGoalModal({ setIsModalOpen, setIsGoalCreatedModalOpen, updateData
       }
       await updateGoal(formDataToSend, csrfToken, goalId);
       closeCreateGoalModal();
-      setIsGoalCreatedModalOpen(true);
+      setIsGoalEditedModalOpen(true);
     } catch (error) {
       console.error("목표 수정 실패", error);
     }
