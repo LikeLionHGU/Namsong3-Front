@@ -26,7 +26,7 @@ const AxiosInterceptor = () => {
           console.log("Axios interceptor caught an error:", error); // 로그 추가
           setCsrfToken(null);
           setUserTokenState({ isLogin: false });
-          navigate("/");
+          navigate("/", { replace: true }); // 리다이렉션
         }
         return Promise.reject(error);
       }

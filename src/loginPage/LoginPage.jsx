@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { UserTokenState } from "../atom/atom";
+import { tokenState, UserTokenState } from "../atom/atom";
 import { useEffect } from "react";
 
 const Wrapper = styled.div`
@@ -29,12 +29,14 @@ const GoogleLoginBtn = styled.div`
 const LoginPage = () => {
   const navigate = useNavigate();
   const UserToken = useRecoilValue(UserTokenState);
+  const Token = useRecoilValue(tokenState);
 
   useEffect(() => {
-    if (UserToken !== false) {
+    // UserToken이 null이 아니고, false가 아닌 경우에만 navigate 호출
+    if (Token !== null && UserToken !== false) {
       navigate(`/HomePage`);
     }
-  }, [UserToken]);
+  }, [UserToken, navigate]);
   const handleGoogleLogin = () => {
     // 구글 로그인 화면으로 이동시키기
     window.location.href = `${process.env.REACT_APP_HOST_URL}/oauth2/authorization/google`;
