@@ -98,7 +98,7 @@ const QuillEditor = ({ onChange, mainText }) => {
 
   const handleSubmit = async (formData) => {
     // !! 백엔드 주소 바꿔주기 !
-    const url = process.env.REACT_APP_BACK_URL + "/api/fillyouin/files"; // 백엔드 업로드 URL
+    const url = process.env.REACT_APP_HOST_URL + ""; // 백엔드 업로드 URL
     // 파일을 업로드 할 때 : 백엔드 주소로 바로 보냄
     const config = {
       headers: {
@@ -115,7 +115,7 @@ const QuillEditor = ({ onChange, mainText }) => {
       quillRef.current.insertEmbed(range.index, "image", response.data.fileUrl);
     } catch (error) {
       console.log("파일 업로드 중 에러 발생: ", error);
-
+      // console.log("!!!!file: ",);
       alert("파일 업로드 중 에러 발생. 다시 시도해주세요.");
     }
   };
