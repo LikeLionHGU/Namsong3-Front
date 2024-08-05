@@ -4,16 +4,20 @@ import sendIcon from "../../asset/Icon/send.svg";
 import LoadingModal from "./LoadingModal";
 import { useLocation } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
-
+import gotoSummary from "../../asset/Icon/gotoSummary.svg";
+import chatbotIcon from "../../asset/Icon/chatbotIcon.svg";
+import chatLoading from "../../asset/Loading/chatLoading.gif";
 function ChatbotBody() {
   const [modalOpen, setModalOpen] = useState(false);
   const [messageLog, setMessageLog] = useState({ logs: [] }); // 1회로 받아오는 채팅 기록 저장용
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const location = useLocation();
   const chatId = location.state.chatId.chatId;
   const clientRef = useRef(null); //
   const isFirstLoadRef = useRef(true); //이 페이지가 로드 되었는가 (맨 처음 한번만 채팅 기록 가져오기위해 씀)
   const scrollRef = useRef(); // 스크롤 채팅창 맨 아래로 넣어주기 위해 사용하는 부분
+
   useEffect(() => {
     console.log("WebSocket URL:", process.env.REACT_APP_WEBSOCKET_URL); // 환경 변수 값 확인용
 
@@ -24,7 +28,7 @@ function ChatbotBody() {
         if (isFirstLoadRef.current) {
           client.subscribe(`/app/chats/${chatId}/history`, (message) => {
             const data = JSON.parse(message.body);
-
+            console.log("데이터: ", data);
             console.log("data: ", data.messages);
             // setMessageLog(data);
             setMessageLog((prevMessageLog) => ({
@@ -40,6 +44,7 @@ function ChatbotBody() {
 
         // AI 질문 받아오기
         client.subscribe(`/user/queue/messages`, (message) => {
+          setIsLoading(false);
           const data = JSON.parse(message.body);
           setMessages((prevMessages) => [...prevMessages, data]);
         });
@@ -60,6 +65,10 @@ function ChatbotBody() {
     console.log("메시지 로그: ", messageLog);
   }, [messageLog]);
 
+  useEffect(() => {
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages, messageLog]);
+
   const openLoadingModal = () => {
     setModalOpen(true);
   };
@@ -75,8 +84,8 @@ function ChatbotBody() {
         ...prevMessages,
         { role: "USER", content },
       ]);
+      setIsLoading(true); // 메시지 전송 시 로딩 상태 설정
     }
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     // });
   };
   // client.activate();
@@ -100,19 +109,14 @@ function ChatbotBody() {
     </div>
   );
 
-  // 채팅 추가되면 화면이 자동으로 아래로 스크롤 되도록
-  useEffect(() => {
-    // 현재 스크롤 위치 === scrollRef.current.scrollTop
-    // 스크롤 길이 === scrollRef.current.scrollHeight
-    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  });
   return (
     <div>
       <PageWrapper>
         <BoxWrapper>
           <BoxTitle>steppy와 일지 작성하기</BoxTitle>
           <CenterBox className="flex">
-            <Chattings>
+            {/* 스크롤하는 부분 */}
+            <Chattings ref={scrollRef}>
               {/* <ChatbotIcon className="flex" /> */}
 
               {/* {messages.map((msg, index) => (
@@ -150,6 +154,16 @@ function ChatbotBody() {
                 )
               )}
               {/* 채팅 화면 자동으로 맨 아래로 스크롤 되도록 */}
+              {isLoading && (
+                <div className="flex" style={{ flexDirection: "column" }}>
+                  <ChatbotIcon className="flex" />
+                  <Chatbot className="flex">
+                    <ChatbotText>
+                      <img src={chatLoading} alt="" />
+                    </ChatbotText>
+                  </Chatbot>
+                </div>
+              )}
               <div ref={scrollRef}></div>
             </Chattings>
 
@@ -161,7 +175,8 @@ function ChatbotBody() {
                   요약해보세요!
                 </span>{" "}
                 <span className="summarizeBtn" onClick={openLoadingModal}>
-                  일지 요약하기 &gt;{" "}
+                  일지 요약하기
+                  <img src={gotoSummary} alt="" />
                 </span>
               </SummarizeArea>
               <TypingBox>
@@ -185,7 +200,9 @@ function ChatbotBody() {
               </TypingBox>
             </UserInteractField>
           </CenterBox>
-          {modalOpen && <LoadingModal setModalOpen={setModalOpen} />}
+          {modalOpen && (
+            <LoadingModal chatId={chatId} setModalOpen={setModalOpen} />
+          )}
         </BoxWrapper>
       </PageWrapper>
     </div>
@@ -252,6 +269,8 @@ const ChatbotIcon = styled.div`
   border-radius: 40px;
   background-color: gray;
   margin-bottom: 12px;
+  background-image: url(${chatbotIcon});
+  background-size: 40px 40px;
 `;
 
 const Chattings = styled.div`
@@ -259,6 +278,8 @@ const Chattings = styled.div`
   height: 100%;
   overflow: auto;
   flex-direction: column;
+  /* overflow-y: auto; // 채팅창 스크롤 가능하도록 설정 */
+  /* max-height: 400px; // 원하는 높이 설정 */
 `;
 
 const ChatbotText = styled.div`
@@ -270,6 +291,10 @@ const ChatbotText = styled.div`
   margin-bottom: 8px;
   width: fit-content;
   font-size: 14px;
+  > img {
+    width: 35px;
+    height: 30px;
+  }
 `;
 
 const User = styled.div`
@@ -324,6 +349,9 @@ const SummarizeArea = styled.div`
 
   .summarizeBtn {
     cursor: pointer;
+    > img {
+      margin-left: 4px;
+    }
   }
 `;
 
