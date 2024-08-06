@@ -22,7 +22,7 @@ const AxiosInterceptor = () => {
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response && error.response.status === 401) {
+        if ((error.response && error.response.status === 401) || 403) {
           console.log("Axios interceptor caught an error:", error); // 로그 추가
           setCsrfToken(null);
           setUserTokenState({ isLogin: false });
