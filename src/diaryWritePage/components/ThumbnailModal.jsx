@@ -109,7 +109,7 @@ function ThumbnailModal({
         <Wrapper>
           <TopContainer>
             <TopText>
-              대표사진 수정하기<span>(선택)</span>
+              대표사진 추가하기<span>(선택)</span>
             </TopText>
             <ExitButton onClick={closeThumbnailModal}>
               <CloseRoundedIcon />
@@ -142,7 +142,12 @@ function ThumbnailModal({
                 <div className="thumbnail-add-text">사진 추가하기</div>
               </>
             )}
-            <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
+            <input
+              type="file"
+              style={{ display: "none" }}
+              onChange={handleFileInputChange}
+              ref={fileInputRef}
+            />
           </ImageAdd>
           <Buttons>
             <NextBtn>
