@@ -10,7 +10,7 @@ import { Toggle } from "./Toggle";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import updateGoal from "../../../../apis/updateGoal";
 import { fi } from "date-fns/locale";
-import createImg from "../../../../apis/\bcreateImg";
+import createImg from "../../../../apis/createImg";
 
 const formatDate = (date) => {
   const year = date.getFullYear();
