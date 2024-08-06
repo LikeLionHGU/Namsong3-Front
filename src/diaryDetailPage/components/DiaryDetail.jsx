@@ -55,12 +55,20 @@ function DiaryDetail() {
           <ContentArea>
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
-              <div dangerouslySetInnerHTML={{ __html: diaryDetail.content }}></div>
+              <div
+                dangerouslySetInnerHTML={{ __html: diaryDetail.content }}
+              ></div>
             </Contents>
           </ContentArea>
         </CenterBox>
 
-        {deleteModal && <DeleteConfirmModal setDeleteModal={setDeleteModal} goalId={goalId} journalId={diaryId} />}
+        {deleteModal && (
+          <DeleteConfirmModal
+            setDeleteModal={setDeleteModal}
+            goalId={goalId}
+            journalId={diaryId}
+          />
+        )}
       </BoxWrapper>
     </Wrapper>
   );

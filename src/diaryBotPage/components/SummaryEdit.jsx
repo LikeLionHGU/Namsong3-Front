@@ -24,10 +24,18 @@ function SummaryEdit() {
   });
   const csrfToken = useRecoilValue(tokenState);
   const goalId = location.state?.goalId;
+  const [isTitleEmpty, setIsTitleEmpty] = useState(false); // State to track empty title
 
   console.log("<<<<<<<<goalID : ", goalId);
   const openThumbnailModal = () => {
-    setThumbnailModal(true);
+    if (formData.title.trim() === "") {
+      setIsTitleEmpty(true); // Set the validation state to true if title is empty
+      alert("제목을 입력해 주세요!"); // Show alert message
+    } else {
+      setIsTitleEmpty(false); // Reset the validation state if title is not empty
+      setThumbnailModal(true);
+    }
+    // setThumbnailModal(true);
   };
   useEffect(() => {
     console.log("formData updated:", formData, csrfToken);
@@ -42,6 +50,10 @@ function SummaryEdit() {
       }));
     }
   }, [summaryText]);
+
+  // const journalId = formData.journalId;
+  // const thumbnail = formData.thumbnail;
+
   return (
     <Wrapper>
       <BoxWrapper>
@@ -55,12 +67,16 @@ function SummaryEdit() {
               placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
               name="title"
               value={formData.title}
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData((formData) => ({
                   ...formData,
                   title: e.target.value,
-                }))
-              }
+                }));
+                setIsTitleEmpty(false);
+              }}
+              style={{
+                borderColor: isTitleEmpty ? "red" : "#ccc", // Apply red border if validation fails, default to gray
+              }}
             >
               {/* */}
             </DiaryTitle>
@@ -89,6 +105,8 @@ function SummaryEdit() {
             formData={formData}
             goalId={goalId}
             csrfToken={csrfToken}
+            // journalId={journalId}
+            // thumbnail={thumbnail}
           />
         )}
         {!thumbnailModal && postedModal && (
