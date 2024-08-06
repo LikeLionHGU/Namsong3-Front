@@ -1,24 +1,16 @@
-// /*  react-quill 사용할때 */
-//  >>>      npm i react-quill    <<< 설치
-// + index.js 에 아래 링크 넣어줘야 editor 사용가능
-//  <link
-//       rel="stylesheet"
-//       href="https://unpkg.com/react-quill@1.3.3/dist/quill.snow.css"
-//     />
-// *** 100번줄 쯤에 백엔드 주소 나중에 바꿔주기 *** //
-
 import React, { useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import axios from "axios";
 import styled from "styled-components";
 import createImg from "../../apis/createImg";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
+
 const QuillEditor = ({ onChange, mainText }) => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
   const csrfToken = useRecoilValue(tokenState);
+
   useEffect(() => {
     if (quillRef.current) {
       return;
@@ -38,8 +30,11 @@ const QuillEditor = ({ onChange, mainText }) => {
       modules: {
         toolbar: toolbarOptions,
       },
-      placeholder:
-        "일지의 내용을 작성해주세요!\n어떤 내용을 적어야 할지 막막하다면 아래 질문을 참고해주세요 🤔\n\n - 오늘 어떤 새로운 것을 배웠나요?\n - 오늘의 목표를 달성하기 위해 어떤 계획을 세웠나요? 그 계획이 효과적이었나요?\n - 내일을 위해 무엇을 준비해야 할까요?", // placeholder에 들어갈 값은 나중에 적절히... props 주고받을때 처리해주기.
+      placeholder: `일지의 내용을 작성해주세요!
+어떤 내용을 적어야 할지 막막하다면 아래 질문을 참고해주세요 🤔
+- 오늘 어떤 새로운 것을 배웠나요?
+- 오늘의 목표를 달성하기 위해 어떤 계획을 세웠나요? 그 계획이 효과적이었나요?
+- 내일을 위해 무엇을 준비해야 할까요?`,
       theme: "snow",
     };
 
@@ -50,20 +45,21 @@ const QuillEditor = ({ onChange, mainText }) => {
       quillRef.current.clipboard.dangerouslyPasteHTML(initialContent);
     }
 
-    // 텍스트 에디터에 변화 있으면(=타이핑하거나 지우거나 등) 변화 적용시켜주기
     quillRef.current.on("text-change", () => {
       const content = quillRef.current.root.innerHTML;
       if (onChange) {
-        onChange(content); // 상위 컴포넌트로 content 전달 (밖에서 이 에디터 컴포넌트를 쓰고 있으니까)
-        console.log(content);
+        onChange(content);
       }
     });
 
-    // 이미지 핸들러 추가
     quillRef.current.getModule("toolbar").addHandler("image", selectLocalImage);
-    // eslint-disable-next-lin
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onChange]);
+
+    quillRef.current.root.addEventListener("paste", handlePaste);
+
+    return () => {
+      quillRef.current.root.removeEventListener("paste", handlePaste);
+    };
+  }, [onChange, mainText, csrfToken]);
 
   const selectLocalImage = () => {
     const fileInput = document.createElement("input");
@@ -100,34 +96,43 @@ const QuillEditor = ({ onChange, mainText }) => {
 
   const handleSubmit = async (formData) => {
     try {
-      // const response = await axios.post(url, formData, config);
-      const response = await createImg(csrfToken, formData); // 이미지 삽입하는 api 코드
-      console.log("파일 업로드 완료");
-      console.log(response.imageUrl);
+      const imageUrl = await createImg(csrfToken, formData);
       const range = quillRef.current.getSelection();
-      quillRef.current.insertEmbed(range.index, "image", response);
+      quillRef.current.insertEmbed(range.index, "image", imageUrl);
     } catch (error) {
-      console.log("파일 업로드 중 에러 발생: ", error);
-      // console.log("!!!!file: ",);
       alert("파일 업로드 중 에러 발생. 다시 시도해주세요.");
     }
   };
 
+  const handlePaste = async (event) => {
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const items = clipboardData.items;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const file = items[i].getAsFile();
+        const formData = new FormData();
+        formData.append("file", file);
+
+        handleSubmit(formData);
+        event.preventDefault(); // Prevent the default paste behavior
+      }
+    }
+  };
+
   return (
-    <>
-      <MyBlock>
-        <div
-          id="quill-editor"
-          ref={editorRef}
-          style={{
-            backgroundColor: "#EEF1FF", // 에디터 내부 입력 부분 색깔
-            width: "100%",
-            height: "520px",
-            border: "2px solid lavender",
-          }}
-        ></div>
-      </MyBlock>
-    </>
+    <MyBlock>
+      <div
+        id="quill-editor"
+        ref={editorRef}
+        style={{
+          backgroundColor: "#EEF1FF",
+          width: "100%",
+          height: "520px",
+          border: "2px solid lavender",
+        }}
+      ></div>
+    </MyBlock>
   );
 };
 
