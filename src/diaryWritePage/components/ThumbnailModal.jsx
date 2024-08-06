@@ -22,10 +22,6 @@ function ThumbnailModal({
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
   const [imageUrl, setImageUrl] = useState("");
 
-  useEffect(() => {
-    console.log("journalId updated:", journalId);
-  }, [journalId]);
-
   const closeThumbnailModal = () => {
     // 썸네일 추가하는 모달 닫는 함수(배경누르거나 x 눌러서 닫기만할때)
     setThumbnailModal(false);
@@ -95,7 +91,6 @@ function ThumbnailModal({
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result);
-        console.log("Uploaded thumbnail:", reader.result);
       };
       reader.readAsDataURL(file);
     } else {
@@ -142,12 +137,7 @@ function ThumbnailModal({
                 <div className="thumbnail-add-text">사진 추가하기</div>
               </>
             )}
-            <input
-              type="file"
-              style={{ display: "none" }}
-              onChange={handleFileInputChange}
-              ref={fileInputRef}
-            />
+            <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
           </ImageAdd>
           <Buttons>
             <NextBtn>

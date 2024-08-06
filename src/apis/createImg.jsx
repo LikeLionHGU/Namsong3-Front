@@ -9,7 +9,6 @@ const createImg = async (csrfToken, formData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log("이미지가 정상적으로 추가되었음", serverResponse);
 
     return serverResponse.data.imageUrl;
   } catch (error) {

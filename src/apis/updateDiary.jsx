@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const updateDiary = async (formDataToSend, csrfToken, journalId) => {
-  console.log("API 코드에서 잘 넘어왔는지", formDataToSend, csrfToken, journalId);
   try {
     const serverResponse = await axios.put(
       `${process.env.REACT_APP_HOST_URL}/v1/journals/${journalId}`,
@@ -14,7 +13,6 @@ const updateDiary = async (formDataToSend, csrfToken, journalId) => {
         },
       }
     );
-    console.log("일지가 정상적으로 수정되었음", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

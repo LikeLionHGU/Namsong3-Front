@@ -15,14 +15,12 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
     const fetchUserName = async () => {
       const fetchedUserName = await getUserName();
       setUserName(fetchedUserName);
-      console.log("Fetched name!!!:", fetchedUserName);
     };
     fetchUserName();
   }, []);
   const ClickChatbot = async () => {
     try {
       const chatId = await createChatbotRoom(csrfToken, goalId);
-      console.log("채팅아디", chatId.chatId);
       closeCreateDiaryModal();
       navigate(`../chatbot`, { state: { chatId, goalId } });
     } catch (error) {
@@ -50,29 +48,17 @@ function CreateDiaryModal({ setIsModalOpen, goalId }) {
               <TextContainer>
                 <MainText>👾 steppy와 함께 일지 작성하기</MainText>
                 <SubText>
-                  <div>
-                    무슨 일지를 써야할지 고민이 되는 날에도, 고된 일정으로
-                    피곤한 하루에도
-                  </div>
-                  <div style={{ marginTop: "3px" }}>
-                    steppy가 {userName.name}님의 꾸준한 기록을 도와줄게요!
-                  </div>
+                  <div>무슨 일지를 써야할지 고민이 되는 날에도, 고된 일정으로 피곤한 하루에도</div>
+                  <div style={{ marginTop: "3px" }}>steppy가 {userName.name}님의 꾸준한 기록을 도와줄게요!</div>
                 </SubText>
               </TextContainer>
             </WriteMethod>
-            <WriteMethod
-              onClick={() => navigate(`/write`, { state: { goalId } })}
-            >
+            <WriteMethod onClick={() => navigate(`/write`, { state: { goalId } })}>
               <TextContainer>
                 <MainText>✍️ 직접 작성하기</MainText>
                 <SubText>
-                  <div>
-                    오늘만큼은 적고 싶은게 너무 많은 날, 떠오르는 생각과 느낌을
-                    적고 싶은 날
-                  </div>
-                  <div style={{ marginTop: "3px" }}>
-                    자유롭게 하루의 일지를 적어보아요!
-                  </div>
+                  <div>오늘만큼은 적고 싶은게 너무 많은 날, 떠오르는 생각과 느낌을 적고 싶은 날</div>
+                  <div style={{ marginTop: "3px" }}>자유롭게 하루의 일지를 적어보아요!</div>
                 </SubText>
               </TextContainer>
             </WriteMethod>

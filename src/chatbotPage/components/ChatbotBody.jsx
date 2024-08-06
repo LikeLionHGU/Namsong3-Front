@@ -20,8 +20,6 @@ function ChatbotBody() {
   const scrollRef = useRef(); // 스크롤 채팅창 맨 아래로 넣어주기 위해 사용하는 부분
 
   useEffect(() => {
-    console.log("WebSocket URL:", process.env.REACT_APP_WEBSOCKET_URL); // 환경 변수 값 확인용
-
     const client = new Client({
       brokerURL: process.env.REACT_APP_WEBSOCKET_URL,
       onConnect: () => {
@@ -29,16 +27,10 @@ function ChatbotBody() {
         if (isFirstLoadRef.current) {
           client.subscribe(`/app/chats/${chatId}/history`, (message) => {
             const data = JSON.parse(message.body);
-            console.log("데이터: ", data);
-            console.log("data: ", data.messages);
             // setMessageLog(data);
             setMessageLog((prevMessageLog) => ({
               logs: [...prevMessageLog.logs, ...data.messages],
             }));
-            // console.log("subscribed");
-            // console.log("data:!!!! ", data);
-            // console.log("메시지 로그: ", messageLog);
-            // console.log("messages: ", data.);
           });
           isFirstLoadRef.current = false; // 한번 로드하고 나면 false로 만들어서 그 이후에는 이 부분 수행 안되도록.
         }
@@ -60,11 +52,7 @@ function ChatbotBody() {
     };
   }, [chatId]);
 
-  useEffect(() => {
-    // 채팅 기록을 받아온 걸 확인.
-    // 채팅 기록이 잘 넣어지는지 확인
-    console.log("메시지 로그: ", messageLog);
-  }, [messageLog]);
+  useEffect(() => {}, [messageLog]);
 
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -81,10 +69,7 @@ function ChatbotBody() {
         destination: `/app/chats/${chatId}/messages`,
         body: JSON.stringify({ content }),
       });
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "USER", content },
-      ]);
+      setMessages((prevMessages) => [...prevMessages, { role: "USER", content }]);
       setIsLoading(true); // 메시지 전송 시 로딩 상태 설정
     }
     // });
@@ -149,9 +134,7 @@ function ChatbotBody() {
                 showChatLog(
                   msg,
                   index + messageLog.logs.length,
-                  index === 0 ||
-                    (messages[index - 1]?.role !== "CHATBOT" &&
-                      msg.role === "CHATBOT")
+                  index === 0 || (messages[index - 1]?.role !== "CHATBOT" && msg.role === "CHATBOT")
                 )
               )}
               {/* 채팅 화면 자동으로 맨 아래로 스크롤 되도록 */}
@@ -171,10 +154,7 @@ function ChatbotBody() {
             <UserInteractField>
               <> {/* 일지 작성 조건 갖춰지면 클릭할 부분 보여주기 */}</>
               <SummarizeArea>
-                <span>
-                  대화를 통해 충분히 오늘의 감상을 기록하셨다면 일지를
-                  요약해보세요!
-                </span>{" "}
+                <span>대화를 통해 충분히 오늘의 감상을 기록하셨다면 일지를 요약해보세요!</span>{" "}
                 <span className="summarizeBtn" onClick={openLoadingModal}>
                   일지 요약하기
                   <img src={gotoSummary} alt="" />
@@ -201,13 +181,7 @@ function ChatbotBody() {
               </TypingBox>
             </UserInteractField>
           </CenterBox>
-          {modalOpen && (
-            <LoadingModal
-              chatId={chatId}
-              goalId={goalId}
-              setModalOpen={setModalOpen}
-            />
-          )}
+          {modalOpen && <LoadingModal chatId={chatId} goalId={goalId} setModalOpen={setModalOpen} />}
         </BoxWrapper>
       </PageWrapper>
     </div>

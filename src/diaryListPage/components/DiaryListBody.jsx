@@ -5,7 +5,6 @@ import GoalCard from "./GoalCard";
 import Calendar from "./Calendar";
 
 function DiaryListBody(goalId) {
-  console.log("프롭스로 받은 골아이디", goalId);
   return (
     <Container>
       <CenterBox>

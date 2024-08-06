@@ -23,7 +23,6 @@ const AxiosInterceptor = () => {
       (response) => response,
       (error) => {
         if ((error.response && error.response.status === 401) || 403) {
-          console.log("Axios interceptor caught an error:", error); // 로그 추가
           setCsrfToken(null);
           setUserTokenState({ isLogin: false });
           navigate("/", { replace: true }); // 리다이렉션

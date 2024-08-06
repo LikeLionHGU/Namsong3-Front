@@ -5,7 +5,6 @@ import { CSSTransition } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
 
 function DiaryEditDropdown({ setDeleteModal, diaryDetail, goalId }) {
-  //   console.log("???");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();

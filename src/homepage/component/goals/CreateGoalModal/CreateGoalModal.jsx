@@ -23,10 +23,7 @@ const parseDate = (dateString) => {
   if (!dateString) return "";
   const [year, month, day] = dateString.split(".").map(Number);
   const fullYear = year < 50 ? 2000 + year : 1900 + year;
-  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(
-    2,
-    "0"
-  )}`;
+  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 };
 
 function CreateGoalModal({
@@ -57,12 +54,7 @@ function CreateGoalModal({
   //   endInputRef: useRef(null),
   // };
   const [formData, setFormData] = useState({
-    title:
-      isUpdate && updateData?.title
-        ? updateData.title
-        : expiredData?.title
-        ? expiredData.title
-        : "",
+    title: isUpdate && updateData?.title ? updateData.title : expiredData?.title ? expiredData.title : "",
     startDate:
       isUpdate && updateData?.startDate
         ? parseDate(updateData.startDate)
@@ -76,37 +68,16 @@ function CreateGoalModal({
         ? parseDate(expiredData.endDate)
         : "",
     thumbnail:
-      isUpdate && updateData?.thumbnail
-        ? updateData.thumbnail
-        : expiredData?.thumbnail
-        ? expiredData.thumbnail
-        : "",
+      isUpdate && updateData?.thumbnail ? updateData.thumbnail : expiredData?.thumbnail ? expiredData.thumbnail : "",
   });
 
   const [imageUrl, setImageUrl] = useState("");
 
-  const goalId =
-    isUpdate && updateData.goalId ? updateData.goalId : expiredData?.goalId;
-  const status =
-    isUpdate && updateData.status ? updateData.status : expiredData?.status;
+  const goalId = isUpdate && updateData.goalId ? updateData.goalId : expiredData?.goalId;
+  const status = isUpdate && updateData.status ? updateData.status : expiredData?.status;
   const [previewUrl, setPreviewUrl] = useState(
-    isUpdate && updateData?.thumbnail
-      ? updateData.thumbnail
-      : expiredData?.thumbnail
-      ? expiredData.thumbnail
-      : null
+    isUpdate && updateData?.thumbnail ? updateData.thumbnail : expiredData?.thumbnail ? expiredData.thumbnail : null
   );
-
-  useEffect(() => {
-    console.log(
-      "formData updated:",
-      formData,
-      csrfToken,
-      updateData,
-      isUpdate,
-      imageUrl
-    );
-  }, [formData]);
 
   const closeCreateGoalModal = () => {
     setIsModalOpen(false);
@@ -141,7 +112,6 @@ function CreateGoalModal({
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result);
-        console.log("Uploaded image:", reader.result);
       };
       reader.readAsDataURL(file);
     } else {
@@ -184,7 +154,6 @@ function CreateGoalModal({
     //   return;
     // }
 
-    console.log("Form Data Submitted: ", formData);
     try {
       const { title, startDate, endDate } = formData;
 
@@ -211,7 +180,6 @@ function CreateGoalModal({
       return;
     }
 
-    console.log("Form Data Submitted: ", formData);
     try {
       const { title, startDate, endDate } = formData;
       const updateDataSource = expiredData || updateData; // expiredData가 있으면 사용, 없으면 updateData 사용
@@ -220,19 +188,11 @@ function CreateGoalModal({
       formDataToSend.append("title", title);
       formDataToSend.append(
         "startDate",
-        dateChanged.startDate
-          ? startDate
-          : isDateSetting
-          ? parseDate(updateDataSource.startDate)
-          : ""
+        dateChanged.startDate ? startDate : isDateSetting ? parseDate(updateDataSource.startDate) : ""
       );
       formDataToSend.append(
         "endDate",
-        dateChanged.endDate
-          ? endDate
-          : isDateSetting
-          ? parseDate(updateDataSource.endDate)
-          : ""
+        dateChanged.endDate ? endDate : isDateSetting ? parseDate(updateDataSource.endDate) : ""
       );
       formDataToSend.append("status", status);
 
@@ -270,16 +230,12 @@ function CreateGoalModal({
         <Overlay onClick={closeCreateGoalModal} />
         <Wrapper>
           <TopContainer>
-            <TopText>
-              {expiredData || isUpdate ? "목표 수정하기" : "목표 추가하기"}
-            </TopText>
+            <TopText>{expiredData || isUpdate ? "목표 수정하기" : "목표 추가하기"}</TopText>
             <ExitButton onClick={closeCreateGoalModal}>
               <CloseRoundedIcon />
             </ExitButton>
           </TopContainer>
-          {expiredData !== undefined && (
-            <ExpiredText>만료된 기간을 수정해주세요!</ExpiredText>
-          )}
+          {expiredData !== undefined && <ExpiredText>만료된 기간을 수정해주세요!</ExpiredText>}
           <MainContainer>
             <GoalTitleContainer>
               <ExplainText>
@@ -299,14 +255,9 @@ function CreateGoalModal({
             <NoPeriodContainer>
               <DatePickText>
                 <div>기간</div>
-                <div className="date-pick-explain">
-                  목표 진행 기간을 설정할 수 있어요!
-                </div>
+                <div className="date-pick-explain">목표 진행 기간을 설정할 수 있어요!</div>
               </DatePickText>
-              <Toggle
-                setIsDateSetting={handleToggleDateSetting}
-                isDateSetting={isDateSetting}
-              />
+              <Toggle setIsDateSetting={handleToggleDateSetting} isDateSetting={isDateSetting} />
             </NoPeriodContainer>
             <TransitionGroup component={null}>
               {isDateSetting && (
@@ -357,18 +308,11 @@ function CreateGoalModal({
                     </div>
                   </div>
                 )}
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  onChange={handleFileInputChange}
-                  ref={fileInputRef}
-                />
+                <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
               </ImageUpload>
             </ImgContainer>
             {expiredData || isUpdate ? (
-              <SubmitButton onClick={handleUpdateSubmit}>
-                수정 완료하기
-              </SubmitButton>
+              <SubmitButton onClick={handleUpdateSubmit}>수정 완료하기</SubmitButton>
             ) : (
               <SubmitButton onClick={handleSubmit}>목표 추가하기</SubmitButton>
             )}

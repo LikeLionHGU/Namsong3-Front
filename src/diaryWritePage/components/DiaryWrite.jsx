@@ -29,9 +29,6 @@ function DiaryWrite() {
     }
     // setThumbnailModal(true);
   };
-  useEffect(() => {
-    console.log("formData updated:", formData, csrfToken, goalId);
-  }, [formData]);
 
   return (
     <Wrapper>
@@ -81,9 +78,7 @@ function DiaryWrite() {
             csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && (
-          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
-        )}
+        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );

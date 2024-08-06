@@ -5,7 +5,6 @@ const getUserName = async () => {
     const serverResponse = await axios.get(`${process.env.REACT_APP_HOST_URL}/v1/members/my`, {
       withCredentials: true,
     });
-    console.log("유저이름 불러오기 성공", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

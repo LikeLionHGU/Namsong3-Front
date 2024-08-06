@@ -11,7 +11,6 @@ const getDiaryQuery = async (goalId, query, csrfToken) => {
         },
       }
     );
-    console.log("검색 일지 불러오기 성공", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

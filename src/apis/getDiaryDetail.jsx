@@ -11,7 +11,6 @@ const getDiaryDetail = async (diaryId, csrfToken) => {
         },
       }
     );
-    console.log("일지 불러오기 성공", serverResponse);
 
     return serverResponse.data;
   } catch (error) {
