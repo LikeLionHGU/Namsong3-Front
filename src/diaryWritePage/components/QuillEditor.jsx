@@ -12,11 +12,13 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import axios from "axios";
 import styled from "styled-components";
-
+import createImg from "../../apis/createImg";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
 const QuillEditor = ({ onChange, mainText }) => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
-
+  const csrfToken = useRecoilValue(tokenState);
   useEffect(() => {
     if (quillRef.current) {
       return;
@@ -97,22 +99,13 @@ const QuillEditor = ({ onChange, mainText }) => {
   };
 
   const handleSubmit = async (formData) => {
-    // !! 백엔드 주소 바꿔주기 !
-    const url = process.env.REACT_APP_HOST_URL + ""; // 백엔드 업로드 URL
-    // 파일을 업로드 할 때 : 백엔드 주소로 바로 보냄
-    const config = {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("loginToken"),
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
     try {
-      const response = await axios.post(url, formData, config);
+      // const response = await axios.post(url, formData, config);
+      const response = await createImg(csrfToken, formData); // 이미지 삽입하는 api 코드
       console.log("파일 업로드 완료");
-      console.log(response);
+      console.log(response.imageUrl);
       const range = quillRef.current.getSelection();
-      quillRef.current.insertEmbed(range.index, "image", response.data.fileUrl);
+      quillRef.current.insertEmbed(range.index, "image", response);
     } catch (error) {
       console.log("파일 업로드 중 에러 발생: ", error);
       // console.log("!!!!file: ",);
