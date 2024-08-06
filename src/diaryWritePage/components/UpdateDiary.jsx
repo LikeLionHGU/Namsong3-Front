@@ -20,8 +20,17 @@ function UpdateDiary() {
     content: diaryDetail.content,
   });
   const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
+  const [isTitleEmpty, setIsTitleEmpty] = useState(false); // State to track empty title
+
   const openThumbnailModal = () => {
-    setThumbnailModal(true);
+    // setThumbnailModal(true);
+    if (formData.title.trim() === "") {
+      setIsTitleEmpty(true); // Set the validation state to true if title is empty
+      alert("제목을 입력해 주세요!"); // Show alert message
+    } else {
+      setIsTitleEmpty(false); // Reset the validation state if title is not empty
+      setThumbnailModal(true);
+    }
   };
 
   useEffect(() => {
@@ -42,12 +51,16 @@ function UpdateDiary() {
                 placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
                 name="title"
                 value={formData.title}
-                onChange={(e) =>
+                onChange={(e) => {
                   setFormData((formData) => ({
                     ...formData,
                     title: e.target.value,
-                  }))
-                }
+                  }));
+                  setIsTitleEmpty(false);
+                }}
+                style={{
+                  borderColor: isTitleEmpty ? "red" : "#ccc", // Apply red border if validation fails, default to gray
+                }}
               >
                 {/* */}
               </DiaryTitle>
