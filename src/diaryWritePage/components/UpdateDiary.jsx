@@ -6,6 +6,8 @@ import ThumbnailModal from "./ThumbnailModal";
 import { useRecoilValue } from "recoil";
 import { tokenState } from "../../atom/atom";
 import DiaryEditModal from "./DiaryEditModal";
+import Header from "../../common/Header";
+import Footer from "../../common/Footer";
 
 function UpdateDiary() {
   const csrfToken = useRecoilValue(tokenState);
@@ -30,55 +32,61 @@ function UpdateDiary() {
   const thumbnail = diaryDetail.thumbnail;
 
   return (
-    <Wrapper>
-      <BoxWrapper>
-        <CenterBox>
-          <DiaryHeader>
-            <DiaryTitle
-              placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
-              name="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData((formData) => ({
-                  ...formData,
-                  title: e.target.value,
-                }))
-              }
-            >
-              {/* */}
-            </DiaryTitle>
-          </DiaryHeader>
-          <EditorArea>
-            <QuillEditor
-              mainText={diaryDetail.content}
-              onChange={(content) =>
-                setFormData((formData) => ({
-                  ...formData,
-                  content: content,
-                }))
-              }
+    <>
+      <Header />
+      <Wrapper>
+        <BoxWrapper>
+          <CenterBox>
+            <DiaryHeader>
+              <DiaryTitle
+                placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
+                name="title"
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData((formData) => ({
+                    ...formData,
+                    title: e.target.value,
+                  }))
+                }
+              >
+                {/* */}
+              </DiaryTitle>
+            </DiaryHeader>
+            <EditorArea>
+              <QuillEditor
+                mainText={diaryDetail.content}
+                onChange={(content) =>
+                  setFormData((formData) => ({
+                    ...formData,
+                    content: content,
+                  }))
+                }
+              />
+            </EditorArea>
+            <SaveButton>
+              <button className="save-button" onClick={openThumbnailModal}>
+                수정 완료하기
+              </button>
+            </SaveButton>
+          </CenterBox>
+          {thumbnailModal && (
+            <ThumbnailModal
+              setThumbnailModal={setThumbnailModal}
+              setEditedModal={setEditedModal}
+              formData={formData}
+              diaryDetail={diaryDetail}
+              csrfToken={csrfToken}
+              journalId={journalId}
+              thumbnail={thumbnail}
             />
-          </EditorArea>
-          <SaveButton>
-            <button className="save-button" onClick={openThumbnailModal}>
-              수정 완료하기
-            </button>
-          </SaveButton>
-        </CenterBox>
-        {thumbnailModal && (
-          <ThumbnailModal
-            setThumbnailModal={setThumbnailModal}
-            setEditedModal={setEditedModal}
-            formData={formData}
-            diaryDetail={diaryDetail}
-            csrfToken={csrfToken}
-            journalId={journalId}
-            thumbnail={thumbnail}
-          />
-        )}
-        {!thumbnailModal && editedModal && <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />}
-      </BoxWrapper>
-    </Wrapper>
+          )}
+          {!thumbnailModal && editedModal && (
+            <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />
+          )}
+        </BoxWrapper>
+      </Wrapper>
+      <Footer />
+    </>
   );
 }
 

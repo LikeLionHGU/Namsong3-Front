@@ -70,7 +70,8 @@ const Wrapper = styled.div`
   height: 158px;
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 80px;
+  border-top: 1px solid #dfdfdf;
 `;
 
 const Container = styled.div`
