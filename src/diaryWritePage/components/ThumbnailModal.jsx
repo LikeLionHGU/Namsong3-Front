@@ -3,10 +3,28 @@ import styled from "styled-components";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import createDiary from "../../apis/createDiary";
-function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, csrfToken }) {
+import createImg from "../../apis/createImg";
+import { tokenState } from "../../atom/atom";
+import updateDiary from "../../apis/updateDiary";
+
+function ThumbnailModal({
+  setThumbnailModal,
+  setPostedModal,
+  setEditedModal,
+  formData,
+  goalId,
+  csrfToken,
+  journalId,
+  thumbnail,
+}) {
   // 이미지 설정//
   const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null); // 미리보기창에 들어갈 이미지 url
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    console.log("journalId updated:", journalId);
+  }, [journalId]);
 
   const closeThumbnailModal = () => {
     // 썸네일 추가하는 모달 닫는 함수(배경누르거나 x 눌러서 닫기만할때)
@@ -32,8 +50,8 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
       formDataToSend.append("content", content);
 
       // 이미지 파일이 존재할 경우에만 추가
-      if (fileInputRef.current.files[0]) {
-        formDataToSend.append("image", fileInputRef.current.files[0]);
+      if (imageUrl) {
+        formDataToSend.append("thumbnail", imageUrl);
       }
       //  TODO: 다이어리 수정하는 api 파일 생성하기 !!!!!! creatDiary말고 나중에
       // 백엔드에서 일지 수정 api 생성하면 만들고 이 부분도 고치기.
@@ -44,14 +62,40 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
       console.error("일지 생성 실패", error);
     }
   };
-  const handleFileInputChange = (event) => {
+
+  const handleUpdateClick = async () => {
+    try {
+      const { title, content } = formData;
+
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", title);
+      formDataToSend.append("content", content);
+
+      // 이미지 파일이 존재할 경우에만 추가
+      if (imageUrl) {
+        formDataToSend.append("thumbnail", imageUrl);
+      }
+      //  TODO: 다이어리 수정하는 api 파일 생성하기 !!!!!! creatDiary말고 나중에
+      // 백엔드에서 일지 수정 api 생성하면 만들고 이 부분도 고치기.
+      await updateDiary(formDataToSend, csrfToken, journalId);
+      setThumbnailModal(false);
+      setEditedModal(true);
+    } catch (error) {
+      console.error("일지 생성 실패", error);
+    }
+  };
+
+  const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    setImageUrl(await createImg(csrfToken, formData));
 
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewUrl(reader.result);
-        console.log("Uploaded image:", reader.result);
+        console.log("Uploaded thumbnail:", reader.result);
       };
       reader.readAsDataURL(file);
     } else {
@@ -82,18 +126,31 @@ function ThumbnailModal({ setThumbnailModal, setPostedModal, formData, goalId, c
                   objectFit: "cover",
                 }}
               />
+            ) : thumbnail ? (
+              <img
+                src={`${thumbnail}`}
+                alt="Current"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+              />
             ) : (
               <>
                 <AddRoundedIcon />
-                <div className="image-add-text">사진 추가하기</div>
+                <div className="thumbnail-add-text">사진 추가하기</div>
               </>
             )}
             <input type="file" style={{ display: "none" }} onChange={handleFileInputChange} ref={fileInputRef} />
           </ImageAdd>
           <Buttons>
             <NextBtn>
-              <button onClick={handleNextStep}>다음으로</button>
-              {/* <button onClick={completeGoal}>다음으로</button> */}
+              {journalId === undefined ? (
+                <button onClick={handleNextStep}>다음으로</button>
+              ) : (
+                <button onClick={handleUpdateClick}>다음으로</button>
+              )}
             </NextBtn>
           </Buttons>
         </Wrapper>
@@ -184,7 +241,7 @@ const ImageAdd = styled.div`
   > svg {
     font-size: 40px;
   }
-  .image-add-text {
+  .thumbnail-add-text {
     font-size: 14px;
     font-weight: bold;
   }

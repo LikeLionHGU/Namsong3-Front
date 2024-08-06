@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import QuillEditor from "./QuillEditor";
 import { useLocation } from "react-router-dom";
@@ -21,6 +21,13 @@ function UpdateDiary() {
   const openThumbnailModal = () => {
     setThumbnailModal(true);
   };
+
+  useEffect(() => {
+    console.log("diaryDetail updated:", diaryDetail);
+  }, [diaryDetail]);
+
+  const journalId = diaryDetail.journalId;
+  const thumbnail = diaryDetail.thumbnail;
 
   return (
     <Wrapper>
@@ -65,11 +72,11 @@ function UpdateDiary() {
             formData={formData}
             diaryDetail={diaryDetail}
             csrfToken={csrfToken}
+            journalId={journalId}
+            thumbnail={thumbnail}
           />
         )}
-        {!thumbnailModal && editedModal && (
-          <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />
-        )}
+        {!thumbnailModal && editedModal && <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );
