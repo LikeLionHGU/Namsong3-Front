@@ -100,7 +100,7 @@ const DropdownContainer = styled.div`
   cursor: pointer;
   transition: 0.1s;
   &:hover {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.18);
     border-radius: 6px;
   }
 `;
