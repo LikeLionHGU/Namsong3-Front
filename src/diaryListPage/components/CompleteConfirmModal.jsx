@@ -6,7 +6,10 @@ const parseDate = (dateString) => {
   if (!dateString) return ""; // dateString이 없을 경우 빈 문자열 반환
   const [year, month, day] = dateString.split(".").map(Number);
   const fullYear = year < 50 ? 2000 + year : 1900 + year;
-  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  return `${fullYear}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}`;
 };
 
 function CompleteConfirmModal({
@@ -63,19 +66,28 @@ function CompleteConfirmModal({
       <ModalBackground>
         <Overlay onClick={closeConfirmModal} />
         <Wrapper isExpired={expiredData !== undefined}>
-          <h3>도전을 완료하시겠어요?</h3>
+          {expiredData !== undefined ? (
+            <h3>목표 기간이 만료되었어요</h3>
+          ) : (
+            <h3>도전을 완료하시겠어요?</h3>
+          )}
+
           <div className="complete-content">
-            {expiredData !== undefined && <div>목표 기간이 만료되었어요.</div>}
+            {expiredData !== undefined && (
+              <div>목표기한을 수정하시거나 완료해주세요.</div>
+            )}
             완료한 도전은 재도전이 불가합니다.
             <br />
             도전을 완료하시겠어요?
           </div>
           <Buttons>
             <CancelBtn>
-              <button onClick={handleClickCancle}>취소 </button>
+              <button onClick={handleClickCancle}>
+                {expiredData !== undefined ? "수정하기" : "취소"}
+              </button>
             </CancelBtn>
             <CompleteBtn>
-              <button onClick={completeGoal}>확인</button>
+              <button onClick={completeGoal}>완료하기</button>
             </CompleteBtn>
           </Buttons>
         </Wrapper>
@@ -120,13 +132,16 @@ const Wrapper = styled.div`
   background: #ffffff;
   width: 350px; // 로딩모달 크기
   height: ${(props) => (props.isExpired ? "187px" : "180px")};
+  /* min-height: 187px; */
   border-radius: 12px;
   padding-top: 5px;
+  padding-bottom: 5px;
   z-index: 5;
   .complete-content {
+    line-height: 150%;
     width: 310px;
     /* height: 100px; */
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
   }
 `;
@@ -148,6 +163,7 @@ const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 16px;
+  margin-bottom: 18px;
   > div > button {
     display: flex;
     justify-content: center;
