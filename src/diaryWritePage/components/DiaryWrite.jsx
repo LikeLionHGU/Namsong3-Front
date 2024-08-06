@@ -13,12 +13,21 @@ function DiaryWrite() {
     title: "",
     content: "",
   });
+  const [isTitleEmpty, setIsTitleEmpty] = useState(false); // State to track empty title
+
   const csrfToken = useRecoilValue(tokenState);
   const location = useLocation();
   const goalId = location.state.goalId;
 
   const openThumbnailModal = () => {
-    setThumbnailModal(true);
+    if (formData.title.trim() === "") {
+      setIsTitleEmpty(true); // 제목 비어있을때
+      alert("제목을 입력해 주세요!"); // Show alert message
+    } else {
+      setIsTitleEmpty(false); // 제목 안 비어있을때
+      setThumbnailModal(true);
+    }
+    // setThumbnailModal(true);
   };
   useEffect(() => {
     console.log("formData updated:", formData, csrfToken, goalId);
@@ -33,12 +42,16 @@ function DiaryWrite() {
               placeholder="오늘의 일지를 잘 표현할 수 있는 제목을 작성해주세요 (최대 10자)"
               name="title"
               value={formData.title}
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData((formData) => ({
                   ...formData,
                   title: e.target.value,
-                }))
-              }
+                }));
+                setIsTitleEmpty(false);
+              }}
+              style={{
+                borderColor: isTitleEmpty ? "red" : "#dfdfdf", // 제목에 값이 없으면 빨간줄로 표시
+              }}
             >
               {/* */}
             </DiaryTitle>
@@ -68,7 +81,9 @@ function DiaryWrite() {
             csrfToken={csrfToken}
           />
         )}
-        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
+        {!thumbnailModal && postedModal && (
+          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
+        )}
       </BoxWrapper>
     </Wrapper>
   );
