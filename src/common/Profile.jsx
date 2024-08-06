@@ -33,7 +33,6 @@ function Profile() {
     const fetchUserName = async () => {
       const fetchedUserName = await getUserName();
       setUserName(fetchedUserName);
-      console.log("Fetched goalList:", fetchedUserName);
     };
     fetchUserName();
   }, []);
@@ -46,12 +45,7 @@ function Profile() {
     <>
       <ProfileBtn ref={profileRef} onClick={toggleProfile}>
         <div style={{ cursor: "pointer" }}>프로필</div>
-        <CSSTransition
-          in={isProfileOpen}
-          timeout={300}
-          classNames="profile"
-          unmountOnExit
-        >
+        <CSSTransition in={isProfileOpen} timeout={300} classNames="profile" unmountOnExit>
           <ProfileMenu>
             <ProfileInfo>
               <img src={ProfileImg} alt="" />
@@ -61,9 +55,7 @@ function Profile() {
           </ProfileMenu>
         </CSSTransition>
       </ProfileBtn>
-      {logoutModalOpen && (
-        <LogoutModal setLogoutModalOpen={setLogoutModalOpen} />
-      )}
+      {logoutModalOpen && <LogoutModal setLogoutModalOpen={setLogoutModalOpen} />}
     </>
   );
 }

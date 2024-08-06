@@ -27,15 +27,10 @@ function DiaryEditModal({ setEditedModal }) {
   const diaries = diaryDetail;
 
   // location.state가 존재하고, goalId와 diaryDetail이 존재하는지 확인
-  if (
-    !location.state ||
-    !location.state.goalId ||
-    !location.state.diaryDetail
-  ) {
+  if (!location.state || !location.state.goalId || !location.state.diaryDetail) {
     console.error("Missing required state data");
     return null; // 필수 데이터가 없으면 null 반환
   }
-  console.log("Location state:", location.state);
 
   const closeModal = () => {
     setEditedModal(false); // !! 주석 풀기 !!

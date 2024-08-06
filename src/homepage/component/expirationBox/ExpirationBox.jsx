@@ -11,7 +11,6 @@ import banner4 from "../../../asset/Random/banner4.svg";
 const bannerArr = [banner1, banner2, banner3, banner4];
 const randomIndex = Math.floor(Math.random() * bannerArr.length);
 const bannerImg = bannerArr[randomIndex];
-console.log("banner image: ", bannerImg);
 
 function ExpirationBox() {
   const [mostOverdueGoal, setMostOverdueGoal] = useState(null);
@@ -39,9 +38,6 @@ function ExpirationBox() {
       setMostOverdueGoal(overdueGoals[0].title);
     }
   }, []);
-  // const randomIndex = Math.floor(Math.random() * bannerArr.length);
-  // const bannerImg = bannerArr[randomIndex];
-  // console.log("banner image: ", bannerImg);
   return (
     <Wrapper>
       {/* bannerImg있는지 없는지 여부가 아니라 마감 임박인 목표가 있는지를 확인해서 넣어줘야할듯. */}
@@ -55,16 +51,13 @@ function ExpirationBox() {
                 <MainText>완료날짜가 다가오고 있어요 !</MainText>
               </MainTextContainer>
               <SubText>
-                <span
-                  style={{ fontWeight: "bold", textDecoration: "underline" }}
-                >
+                <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
                   {mostOverdueGoal || "멋사인재풀등록"}
                 </span>{" "}
                 기간이 만료되었어요!
               </SubText>
               <SubText style={{ marginTop: "4px" }}>
-                목표를 달성하셨다면 ‘목표 달성' 버튼을 누르고 진행 중이시라면
-                기간을 수정해주세요 :)
+                목표를 달성하셨다면 ‘목표 달성' 버튼을 누르고 진행 중이시라면 기간을 수정해주세요 :)
               </SubText>
             </MainContents>
             <MoveToGoal>

@@ -33,9 +33,7 @@ function UpdateDiary() {
     }
   };
 
-  useEffect(() => {
-    console.log("diaryDetail updated:", diaryDetail);
-  }, [diaryDetail]);
+  useEffect(() => {}, [diaryDetail]);
 
   const journalId = diaryDetail.journalId;
   const thumbnail = diaryDetail.thumbnail;
@@ -93,9 +91,7 @@ function UpdateDiary() {
               thumbnail={thumbnail}
             />
           )}
-          {!thumbnailModal && editedModal && (
-            <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />
-          )}
+          {!thumbnailModal && editedModal && <DiaryEditModal setEditedModal={setEditedModal} goalId={goalId} />}
         </BoxWrapper>
       </Wrapper>
       <Footer />

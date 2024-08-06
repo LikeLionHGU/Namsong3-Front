@@ -11,7 +11,6 @@ const getGoalList = async (csrfToken) => {
         },
       }
     );
-    console.log("목표 불러오기 성공", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

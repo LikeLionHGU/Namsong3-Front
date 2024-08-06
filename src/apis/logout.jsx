@@ -12,7 +12,6 @@ const logout = async (csrfToken) => {
         },
       }
     );
-    console.log("로그아웃 성공", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

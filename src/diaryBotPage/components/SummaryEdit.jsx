@@ -15,7 +15,6 @@ import { useLocation } from "react-router-dom";
 function SummaryEdit() {
   const location = useLocation();
   const summaryText = location.state?.summaryText || "";
-  // console.log("edit page에서 확인하는 summary", summaryText);
   const [thumbnailModal, setThumbnailModal] = useState(false); // 썸네일 사진 추가하는 모달
   const [postedModal, setPostedModal] = useState(false); //일지가 추가되었다는 걸 알려주는 모달
   const [formData, setFormData] = useState({
@@ -26,7 +25,6 @@ function SummaryEdit() {
   const goalId = location.state?.goalId;
   const [isTitleEmpty, setIsTitleEmpty] = useState(false); // State to track empty title
 
-  console.log("<<<<<<<<goalID : ", goalId);
   const openThumbnailModal = () => {
     if (formData.title.trim() === "") {
       setIsTitleEmpty(true); // Set the validation state to true if title is empty
@@ -37,9 +35,6 @@ function SummaryEdit() {
     }
     // setThumbnailModal(true);
   };
-  useEffect(() => {
-    console.log("formData updated:", formData, csrfToken);
-  }, [formData]);
 
   // summaryText가 있을 때 formData.content를 업데이트
   useEffect(() => {
@@ -109,9 +104,7 @@ function SummaryEdit() {
             // thumbnail={thumbnail}
           />
         )}
-        {!thumbnailModal && postedModal && (
-          <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />
-        )}
+        {!thumbnailModal && postedModal && <DiaryPostModal setPostedModal={setPostedModal} goalId={goalId} />}
       </BoxWrapper>
     </Wrapper>
   );

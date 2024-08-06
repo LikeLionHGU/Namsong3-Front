@@ -16,7 +16,6 @@ function DiaryDetail() {
   const { goalId } = location.state;
   const { diaries } = location.state;
   const diaryId = diaries.journalId;
-  console.log("id is : ", goalId, diaries);
   const csrfToken = useRecoilValue(tokenState);
 
   // 컨텐츠 내용 많아지면 스크롤로 내려서 확인할 수 있도록 만듦.
@@ -55,20 +54,12 @@ function DiaryDetail() {
           <ContentArea>
             <Contents>
               {/* html 태그 적용된 일지 내용 보여주는 부분 */}
-              <div
-                dangerouslySetInnerHTML={{ __html: diaryDetail.content }}
-              ></div>
+              <div dangerouslySetInnerHTML={{ __html: diaryDetail.content }}></div>
             </Contents>
           </ContentArea>
         </CenterBox>
 
-        {deleteModal && (
-          <DeleteConfirmModal
-            setDeleteModal={setDeleteModal}
-            goalId={goalId}
-            journalId={diaryId}
-          />
-        )}
+        {deleteModal && <DeleteConfirmModal setDeleteModal={setDeleteModal} goalId={goalId} journalId={diaryId} />}
       </BoxWrapper>
     </Wrapper>
   );

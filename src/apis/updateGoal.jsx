@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const updateGoal = async (formDataToSend, csrfToken, goalId) => {
-  console.log("API 코드에서 잘 넘어왔는지", formDataToSend, csrfToken);
   try {
     const serverResponse = await axios.put(`${process.env.REACT_APP_HOST_URL}/v1/goals/${goalId}`, formDataToSend, {
       withCredentials: true,
@@ -10,7 +9,6 @@ const updateGoal = async (formDataToSend, csrfToken, goalId) => {
         "X-CSRF-TOKEN": csrfToken,
       },
     });
-    console.log("목표가 정상적으로 수정되었음", serverResponse);
 
     return serverResponse.data;
   } catch (error) {

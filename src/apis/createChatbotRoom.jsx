@@ -12,7 +12,6 @@ const createChatbotRoom = async (csrfToken, goalId) => {
         },
       }
     );
-    console.log("채팅방이 정상적으로 추가되었음", serverResponse);
 
     return serverResponse.data;
   } catch (error) {
