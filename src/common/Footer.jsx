@@ -32,7 +32,9 @@ function Footer() {
           <Icon
             src={Github}
             alt="Github"
-            onClick={() => handleClick("https://github.com/LikeLionHGU/Namsong3-Front")}
+            onClick={() =>
+              handleClick("https://github.com/LikeLionHGU/Namsong3-Front")
+            }
             hoverSrc={HoverGithub}
           />
           <Icon
@@ -48,7 +50,11 @@ function Footer() {
           <Icon
             src={Notion}
             alt="Notion"
-            onClick={() => handleClick("https://www.notion.so/3-6f963164f909477ba44b6c0466ec45bc")}
+            onClick={() =>
+              handleClick(
+                "https://www.notion.so/3-6f963164f909477ba44b6c0466ec45bc"
+              )
+            }
             hoverSrc={HoverNotion}
           />
         </LeftContainer>
@@ -64,7 +70,8 @@ const Wrapper = styled.div`
   height: 158px;
   display: flex;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 80px;
+  border-top: 1px solid #dfdfdf;
 `;
 
 const Container = styled.div`
