@@ -133,89 +133,112 @@ function Goals() {
     <Container>
       <TopMenu>
         <Taps currentTab={currentTab} setCurrentTab={setCurrentTab} />
-        <GoalViewDropdown currentSort={currentSort} setCurrentSort={setCurrentSort} />
+        <GoalViewDropdown
+          currentSort={currentSort}
+          setCurrentSort={setCurrentSort}
+        />
       </TopMenu>
       <GoalContainer>
         <CreateGoalModalBtn onClick={openCreateGoalsModal}>
           <img src={CreateGoal} alt="" style={{ marginBottom: "15px" }} />
           목표 추가하기
         </CreateGoalModalBtn>
-        {!isLoading && filteredGoals.length === 0 && currentTab !== "완료한 도전" && (
-          <GoalDoesNotExist>
-            <img src={GoalDoesNotExistImg} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
-            <div
-              style={{
-                color: "#676767",
-                fontWeight: "bold",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "16px",
-              }}
-            >
-              <div>첫 걸음을 내딛는 순간</div>
-              <div style={{ marginTop: "5px" }}>성장이 시작됩니다!</div>
-            </div>
-            <div
-              style={{
-                color: "#AEAEAE",
-                fontSize: "14px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "10px",
-              }}
-            >
-              <div>하고 싶은 일을 적어볼까요? </div>{" "}
-              <div style={{ marginTop: "5px" }}>작은 목표부터 큰 목표까지 모두 좋아요!</div>
-            </div>
-          </GoalDoesNotExist>
-        )}
-        {!isLoading && filteredGoals.length === 0 && currentTab === "완료한 도전" && (
-          <GoalDoesNotExist>
-            <img src={GoalDoesNotExistPink} alt="" style={{ marginTop: "59px", width: "40px", height: "41px" }} />
-            <div
-              style={{
-                color: "#676767",
-                fontWeight: "bold",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "16px",
-              }}
-            >
-              <div>작은 목표부터 시작해서</div>
-              <div style={{ marginTop: "5px" }}>하나씩 채워나가봐요!</div>
-            </div>
-            <div
-              style={{
-                color: "#AEAEAE",
-                fontSize: "14px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "10px",
-              }}
-            >
-              <div>곧 이곳이 당신의 성취로</div> <div style={{ marginTop: "5px" }}>가득 찰 거예요!</div>
-            </div>
-          </GoalDoesNotExist>
-        )}
+        {!isLoading &&
+          filteredGoals.length === 0 &&
+          currentTab !== "완료한 도전" && (
+            <GoalDoesNotExist>
+              <img
+                src={GoalDoesNotExistImg}
+                alt=""
+                style={{ marginTop: "59px", width: "40px", height: "41px" }}
+              />
+              <div
+                style={{
+                  color: "#676767",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <div>첫 걸음을 내딛는 순간</div>
+                <div style={{ marginTop: "5px" }}>성장이 시작됩니다!</div>
+              </div>
+              <div
+                style={{
+                  color: "#AEAEAE",
+                  fontSize: "14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <div>하고 싶은 일을 적어볼까요? </div>{" "}
+                <div style={{ marginTop: "5px" }}>
+                  작은 목표부터 큰 목표까지 모두 좋아요!
+                </div>
+              </div>
+            </GoalDoesNotExist>
+          )}
+        {!isLoading &&
+          filteredGoals.length === 0 &&
+          currentTab === "완료한 도전" && (
+            <GoalDoesNotExist>
+              <img
+                src={GoalDoesNotExistPink}
+                alt=""
+                style={{ marginTop: "59px", width: "40px", height: "41px" }}
+              />
+              <div
+                style={{
+                  color: "#676767",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "16px",
+                }}
+              >
+                <div>작은 목표부터 시작해서</div>
+                <div style={{ marginTop: "5px" }}>하나씩 채워나가봐요!</div>
+              </div>
+              <div
+                style={{
+                  color: "#AEAEAE",
+                  fontSize: "14px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "10px",
+                }}
+              >
+                <div>곧 이곳이 당신의 성취로</div>{" "}
+                <div style={{ marginTop: "5px" }}>가득 찰 거예요!</div>
+              </div>
+            </GoalDoesNotExist>
+          )}
         <TransitionGroup component={null}>
           {filteredGoals.map((goal) => {
-            const randomIndex = Math.floor(Math.random() * backgroundArr.length);
+            const randomIndex = Math.floor(
+              Math.random() * backgroundArr.length
+            );
             const backgroundImg = backgroundArr[randomIndex];
             const daysLeft = getDaysLeft(goal.endDate);
             const expired = isExpired(goal.endDate);
-            const randomStampIndex = Math.floor(Math.random() * complete_stamps.length);
+            const randomStampIndex = Math.floor(
+              Math.random() * complete_stamps.length
+            );
             const completeStamps = complete_stamps[randomStampIndex];
             return (
               <CSSTransition key={goal.id} timeout={500} classNames="goal">
                 <GoalWrapper
                   onClick={() => {
-                    if (expired) {
+                    if (expired && goal?.status !== "CLOSED") {
+                      // op
                       setIsExpiredBox(true);
                       setIsConfirmModalOpen(true);
                       setExpiredData(goal);
@@ -266,7 +289,9 @@ function Goals() {
                           }}
                         />
                       ) : (
-                        <Image style={{ backgroundImage: `url(${backgroundImg})` }} />
+                        <Image
+                          style={{ backgroundImage: `url(${backgroundImg})` }}
+                        />
                       )}
                       <GoalEditDropdown
                         setIsDeleteModalOpen={setIsDeleteModalOpen}
@@ -280,19 +305,26 @@ function Goals() {
 
                   <Info>
                     <InfoContainer>
-                      {daysLeft !== null && daysLeft <= 5 && daysLeft > 0 && goal?.status === "OPEN" && (
-                        <DeadlineComing>
-                          <span>D-{daysLeft}</span>
-                        </DeadlineComing>
-                      )}
+                      {daysLeft !== null &&
+                        daysLeft <= 5 &&
+                        daysLeft > 0 &&
+                        goal?.status === "OPEN" && (
+                          <DeadlineComing>
+                            <span>D-{daysLeft}</span>
+                          </DeadlineComing>
+                        )}
                       {expired && goal?.status === "OPEN" && (
                         <ExpirationText>
                           <span>기한이 지났어요!</span>
                         </ExpirationText>
                       )}
-                      {daysLeft === null || daysLeft > 5 ? !expired && <div style={{ marginTop: "4px" }} /> : null}
+                      {daysLeft === null || daysLeft > 5
+                        ? !expired && <div style={{ marginTop: "4px" }} />
+                        : null}
                       <TitleFireContainer>
-                        <Title isOpen={goal?.status === "OPEN"}>{goal.title}</Title>
+                        <Title isOpen={goal?.status === "OPEN"}>
+                          {goal.title}
+                        </Title>
                         {goal.streak >= 3 && (
                           <FireContainer>
                             <Fire>
@@ -305,7 +337,9 @@ function Goals() {
                       </TitleFireContainer>
                       {(goal.startDate || goal.endDate) && (
                         <Period isOpen={goal?.status === "OPEN"}>
-                          {goal.startDate && <StartDate>{goal.startDate}</StartDate>}
+                          {goal.startDate && (
+                            <StartDate>{goal.startDate}</StartDate>
+                          )}
                           {goal.startDate && goal.endDate && <span> → </span>}
                           {goal.endDate && <DueDate>{goal.endDate}</DueDate>}
                         </Period>
@@ -337,7 +371,12 @@ function Goals() {
           updateData={updateData}
         />
       )}
-      {isDeleteModalOpen && <DeleteGoalModal setIsDeleteModalOpen={setIsDeleteModalOpen} goalId={updateData.goalId} />}
+      {isDeleteModalOpen && (
+        <DeleteGoalModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          goalId={updateData.goalId}
+        />
+      )}
       {isGoalEditedModalOpen && <GoalEditedModal />}
       {isConfirmModalOpen && (
         <CompleteConfirmModal
@@ -348,7 +387,12 @@ function Goals() {
           setIsModalOpen={setIsModalOpen}
         />
       )}
-      {isCompModalOpen && <CompleteGoalModal setIsCompModalOpen={setIsCompModalOpen} isExpiredBox={isExpiredBox} />}
+      {isCompModalOpen && (
+        <CompleteGoalModal
+          setIsCompModalOpen={setIsCompModalOpen}
+          isExpiredBox={isExpiredBox}
+        />
+      )}
     </Container>
   );
 }
