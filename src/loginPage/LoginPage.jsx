@@ -39,13 +39,6 @@ const Image = styled.img`
   object-fit: cover;
 `;
 
-const StartStepper = styled.img`
-  position: absolute;
-  margin-top: 400px;
-  margin-right: 510px;
-  cursor: pointer;
-`;
-
 const ContentOverlay = styled.div`
   position: absolute;
   color: white;
@@ -116,7 +109,6 @@ const LoginPage = () => {
         index === 0 ? (
           <ImageContainer key={index}>
             <Image src={image} />
-            <StartStepper src={StartStepperIcon} alt="StartStepper" onClick={handleGoogleLogin} />
           </ImageContainer>
         ) : index === images.length - 1 ? (
           <ImageContainer key={index}>
