@@ -9,6 +9,8 @@ import ImgUpload from "../../../../asset/Icon/ImgUpload.svg";
 import { Toggle } from "./Toggle";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import updateGoal from "../../../../apis/updateGoal";
+import { fi } from "date-fns/locale";
+import createImg from "../../../../apis/\bcreateImg";
 
 const formatDate = (date) => {
   const year = date.getFullYear();
@@ -32,6 +34,7 @@ function CreateGoalModal({
   setIsUpdate,
   setIsGoalEditedModalOpen,
   expiredData,
+  setExpiredData,
 }) {
   const [isDateSetting, setIsDateSetting] = useState(true);
   const csrfToken = useRecoilValue(tokenState);
@@ -61,6 +64,8 @@ function CreateGoalModal({
       isUpdate && updateData?.thumbnail ? updateData.thumbnail : expiredData?.thumbnail ? expiredData.thumbnail : "",
   });
 
+  const [imageUrl, setImageUrl] = useState("");
+
   const goalId = isUpdate && updateData.goalId ? updateData.goalId : expiredData?.goalId;
   const status = isUpdate && updateData.status ? updateData.status : expiredData?.status;
   const [previewUrl, setPreviewUrl] = useState(
@@ -68,12 +73,13 @@ function CreateGoalModal({
   );
 
   useEffect(() => {
-    console.log("formData updated:", formData, csrfToken, updateData, isUpdate);
+    console.log("formData updated:", formData, csrfToken, updateData, isUpdate, imageUrl);
   }, [formData]);
 
   const closeCreateGoalModal = () => {
     setIsModalOpen(false);
     setIsUpdate(false);
+    setExpiredData(undefined);
   };
 
   const handleImageUploadClick = () => {
@@ -93,8 +99,11 @@ function CreateGoalModal({
     }
   };
 
-  const handleFileInputChange = (event) => {
+  const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    setImageUrl(await createImg(csrfToken, formData));
 
     if (file) {
       const reader = new FileReader();
@@ -140,8 +149,8 @@ function CreateGoalModal({
       formDataToSend.append("startDate", startDate);
       formDataToSend.append("endDate", endDate);
 
-      if (fileInputRef.current.files[0]) {
-        formDataToSend.append("thumbnail", fileInputRef.current.files[0]);
+      if (imageUrl) {
+        formDataToSend.append("thumbnail", imageUrl);
       }
       await createGoal(formDataToSend, csrfToken);
       closeCreateGoalModal();
@@ -175,8 +184,8 @@ function CreateGoalModal({
       );
       formDataToSend.append("status", status);
 
-      if (fileInputRef.current.files[0]) {
-        formDataToSend.append("thumbnail", fileInputRef.current.files[0]);
+      if (imageUrl) {
+        formDataToSend.append("thumbnail", imageUrl);
       }
       await updateGoal(formDataToSend, csrfToken, goalId);
       closeCreateGoalModal();
@@ -184,6 +193,7 @@ function CreateGoalModal({
     } catch (error) {
       console.error("목표 수정 실패", error);
     }
+    setExpiredData(undefined);
   };
 
   const handleToggleDateSetting = () => {
