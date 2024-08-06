@@ -19,7 +19,9 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const LogoImg = styled.img``;
+const LogoImg = styled.img`
+  cursor: pointer;
+`;
 const RightContainer = styled.div`
   display: flex;
   font-size: 16px;
@@ -42,7 +44,7 @@ function Header() {
     <div>
       <Wrapper>
         <Container>
-          <LogoImg src={Logo} alt="" />
+          <LogoImg onClick={handleClickHome} src={Logo} alt="" />
           <RightContainer>
             <HomeBtn onClick={handleClickHome}>홈화면</HomeBtn>
             <ProfileBtn />

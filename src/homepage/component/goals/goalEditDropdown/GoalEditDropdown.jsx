@@ -3,7 +3,13 @@ import styled, { keyframes } from "styled-components";
 import GoalEditDropdownBtn from "../../../../asset/Icon/GoalEditDropdownBtn.svg";
 import { CSSTransition } from "react-transition-group";
 
-function GoalEditDropdown({ setIsDeleteModalOpen, setIsUpdate, setIsModalOpen, goal, onEdit }) {
+function GoalEditDropdown({
+  setIsDeleteModalOpen,
+  setIsUpdate,
+  setIsModalOpen,
+  goal,
+  onEdit,
+}) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -42,7 +48,12 @@ function GoalEditDropdown({ setIsDeleteModalOpen, setIsUpdate, setIsModalOpen, g
   return (
     <DropdownContainer ref={dropdownRef} onClick={toggleDropdown}>
       <img src={GoalEditDropdownBtn} alt=""></img>
-      <CSSTransition in={isDropdownOpen} timeout={300} classNames="dropdown" unmountOnExit>
+      <CSSTransition
+        in={isDropdownOpen}
+        timeout={300}
+        classNames="dropdown"
+        unmountOnExit
+      >
         <DropdownMenu>
           <DropdownItem onClick={handleUpdateClick}>수정하기</DropdownItem>
           <Separator />
@@ -87,6 +98,11 @@ const DropdownContainer = styled.div`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: 0.1s;
+  &:hover {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 6px;
+  }
 `;
 
 const DropdownMenu = styled.div`
