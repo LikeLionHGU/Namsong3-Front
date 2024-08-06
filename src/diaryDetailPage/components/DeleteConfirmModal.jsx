@@ -1,16 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import deleteDiary from "../../apis/deleteDiary";
+import { useRecoilValue } from "recoil";
+import { tokenState } from "../../atom/atom";
 
-function DeleteConfirmModal({ setDeleteModal, goalId }) {
+function DeleteConfirmModal({ setDeleteModal, goalId, journalId }) {
   const navigate = useNavigate();
+  const csrfToken = useRecoilValue(tokenState);
   const closeDeleteModal = () => {
     setDeleteModal(false);
   };
-  const deleteModal = () => {
-    //일지 삭제하는 부분 필요.
-    setDeleteModal(false);
-    navigate(`/diarylist`, { state: { goalId } });
+  const deleteModal = async () => {
+    try {
+      await deleteDiary(csrfToken, journalId);
+      setDeleteModal(false);
+      navigate(`/diarylist`, { state: { goalId } });
+    } catch (error) {
+      console.error("목표 삭제 실패", error);
+    }
   };
   return (
     <div>
